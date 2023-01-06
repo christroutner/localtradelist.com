@@ -1,5 +1,5 @@
 /*
-  This is an SPA that creates a template for future BCH web3 apps.
+  This is an SPA.
 */
 
 // Global npm libraries
