@@ -52,7 +52,7 @@ class AppBody extends React.Component {
 
     switch (menuState) {
       case 0:
-        return (<BchSend appData={this.state.appData} />)
+        return (<StoreMap appData={this.state.appData} />)
       case 1:
         return (<SlpTokens appData={this.state.appData} />)
       case 2:
@@ -66,13 +66,13 @@ class AppBody extends React.Component {
       case 4:
         return (<Sign appData={this.state.appData} />)
       case 5:
-        return (<StoreMap appData={this.state.appData} />)
+        return (<BchSend appData={this.state.appData} />)
 
       // Special Views
       case 100:
         return (<ServerSelectView appData={this.state.appData} />)
       default:
-        return (<BchSend appData={this.state.appData} />)
+        return (<StoreMap appData={this.state.appData} />)
     }
   }
 }
