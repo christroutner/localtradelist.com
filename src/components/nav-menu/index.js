@@ -38,6 +38,7 @@ class NavMenu extends React.Component {
               <Nav.Link href='#' onClick={() => this.handleClickEvent(2)}>Wallet</Nav.Link>
               <Nav.Link href='#' onClick={() => this.handleClickEvent(3)}>Sweep</Nav.Link>
               <Nav.Link href='#' onClick={() => this.handleClickEvent(4)}>Sign</Nav.Link>
+              <Nav.Link href='#' onClick={() => this.handleClickEvent(5)}>Store Map</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
