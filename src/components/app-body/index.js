@@ -16,6 +16,7 @@ import SlpTokens from '../slp-tokens'
 import ServerSelectView from '../servers/select-server-view'
 import Sweep from '../sweep'
 import Sign from '../sign'
+import StoreMap from '../store-map'
 
 // let _this
 
@@ -64,6 +65,8 @@ class AppBody extends React.Component {
         return (<Sweep appData={this.state.appData} />)
       case 4:
         return (<Sign appData={this.state.appData} />)
+      case 5:
+        return (<StoreMap appData={this.state.appData} />)
 
       // Special Views
       case 100:
