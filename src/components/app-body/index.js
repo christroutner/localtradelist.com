@@ -17,6 +17,7 @@ import ServerSelectView from '../servers/select-server-view'
 import Sweep from '../sweep'
 import Sign from '../sign'
 import StoreMap from '../store-map'
+import CreateToken from '../create-token'
 
 // let _this
 
@@ -54,19 +55,21 @@ class AppBody extends React.Component {
       case 0:
         return (<StoreMap appData={this.state.appData} />)
       case 1:
-        return (<SlpTokens appData={this.state.appData} />)
+        return (<CreateToken appData={this.state.appData} />)
       case 2:
+        return (<BchSend appData={this.state.appData} />)
+      case 3:
+        return (<SlpTokens appData={this.state.appData} />)
+      case 4:
         return (
           <BchWallet
             appData={this.state.appData}
           />
         )
-      case 3:
-        return (<Sweep appData={this.state.appData} />)
-      case 4:
-        return (<Sign appData={this.state.appData} />)
       case 5:
-        return (<BchSend appData={this.state.appData} />)
+        return (<Sweep appData={this.state.appData} />)
+      case 6:
+        return (<Sign appData={this.state.appData} />)
 
       // Special Views
       case 100:

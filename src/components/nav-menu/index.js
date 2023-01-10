@@ -34,11 +34,12 @@ class NavMenu extends React.Component {
           <Navbar.Collapse id='responsive-navbar-nav'>
             <Nav className='mr-auto' style={{ padding: '25px' }}>
               <Nav.Link href='#' onClick={() => this.handleClickEvent(0)}>Store Map</Nav.Link>
-              <Nav.Link href='#' onClick={() => this.handleClickEvent(1)}>Tokens</Nav.Link>
-              <Nav.Link href='#' onClick={() => this.handleClickEvent(2)}>Wallet</Nav.Link>
-              <Nav.Link href='#' onClick={() => this.handleClickEvent(3)}>Sweep</Nav.Link>
-              <Nav.Link href='#' onClick={() => this.handleClickEvent(4)}>Sign</Nav.Link>
-              <Nav.Link href='#' onClick={() => this.handleClickEvent(5)}>BCH</Nav.Link>
+              <Nav.Link href='#' onClick={() => this.handleClickEvent(1)}>Create Store</Nav.Link>
+              <Nav.Link href='#' onClick={() => this.handleClickEvent(2)}>BCH</Nav.Link>
+              <Nav.Link href='#' onClick={() => this.handleClickEvent(3)}>Tokens</Nav.Link>
+              <Nav.Link href='#' onClick={() => this.handleClickEvent(4)}>Wallet</Nav.Link>
+              <Nav.Link href='#' onClick={() => this.handleClickEvent(5)}>Sweep</Nav.Link>
+              <Nav.Link href='#' onClick={() => this.handleClickEvent(6)}>Sign</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>

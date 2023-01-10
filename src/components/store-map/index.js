@@ -10,8 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import "leaflet/dist/leaflet.css"
-
+import 'leaflet/dist/leaflet.css'
 
 // let _this
 
@@ -40,7 +39,7 @@ class StoreMap extends React.Component {
     // _this = this
   }
 
-  async componentDidMount() {
+  async componentDidMount () {
     await this.loadTokens()
   }
 
@@ -77,7 +76,7 @@ class StoreMap extends React.Component {
                   url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
                 />
 
-                <Markers markers={this.state.markers}/>
+                <Markers markers={this.state.markers} />
               </MapContainer>
             </Col>
             <Col>
@@ -97,7 +96,7 @@ class StoreMap extends React.Component {
 
   // Load the tokens from the blockchain.
   // Right now this is mocked by loading a hard-coded array of token IDs.
-  async loadTokens() {
+  async loadTokens () {
     try {
       const tokenIds = [
         'e2d78b130bd84573b17a2a5cb1b52eaa3e95ac75a17e1ed44405ef0aefdd86e7' // Orcas Landing
@@ -127,12 +126,10 @@ class StoreMap extends React.Component {
       this.setState({
         markers: [marker]
       })
-
-    } catch(err) {
+    } catch (err) {
       console.error('Error in loadTokens(): ', err)
     }
   }
-
 
   // Generate the info modal that is displayed when the button is clicked.
   getModal () {
@@ -175,15 +172,15 @@ class StoreMap extends React.Component {
   }
 }
 
-function Markers(props) {
+function Markers (props) {
   console.log('Marker props: ', props)
 
-  const {markers} = props
+  const { markers } = props
 
   const map = useMap()
 
-  if(markers.length) {
-    const {lat, long, id, name, description} = markers[0]
+  if (markers.length) {
+    const { lat, long, id, name, description } = markers[0]
 
     const icon = L.icon({
       iconSize: [25, 41],
@@ -193,7 +190,7 @@ function Markers(props) {
       shadowUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-shadow.png'
     })
 
-    const pin = L.marker([lat, long], {id, icon})
+    const pin = L.marker([lat, long], { id, icon })
     pin.addTo(map)
 
     const popUpHtml = `
@@ -204,7 +201,7 @@ function Markers(props) {
     pin.bindPopup(popUpHtml)
   }
 
-  return(
+  return (
     <>
     </>
   )
