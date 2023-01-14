@@ -20,7 +20,7 @@ class CreateToken extends React.Component {
   constructor (props) {
     super(props)
 
-    const rnd = Math.floor(1000000*Math.random())
+    const rnd = Math.floor(1000000 * Math.random())
 
     this.state = {
       appData: props.appData,

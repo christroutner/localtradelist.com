@@ -11,40 +11,39 @@ import 'leaflet/dist/leaflet.css'
 // Local libraries
 
 function MapOfStreets (props) {
-    window.handleFlagStore = handleFlagStore
+  window.handleFlagStore = handleFlagStore
 
-    // console.log('map-of-store2 props: ', JSON.stringify(props, null, 2))
-    let {markers, mapCenterLat, mapCenterLong, zoom} = props.mapObj
+  // console.log('map-of-store2 props: ', JSON.stringify(props, null, 2))
+  let { markers, mapCenterLat, mapCenterLong, zoom } = props.mapObj
 
+  if (!Array.isArray(markers)) markers = []
+  if (!mapCenterLat) mapCenterLat = 45.5767026
+  if (!mapCenterLong) mapCenterLong = -122.6437683
+  if (!zoom) zoom = 12
+  console.log(`markers2: ${JSON.stringify(markers, null, 2)}`)
 
-    if(!Array.isArray(markers)) markers = []
-    if(!mapCenterLat) mapCenterLat = 45.5767026
-    if(!mapCenterLong) mapCenterLong = -122.6437683
-    if(!zoom) zoom = 12
-    console.log(`markers2: ${JSON.stringify(markers, null, 2)}`)
+  return (
+    <>
+      <MapContainer
+        center={[mapCenterLat, mapCenterLong]}
+        zoom={zoom}
+        style={{ height: '70vh' }}
+      >
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        />
 
-    return (
-      <>
-        <MapContainer
-          center={[mapCenterLat, mapCenterLong]}
-          zoom={zoom}
-          style={{ height: '70vh' }}
-        >
-          <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          />
-
-          <Markers markers={markers} />
-        </MapContainer>
-      </>
-    )
+        <Markers markers={markers} />
+      </MapContainer>
+    </>
+  )
   // }
 }
 
 // This is an onclick event handler for the button inside the pin dialog.
 // When clicked, it will call this function and pass the Token ID.
-async function handleFlagStore(tokenId) {
+async function handleFlagStore (tokenId) {
   console.log('handleFlagStore() tokenId: ', tokenId)
 }
 
@@ -85,7 +84,5 @@ function Markers (props) {
 
   return null
 }
-
-
 
 export default MapOfStreets

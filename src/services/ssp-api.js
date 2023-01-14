@@ -7,14 +7,13 @@ const axios = require('axios')
 
 class SspApi {
   constructor () {
-
     // Encapsulate dependencies.
     this.axios = axios
   }
 
   // Get all the stores in the database.
   // Note: This endpoint will be removed in the future, as it won't scale.
-  async getAllStores() {
+  async getAllStores () {
     try {
       const server = 'http://localhost:5020'
       const endpoint = '/store/all'

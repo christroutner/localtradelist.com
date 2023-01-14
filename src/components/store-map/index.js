@@ -101,12 +101,12 @@ class StoreMap extends React.Component {
 
       // Loop through each store.
       const stores = allStoreData.stores
-      for(let i=0; i < stores.length; i++) {
+      for (let i = 0; i < stores.length; i++) {
         const thisStore = stores[i]
         const storeData = thisStore.storeData
 
         // Skip this entry if it does not include the store data from the mutable data.
-        if(!storeData) continue
+        if (!storeData) continue
 
         const lat = storeData.location.geo.latitude
         const long = storeData.location.geo.longitude
@@ -129,7 +129,6 @@ class StoreMap extends React.Component {
         // markers: [marker]
         markers
       })
-
     } catch (err) {
       console.error('Error in loadTokens(): ', err)
     }
@@ -175,6 +174,5 @@ class StoreMap extends React.Component {
     })
   }
 }
-
 
 export default StoreMap
