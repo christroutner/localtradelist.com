@@ -8,8 +8,10 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import TradelistLib from '@chris.troutner/tradelist-lib'
+import ReactDOMServer from "react-dom/server";
 
 // Local libraries
+import InfoPopup from './info-popup.js'
 
 let wallet = null
 
@@ -51,25 +53,35 @@ function MapOfStreets (props) {
 async function handleFlagStore (tokenId) {
   console.log('handleFlagStore() tokenId: ', tokenId)
 
-  console.log('wallet: ', wallet)
+  // console.log('wallet: ', wallet)
 
   const tradelistLib = new TradelistLib({wallet})
-  const result = await tradelistLib.claim.createClaim({foo: 'bar'})
-  console.log('result of creating claim: ', result)
+
+  const data = {
+    about: tokenId
+  }
+
+  // Instantiate the support libraries.
+  // await tradelistLib.util.instantiateWrite()
+  // await tradelistLib.util.instantiatePin()
+  //
+  // // Generate flag data and pin it to IPFS.
+  // const result = await tradelistLib.util.pinJson({data})
+  // console.log('IPFS CID: ', result)
 }
 
 // This is a React function component. It loads the markers on the map.
 function Markers (props) {
-  console.log('Marker props: ', props)
+  // console.log('Marker props: ', props)
 
   const { markers } = props
 
   // globalMap = useMap()
   const map = useMap()
-  console.log('map: ', map)
+  // console.log('map: ', map)
 
   if (markers.length) {
-    console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
+    // console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
     const { lat, long, id, name, description, tokenId } = markers[0]
 
     const icon = L.icon({
@@ -82,15 +94,25 @@ function Markers (props) {
 
     const pin = L.marker([lat, long], { id, icon })
     pin.addTo(map)
-    console.log('pin: ', pin)
+    // console.log('pin: ', pin)
 
-    const popUpHtml = `
-    <p><b>Name</b>: ${name}</p>
-    <p><b>Description</b>: ${description}</p>
-    <button onclick="window.handleFlagStore('${tokenId}')">Flag</button>
-    `
+    // Data to pass on to the popup React component.
+    const popupData = {
+      name,
+      description,
+      tokenId
+    }
 
-    pin.bindPopup(popUpHtml)
+    // Render the popup component as an HTML string.
+    let htmlString = ReactDOMServer.renderToString(<InfoPopup popupData={popupData} />)
+
+    // Append the buttons to the bottom. They do not render properly in the
+    // popup component, so they are added here.
+    htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagStore('${tokenId}')">Flag</button>`
+    // console.log('htmlString: ', htmlString)
+
+    // Bind the popup component to the map pin.
+    pin.bindPopup(htmlString)
   }
 
   return null
