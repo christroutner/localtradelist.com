@@ -5,19 +5,17 @@
 
 // Global npm libraries
 import React from 'react'
-import { Container, Row, Col, Modal, Spinner, Button } from 'react-bootstrap'
+import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
 
 // Local libraries
 import SspApi from '../../services/ssp-api.js'
+import MapOfStores from './map-of-stores.js'
 
 class StoreMap extends React.Component {
   constructor (props) {
-    super()
+    super(props)
 
     this.state = {
       appData: props.appData,
@@ -51,9 +49,13 @@ class StoreMap extends React.Component {
     // Generate the JSX for the modal.
     const modal = this.getModal()
 
-    // Starting coordinates
-    const latitude = 48.5979506
-    const longitude = -122.9446977
+    const mapProps = {
+      markers: this.state.markers,
+      mapCenterLat: 45.5767026,
+      mapCenterLong: -122.6437683,
+      zoom: 12
+    }
+    console.log('mapProps: ', JSON.stringify(mapProps, null, 2))
 
     return (
       <>
@@ -70,18 +72,7 @@ class StoreMap extends React.Component {
         <Container>
           <Row>
             <Col>
-              <MapContainer
-                center={[latitude, longitude]}
-                zoom={12}
-                style={{ height: '70vh' }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-                />
-
-                <Markers markers={this.state.markers} />
-              </MapContainer>
+              <MapOfStores mapObj={mapProps} />
             </Col>
             <Col>
               Loading stores from blockchain...
@@ -126,7 +117,8 @@ class StoreMap extends React.Component {
           long,
           id: 1,
           name: storeData.name,
-          description: storeData.description
+          description: storeData.description,
+          tokenId: thisStore.tokenId
         }
 
         markers.push(marker)
@@ -184,55 +176,5 @@ class StoreMap extends React.Component {
   }
 }
 
-async function handleFlagStore(event) {
-  console.log('handleFlagStore() event: ', event)
-}
-
-function Markers (props) {
-  console.log('Marker props: ', props)
-
-  const { markers } = props
-
-  const map = useMap()
-
-  if (markers.length) {
-    console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
-    const { lat, long, id, name, description } = markers[0]
-
-    const icon = L.icon({
-      iconSize: [25, 41],
-      iconAnchor: [10, 41],
-      popupAnchor: [2, -40],
-      iconUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-shadow.png'
-    })
-
-    const pin = L.marker([lat, long], { id, icon })
-    pin.addTo(map)
-    console.log('pin: ', pin)
-
-    // const popUpHtml = `
-    // <p><b>Name</b>: ${name}</p>
-    // <p><b>Description</b>: ${description}</p>
-    // `
-
-    // const popUpHtml = (
-    //   <>
-    //     <p><b>Name</b>: {name}</p>
-    //     <p><b>Description</b>: {description}</p>
-    //     <Button variant='primary' onClick={handleFlagStore}>
-    //       Flag
-    //     </Button>
-    //   </>
-    // )
-    //
-    // pin.bindPopup(popUpHtml)
-  }
-
-  return (
-    <>
-    </>
-  )
-}
 
 export default StoreMap
