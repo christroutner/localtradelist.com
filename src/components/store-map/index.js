@@ -5,14 +5,15 @@
 
 // Global npm libraries
 import React from 'react'
-import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
+import { Container, Row, Col, Modal, Spinner, Button } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// let _this
+// Local libraries
+import SspApi from '../../services/ssp-api.js'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -31,6 +32,9 @@ class StoreMap extends React.Component {
       // Map
       markers: []
     }
+
+    // Encapsulate dependecies
+    this.sspApi = new SspApi()
 
     // Bind this to event handlers
     // this.handleSweep = this.handleSweep.bind(this)
@@ -98,34 +102,42 @@ class StoreMap extends React.Component {
   // Right now this is mocked by loading a hard-coded array of token IDs.
   async loadTokens () {
     try {
-      const tokenIds = [
-        'e2d78b130bd84573b17a2a5cb1b52eaa3e95ac75a17e1ed44405ef0aefdd86e7' // Orcas Landing
-      ]
+      // Get all the stores from the ssp-api
+      const allStoreData = await this.sspApi.getAllStores()
+      console.log(`allStoreData: ${JSON.stringify(allStoreData, null, 2)}`)
 
-      const wallet = this.state.appData.wallet
+      const markers = []
 
-      const tokenData = await wallet.getTokenData2(tokenIds[0])
-      // console.log(`tokenData: ${JSON.stringify(tokenData, null, 2)}`)
+      // Loop through each store.
+      const stores = allStoreData.stores
+      for(let i=0; i < stores.length; i++) {
+        const thisStore = stores[i]
+        const storeData = thisStore.storeData
 
-      // const storeData = JSON.parse(tokenData.mutableData.jsonLd)
-      const storeData = tokenData.mutableData.jsonLd.storeData
-      console.log(`storeData: ${JSON.stringify(storeData, null, 2)}`)
+        // Skip this entry if it does not include the store data from the mutable data.
+        if(!storeData) continue
 
-      console.log('location: ', storeData.location)
-      const lat = storeData.location.geo.latitude
-      const long = storeData.location.geo.longitude
-      console.log(`lat,long: ${lat},${long}`)
+        const lat = storeData.location.geo.latitude
+        const long = storeData.location.geo.longitude
+        console.log(`lat,long: ${lat},${long}`)
 
-      const marker = {
-        lat,
-        long,
-        id: 1,
-        name: storeData.name,
-        description: storeData.description
+        const marker = {
+          lat,
+          long,
+          id: 1,
+          name: storeData.name,
+          description: storeData.description
+        }
+
+        markers.push(marker)
       }
+
+      console.log(`Updating state with these markers: ${JSON.stringify(markers, null, 2)}`)
       this.setState({
-        markers: [marker]
+        // markers: [marker]
+        markers
       })
+
     } catch (err) {
       console.error('Error in loadTokens(): ', err)
     }
@@ -172,6 +184,10 @@ class StoreMap extends React.Component {
   }
 }
 
+async function handleFlagStore(event) {
+  console.log('handleFlagStore() event: ', event)
+}
+
 function Markers (props) {
   console.log('Marker props: ', props)
 
@@ -180,6 +196,7 @@ function Markers (props) {
   const map = useMap()
 
   if (markers.length) {
+    console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
     const { lat, long, id, name, description } = markers[0]
 
     const icon = L.icon({
@@ -192,13 +209,24 @@ function Markers (props) {
 
     const pin = L.marker([lat, long], { id, icon })
     pin.addTo(map)
+    console.log('pin: ', pin)
 
-    const popUpHtml = `
-    <p><b>Name</b>: ${name}</p>
-    <p><b>Description</b>: ${description}</p>
-    `
+    // const popUpHtml = `
+    // <p><b>Name</b>: ${name}</p>
+    // <p><b>Description</b>: ${description}</p>
+    // `
 
-    pin.bindPopup(popUpHtml)
+    // const popUpHtml = (
+    //   <>
+    //     <p><b>Name</b>: {name}</p>
+    //     <p><b>Description</b>: {description}</p>
+    //     <Button variant='primary' onClick={handleFlagStore}>
+    //       Flag
+    //     </Button>
+    //   </>
+    // )
+    //
+    // pin.bindPopup(popUpHtml)
   }
 
   return (
