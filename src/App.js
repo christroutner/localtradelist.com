@@ -161,6 +161,7 @@ class App extends React.Component {
       bchWallet: this.state.bchWallet,
       wallet: this.state.bchWallet,
       bchWalletState: this.state.bchWalletState,
+      lsState: this.lsState,
 
       // Functions
       updateBchWalletState: this.updateBchWalletState,
