@@ -12,8 +12,10 @@ import ReactDOMServer from "react-dom/server";
 
 // Local libraries
 import InfoPopup from './info-popup.js'
+// import WaitingModal from '../waiting-modal'
 
 let wallet = null
+let updateModal = null
 
 function MapOfStreets (props) {
   window.handleFlagStore = handleFlagStore
@@ -22,6 +24,7 @@ function MapOfStreets (props) {
   let { markers, mapCenterLat, mapCenterLong, zoom, appData } = props.mapObj
 
   wallet = appData.wallet
+  updateModal = appData.updateModal
 
   if (!Array.isArray(markers)) markers = []
   if (!mapCenterLat) mapCenterLat = 45.5767026
@@ -54,6 +57,15 @@ async function handleFlagStore (tokenId) {
   console.log('handleFlagStore() tokenId: ', tokenId)
 
   // console.log('wallet: ', wallet)
+
+  const modalObj = {
+    showModal: true,
+    modalHeader: 'test003',
+    modalBody: ['test'],
+    hideSpinner: false,
+    denyClose: false
+  }
+  await updateModal(modalObj)
 
   const tradelistLib = new TradelistLib({wallet})
 

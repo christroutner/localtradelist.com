@@ -5,13 +5,14 @@
 
 // Global npm libraries
 import React from 'react'
-import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 
 // Local libraries
 import SspApi from '../../services/ssp-api.js'
 import MapOfStores from './map-of-stores.js'
+import WaitingModal from '../waiting-modal'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -23,9 +24,10 @@ class StoreMap extends React.Component {
 
       // Modal control
       showModal: false,
-      statusMsg: '',
-      hideSpinner: false,
-      shouldRefreshOnModalClose: false,
+      modalHeader: 'Waiting...',
+      modalBody: [], // Strings displayed in the modal
+      hideSpinner: false, // Spinner gif in modal
+      denyClose: false,
 
       // Map
       markers: []
@@ -34,11 +36,23 @@ class StoreMap extends React.Component {
     // Encapsulate dependecies
     this.sspApi = new SspApi()
 
-    // Bind this to event handlers
-    // this.handleSweep = this.handleSweep.bind(this)
-    // this.updateWalletState = this.updateWalletState.bind(this)
+    // Bind the 'this' object to subfunctions.
+    this.updateModal = this.updateModal.bind(this)
 
-    // _this = this
+  }
+
+  // This function is passed to lower-level components, so that they can directly
+  // control the waiting modal in this parent component.
+  async updateModal(inObj) {
+    const {showModal, modalHeader, modalBody, hideSpinner, denyClose} = inObj
+
+    await this.setState({
+      showModal,
+      modalHeader,
+      modalBody,
+      hideSpinner,
+      denyClose
+    })
   }
 
   async componentDidMount () {
@@ -47,7 +61,7 @@ class StoreMap extends React.Component {
 
   render () {
     // Generate the JSX for the modal.
-    const modal = this.getModal()
+    // const modal = this.getModal()
 
     const mapProps = {
       markers: this.state.markers,
@@ -56,6 +70,7 @@ class StoreMap extends React.Component {
       zoom: 12,
       appData: this.state.appData
     }
+    mapProps.appData.updateModal = this.updateModal
     console.log('mapProps: ', mapProps)
 
     return (
@@ -83,7 +98,14 @@ class StoreMap extends React.Component {
 
         {
           this.state.showModal
-            ? modal
+            ? (
+              <WaitingModal
+                heading={this.state.modalHeader}
+                body={this.state.modalBody}
+                hideSpinner={this.state.hideSpinner}
+                denyClose={this.state.denyClose}
+              />
+            )
             : null
         }
       </>
@@ -136,37 +158,37 @@ class StoreMap extends React.Component {
   }
 
   // Generate the info modal that is displayed when the button is clicked.
-  getModal () {
-    // const token = this.state.token
-    // console.log(`token: ${JSON.stringify(token, null, 2)}`)
-
-    return (
-      <Modal show={this.state.showModal} size='lg' onHide={(e) => this.handleCloseModal(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Sweeping...</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Container>
-            <Row>
-              <Col style={{ textAlign: 'center' }}>
-                Sweeping private key... {
-                  this.state.hideSpinner ? null : <Spinner animation='border' />
-                }
-              </Col>
-            </Row>
-            <br />
-
-            <Row>
-              <Col style={{ textAlign: 'center' }}>
-                {this.state.statusMsg}
-              </Col>
-            </Row>
-          </Container>
-        </Modal.Body>
-        <Modal.Footer />
-      </Modal>
-    )
-  }
+  // getModal () {
+  //   // const token = this.state.token
+  //   // console.log(`token: ${JSON.stringify(token, null, 2)}`)
+  //
+  //   return (
+  //     <Modal show={this.state.showModal} size='lg' onHide={(e) => this.handleCloseModal(this)}>
+  //       <Modal.Header closeButton>
+  //         <Modal.Title>Sweeping...</Modal.Title>
+  //       </Modal.Header>
+  //       <Modal.Body>
+  //         <Container>
+  //           <Row>
+  //             <Col style={{ textAlign: 'center' }}>
+  //               Sweeping private key... {
+  //                 this.state.hideSpinner ? null : <Spinner animation='border' />
+  //               }
+  //             </Col>
+  //           </Row>
+  //           <br />
+  //
+  //           <Row>
+  //             <Col style={{ textAlign: 'center' }}>
+  //               {this.state.statusMsg}
+  //             </Col>
+  //           </Row>
+  //         </Container>
+  //       </Modal.Body>
+  //       <Modal.Footer />
+  //     </Modal>
+  //   )
+  // }
 
   // This handler function is called when the modal is closed.
   async handleCloseModal () {
