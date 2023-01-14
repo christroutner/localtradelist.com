@@ -38,13 +38,12 @@ class StoreMap extends React.Component {
 
     // Bind the 'this' object to subfunctions.
     this.updateModal = this.updateModal.bind(this)
-
   }
 
   // This function is passed to lower-level components, so that they can directly
   // control the waiting modal in this parent component.
-  async updateModal(inObj) {
-    const {showModal, modalHeader, modalBody, hideSpinner, denyClose} = inObj
+  async updateModal (inObj) {
+    const { showModal, modalHeader, modalBody, hideSpinner, denyClose } = inObj
 
     await this.setState({
       showModal,
@@ -105,7 +104,7 @@ class StoreMap extends React.Component {
                 hideSpinner={this.state.hideSpinner}
                 denyClose={this.state.denyClose}
               />
-            )
+              )
             : null
         }
       </>

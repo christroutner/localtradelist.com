@@ -8,7 +8,7 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import TradelistLib from '@chris.troutner/tradelist-lib'
-import ReactDOMServer from "react-dom/server";
+import ReactDOMServer from 'react-dom/server'
 
 // Local libraries
 import InfoPopup from './info-popup.js'
@@ -54,32 +54,75 @@ function MapOfStreets (props) {
 // This is an onclick event handler for the button inside the pin dialog.
 // When clicked, it will call this function and pass the Token ID.
 async function handleFlagStore (tokenId) {
-  console.log('handleFlagStore() tokenId: ', tokenId)
+  try {
+    console.log('handleFlagStore() tokenId: ', tokenId)
 
-  // console.log('wallet: ', wallet)
+    // console.log('wallet: ', wallet)
 
-  const modalObj = {
-    showModal: true,
-    modalHeader: 'test003',
-    modalBody: ['test'],
-    hideSpinner: false,
-    denyClose: false
+    // Start the waiting modal
+    const modalBody = ['Publishing data to IPFS...']
+    const modalHeader = 'Flagging Store'
+    let modalObj = {
+      showModal: true,
+      modalHeader,
+      modalBody,
+      hideSpinner: false,
+      denyClose: true
+    }
+    await updateModal(modalObj)
+
+    const tradelistLib = new TradelistLib({ wallet })
+
+    const data = {
+      about: tokenId
+    }
+
+    // Instantiate the support libraries.
+    await tradelistLib.util.instantiateWrite()
+    await tradelistLib.util.instantiatePin()
+
+    // Generate flag data and pin it to IPFS.
+    const cid = await tradelistLib.util.pinJson({ data })
+    console.log('IPFS CID: ', cid)
+
+    // Update modal
+    modalBody.push('...published to IPFS pinning cluster:')
+    modalBody.push(<a href={`https://p2wdb-gateway-678.fullstack.cash/ipfs/${cid}/data.json`} target='_blank' rel='noreferrer'>{cid}</a>)
+    modalBody.push('Writing IPFS CID to BCH blockchain...')
+    modalObj = {
+      showModal: true,
+      modalHeader,
+      modalBody,
+      hideSpinner: false,
+      denyClose: true
+    }
+    await updateModal(modalObj)
+
+    // Signal success
+    modalBody.push('Flag successfully published to blockchain!')
+    modalObj = {
+      showModal: true,
+      modalHeader,
+      modalBody,
+      hideSpinner: true,
+      denyClose: false
+    }
+    await updateModal(modalObj)
+  } catch (err) {
+    // This is a top-level function. Errors must be handled and not thrown.
+
+    // Display the error in the modal
+    const modalObj = {
+      showModal: true,
+      modalHeader: 'Error Flagging Store',
+      modalBody: [err.message],
+      hideSpinner: true,
+      denyClose: false
+    }
+    await updateModal(modalObj)
+
+    console.log('Error in handleFlagStore(): ', err)
   }
-  await updateModal(modalObj)
-
-  const tradelistLib = new TradelistLib({wallet})
-
-  const data = {
-    about: tokenId
-  }
-
-  // Instantiate the support libraries.
-  // await tradelistLib.util.instantiateWrite()
-  // await tradelistLib.util.instantiatePin()
-  //
-  // // Generate flag data and pin it to IPFS.
-  // const result = await tradelistLib.util.pinJson({data})
-  // console.log('IPFS CID: ', result)
 }
 
 // This is a React function component. It loads the markers on the map.
