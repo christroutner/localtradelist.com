@@ -53,9 +53,10 @@ class StoreMap extends React.Component {
       markers: this.state.markers,
       mapCenterLat: 45.5767026,
       mapCenterLong: -122.6437683,
-      zoom: 12
+      zoom: 12,
+      appData: this.state.appData
     }
-    console.log('mapProps: ', JSON.stringify(mapProps, null, 2))
+    console.log('mapProps: ', mapProps)
 
     return (
       <>

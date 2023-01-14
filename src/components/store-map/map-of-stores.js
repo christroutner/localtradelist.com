@@ -7,14 +7,19 @@ import React from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import TradelistLib from '@chris.troutner/tradelist-lib'
 
 // Local libraries
+
+let wallet = null
 
 function MapOfStreets (props) {
   window.handleFlagStore = handleFlagStore
 
   // console.log('map-of-store2 props: ', JSON.stringify(props, null, 2))
-  let { markers, mapCenterLat, mapCenterLong, zoom } = props.mapObj
+  let { markers, mapCenterLat, mapCenterLong, zoom, appData } = props.mapObj
+
+  wallet = appData.wallet
 
   if (!Array.isArray(markers)) markers = []
   if (!mapCenterLat) mapCenterLat = 45.5767026
@@ -34,7 +39,7 @@ function MapOfStreets (props) {
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
         />
 
-        <Markers markers={markers} />
+        <Markers markers={markers} appData={appData} />
       </MapContainer>
     </>
   )
@@ -45,6 +50,12 @@ function MapOfStreets (props) {
 // When clicked, it will call this function and pass the Token ID.
 async function handleFlagStore (tokenId) {
   console.log('handleFlagStore() tokenId: ', tokenId)
+
+  console.log('wallet: ', wallet)
+
+  const tradelistLib = new TradelistLib({wallet})
+  const result = await tradelistLib.claim.createClaim({foo: 'bar'})
+  console.log('result of creating claim: ', result)
 }
 
 // This is a React function component. It loads the markers on the map.
