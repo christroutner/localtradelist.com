@@ -10,30 +10,31 @@
 import TradelistLib from '@chris.troutner/tradelist-lib'
 
 class PopupLib {
-  constructor(initObj = {}) {
+  constructor (initObj = {}) {
     // Dependency Injection
     this.updateConfirmModal = initObj.updateConfirmModal
-    if(!this.updateConfirmModal) {
+    if (!this.updateConfirmModal) {
       throw new Error('updateConfirmModal required when instantiating popup-lib.js')
     }
     this.updateWaitingModal = initObj.updateWaitingModal
-    if(!this.updateWaitingModal) {
+    if (!this.updateWaitingModal) {
       throw new Error('updateWaitingModal required when instatiating popup-lib.js')
     }
     this.wallet = initObj.wallet
-    if(!this.wallet) {
+    if (!this.wallet) {
       throw new Error('wallet instance of minimal-slp-wallet requires when instantiating popup-lib.js')
     }
 
-    // This value is passed on refresh, when the user clicks a button in a popup
+    // These values are passed on refresh, when the user clicks a button in a popup
     // bound to a pin. It contains the Token ID for the token that the pin
     // represents.
     this.confirmTokenId = null
+    this.confirmType = null
 
     // Bind the 'this' object to subfunctions.
     this.handleContinueFlag = this.handleContinueFlag.bind(this)
     this.handleCancelFlag = this.handleCancelFlag.bind(this)
-    this.flagStoreAsNsfw = this.flagStoreAsNsfw.bind(this)
+    this.flagStore = this.flagStore.bind(this)
   }
 
   // This function is called when the 'Continue' button is clicked on the
@@ -41,14 +42,22 @@ class PopupLib {
   async handleContinueFlag (event) {
     // console.log('handleContinueFlag() called')
     console.log(`handleContinueFlag() called. Token ID: ${this.confirmTokenId}`)
+    console.log(`Confirmation type: ${this.confirmType}`)
 
+    // Hide the Confirm modal.
     const modalObj = {
       showConfirmModal: false
     }
-
     await this.updateConfirmModal(modalObj)
 
-    await this.flagStoreAsNsfw(this.confirmTokenId)
+    // Determine the type of flag this is: nsfw, garbage, or other.
+    if (this.confirmType.includes('nsfw')) {
+      await this.flagStore(this.confirmTokenId, 3)
+    } else if (this.confirmType.includes('garbage')) {
+      await this.flagStore(this.confirmTokenId, 4)
+    } else {
+      throw new Error('Confirmation type could not be determined. confirmType: ', this.confirmType)
+    }
   }
 
   // This function is called when the 'Cancel' button is clicked on the
@@ -65,10 +74,10 @@ class PopupLib {
 
   // This is an onclick event handler for the button inside the pin dialog.
   // When clicked, it will call this function and pass the Token ID.
-  async flagStoreAsNsfw (tokenId) {
+  async flagStore (tokenId, flagType = 0) {
     try {
-      console.log('Entering flagStoreAsNsfw()')
-      console.log('flagStoreAsNsfw() tokenId: ', tokenId)
+      console.log('Entering flagStore()')
+      console.log('flagStore() tokenId: ', tokenId)
 
       // Start the waiting modal
       const modalBody = ['Publishing data to IPFS...']
@@ -113,7 +122,7 @@ class PopupLib {
       const opReturnObj = {
         cid,
         storeTokenId: tokenId,
-        type: 0
+        type: flagType
       }
       const hex = await tradelistLib.util.writeCidToBlockchain(opReturnObj)
 
@@ -147,7 +156,7 @@ class PopupLib {
       }
       await this.updateWaitingModal(modalObj)
 
-      console.log('Error in flagStoreAsNsfw(): ', err)
+      console.log('Error in flagStore(): ', err)
     }
   }
 }

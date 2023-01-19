@@ -38,6 +38,7 @@ class StoreMap extends React.Component {
       showConfirmModal: false,
       confirmModalBody: '',
       confirmTokenId: null,
+      confirmType: null,
 
       // Map
       markers: []
@@ -74,6 +75,7 @@ class StoreMap extends React.Component {
       appData: this.state.appData
     }
     this.popupLib.confirmTokenId = this.state.confirmTokenId
+    this.popupLib.confirmType = this.state.confirmType
     mapProps.appData.popupLib = this.popupLib
 
     console.log('mapProps: ', mapProps)
@@ -208,17 +210,16 @@ class StoreMap extends React.Component {
   // of the Confirm (Continue/Cancel) modal. It lets the child components update
   // the state of the modal and trigger a re-render.
   async updateConfirmModal (inObj) {
-    const { showConfirmModal, confirmModalBody, tokenId } = inObj
-    console.log(`updateConfirmModal() tokenId: `, tokenId)
+    const { showConfirmModal, confirmModalBody, tokenId, confirmType } = inObj
+    console.log('updateConfirmModal() tokenId: ', tokenId)
 
-    if(tokenId) {
+    if (tokenId) {
       await this.setState({
         showConfirmModal,
         confirmModalBody,
-        confirmTokenId: tokenId
+        confirmTokenId: tokenId,
+        confirmType
       })
-
-
     } else {
       await this.setState({
         showConfirmModal,
@@ -230,22 +231,6 @@ class StoreMap extends React.Component {
 
     // window.currentTokenId = tokenId
   }
-
-  // This function is called when the 'Continue' button is clicked on the
-  // Confirmation Modal.
-  // handleContinueFlag () {
-  //   console.log('handleContinueFlag() called')
-  // }
-
-  // This function is called when the 'Cancel' button is clicked on the
-  // Confirmation Modal.
-  // handleCancelFlag () {
-  //   console.log('handleCancelFlag() called')
-  //
-  //   this.setState({
-  //     showConfirmModal: false
-  //   })
-  // }
 
   // END CONFIRMATION MODAL
 }

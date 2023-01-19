@@ -87,7 +87,8 @@ async function handleFlagNsfw (tokenId) {
     const confirmModalObj = {
       showConfirmModal: true,
       confirmModalBody,
-      tokenId
+      tokenId,
+      confirmType: 'nsfw'
     }
 
     await updateConfirmModal(confirmModalObj)
@@ -115,13 +116,13 @@ async function handleFlagGarbage (tokenId) {
 
   const confirmModalObj = {
     showConfirmModal: true,
-    confirmModalBody
+    confirmModalBody,
+    tokenId,
+    confirmType: 'garbage'
   }
 
   await updateConfirmModal(confirmModalObj)
 }
-
-
 
 // This is a React function component. It loads the markers on the map.
 function Markers (props) {
