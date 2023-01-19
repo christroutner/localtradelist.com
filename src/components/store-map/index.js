@@ -143,8 +143,8 @@ class StoreMap extends React.Component {
             ? (
               <ModalConfirm
                 heading='Flag NSWF'
-                handleContinue={this.handleContinueFlag}
-                handleCancel={this.handleCancelFlag}
+                onContinue={this.handleContinueFlag}
+                onCancel={this.handleCancelFlag}
                 body={this.state.confirmModalBody}
               />
               )

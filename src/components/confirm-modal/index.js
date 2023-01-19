@@ -5,11 +5,12 @@
 */
 
 // Global npm libraries
-import React, { useState } from 'react'
+import React from 'react'
+// import React, { useState } from 'react'
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap'
 
 function ModalContinueCancel (props) {
-  const [show, setShow] = useState(true)
+  // const [show, setShow] = useState(true)
 
   const handleClose = () => {
     props.handleCancel()
@@ -18,7 +19,7 @@ function ModalContinueCancel (props) {
   // const handleShow = () => setShow(true)
 
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>{props.heading}</Modal.Title>
       </Modal.Header>
@@ -31,10 +32,10 @@ function ModalContinueCancel (props) {
           </Row>
           <Row style={{ textAlign: 'center' }}>
             <Col>
-              <Button onClick={props.handleCancel}>Cancel</Button>
+              <Button onClick={props.onCancel}>Cancel</Button>
             </Col>
             <Col>
-              <Button onClick={props.handleContinue}>Continue</Button>
+              <Button onClick={props.onContinue}>Continue</Button>
             </Col>
           </Row>
         </Container>
