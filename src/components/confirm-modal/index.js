@@ -10,13 +10,12 @@ import React from 'react'
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap'
 
 function ModalContinueCancel (props) {
-  // const [show, setShow] = useState(true)
 
+  // Closing this modal is the same as clicking the Cancel button.
   const handleClose = () => {
-    props.handleCancel()
+    props.onCancel()
   }
 
-  // const handleShow = () => setShow(true)
 
   return (
     <Modal show onHide={handleClose}>

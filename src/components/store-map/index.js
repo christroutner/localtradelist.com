@@ -17,6 +17,7 @@ import SspApi from '../../services/ssp-api.js'
 import MapOfStores from './map-of-stores.js'
 import WaitingModal from '../waiting-modal'
 import ModalConfirm from '../confirm-modal'
+import PopupLib from './popup-lib.js'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -41,14 +42,17 @@ class StoreMap extends React.Component {
       markers: []
     }
 
-    // Encapsulate dependecies
-    this.sspApi = new SspApi()
-
     // Bind the 'this' object to subfunctions.
     this.updateModal = this.updateModal.bind(this)
     this.updateConfirmModal = this.updateConfirmModal.bind(this)
-    this.handleContinueFlag = this.handleContinueFlag.bind(this)
-    this.handleCancelFlag = this.handleCancelFlag.bind(this)
+    // this.handleContinueFlag = this.handleContinueFlag.bind(this)
+    // this.handleCancelFlag = this.handleCancelFlag.bind(this)
+
+    // Encapsulate dependecies
+    this.sspApi = new SspApi()
+    this.popupLib = new PopupLib({
+      updateConfirmModal: this.updateConfirmModal
+    })
   }
 
   async componentDidMount () {
@@ -68,6 +72,7 @@ class StoreMap extends React.Component {
     }
     mapProps.appData.updateModal = this.updateModal
     mapProps.appData.updateConfirmModal = this.updateConfirmModal
+    mapProps.appData.popupLib = this.popupLib
     console.log('mapProps: ', mapProps)
 
     return (
@@ -111,8 +116,8 @@ class StoreMap extends React.Component {
             ? (
               <ModalConfirm
                 heading='Flag NSWF'
-                onContinue={this.handleContinueFlag}
-                onCancel={this.handleCancelFlag}
+                onContinue={this.popupLib.handleContinueFlag}
+                onCancel={this.popupLib.handleCancelFlag}
                 body={this.state.confirmModalBody}
               />
               )
@@ -209,19 +214,19 @@ class StoreMap extends React.Component {
 
   // This function is called when the 'Continue' button is clicked on the
   // Confirmation Modal.
-  handleContinueFlag () {
-    console.log('handleContinueFlag() called')
-  }
+  // handleContinueFlag () {
+  //   console.log('handleContinueFlag() called')
+  // }
 
   // This function is called when the 'Cancel' button is clicked on the
   // Confirmation Modal.
-  handleCancelFlag () {
-    console.log('handleCancelFlag() called')
-
-    this.setState({
-      showConfirmModal: false
-    })
-  }
+  // handleCancelFlag () {
+  //   console.log('handleCancelFlag() called')
+  //
+  //   this.setState({
+  //     showConfirmModal: false
+  //   })
+  // }
 
   // END CONFIRMATION MODAL
 }

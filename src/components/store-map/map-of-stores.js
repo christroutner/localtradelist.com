@@ -22,6 +22,7 @@ import InfoPopup from './popup-component.js'
 let wallet = null
 let updateModal = null
 let updateConfirmModal = null
+let popupLib = null
 
 function MapOfStreets (props) {
   // Attach the button handlers to the window object, so that they can be called
@@ -37,6 +38,7 @@ function MapOfStreets (props) {
   wallet = appData.wallet
   updateModal = appData.updateModal
   updateConfirmModal = appData.updateConfirmModal
+  popupLib = appData.popupLib
 
   // Default settings for map, if they are not overwritten by parent component.
   if (!Array.isArray(markers)) markers = []
