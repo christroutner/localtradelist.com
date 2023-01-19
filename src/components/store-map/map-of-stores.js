@@ -3,7 +3,7 @@
 */
 
 // Global npm libraries
-import React from 'react'
+import React, { useState } from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -12,19 +12,31 @@ import ReactDOMServer from 'react-dom/server'
 
 // Local libraries
 import InfoPopup from './info-popup.js'
+// import ModalContinueCancel from '../confirm-modal'
 // import WaitingModal from '../waiting-modal'
 
+// Placeholders. These will be replaced by parent-level data passed in by props.
 let wallet = null
 let updateModal = null
+let updateConfirmModal = null
+
+// Continue Cancel modal variables
+// let globalSetShowContinueCancelModal = null
 
 function MapOfStreets (props) {
   window.handleFlagStore = handleFlagStore
 
+  // State for Continue/Cancel modal
+  // const [showContinueCancelModal, setShowContinueCancelModal] = useState(false)
+  // globalSetShowContinueCancelModal = setShowContinueCancelModal
+
   // console.log('map-of-store2 props: ', JSON.stringify(props, null, 2))
   let { markers, mapCenterLat, mapCenterLong, zoom, appData } = props.mapObj
 
+  // Extract parent-level functions from the appData.
   wallet = appData.wallet
   updateModal = appData.updateModal
+  updateConfirmModal = appData.updateConfirmModal
 
   if (!Array.isArray(markers)) markers = []
   if (!mapCenterLat) mapCenterLat = 45.5767026
@@ -46,14 +58,39 @@ function MapOfStreets (props) {
 
         <Markers markers={markers} appData={appData} />
       </MapContainer>
+
     </>
   )
   // }
 }
 
+async function handleFlagStore(tokenId) {
+  try {
+    console.log('handleFlagStore() called')
+    // showContinueCancelModal = true
+    // globalSetShowContinueCancelModal(true)
+
+    const confirmModalObj = {
+      showConfirmModal: true
+    }
+
+    await updateConfirmModal(confirmModalObj)
+  } catch(err) {
+    console.log('Error in handleFlagStore(): ', err)
+  }
+}
+
+// function handleContinueFlag() {
+//   console.log('Continue button clicked!')
+// }
+
+// function handleCancelFlag() {
+//   console.log('Cancel button clicked!')
+// }
+
 // This is an onclick event handler for the button inside the pin dialog.
 // When clicked, it will call this function and pass the Token ID.
-async function handleFlagStore (tokenId) {
+async function handleFlagStore2 (tokenId) {
   try {
     console.log('handleFlagStore() tokenId: ', tokenId)
 
@@ -97,6 +134,21 @@ async function handleFlagStore (tokenId) {
       denyClose: true
     }
     await updateModal(modalObj)
+
+    // Generate the OP_RETURN TX for a claim
+    const opReturnObj = {
+      cid,
+      storeTokenId: tokenId,
+      type: 0
+    }
+    const hex = await tradelistLib.util.writeCidToBlockchain(opReturnObj)
+
+    // Broadcast the transaction
+    const txid = await wallet.broadcast(hex)
+
+    modalBody.push('Claim written to blockchain. TXID:')
+    modalBody.push(<a href={`https://blockchair.com/bitcoin-cash/transaction/${txid}`} target='_blank' rel='noreferrer'>{txid}</a>)
+    modalBody.push(' ')
 
     // Signal success
     modalBody.push('Flag successfully published to blockchain!')

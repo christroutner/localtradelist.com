@@ -13,6 +13,7 @@ import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 import SspApi from '../../services/ssp-api.js'
 import MapOfStores from './map-of-stores.js'
 import WaitingModal from '../waiting-modal'
+import ModalConfirm from '../confirm-modal'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -22,12 +23,15 @@ class StoreMap extends React.Component {
       appData: props.appData,
       wifToSweep: '',
 
-      // Modal control
+      // Waiting modal control
       showModal: false,
       modalHeader: 'Waiting...',
       modalBody: [], // Strings displayed in the modal
       hideSpinner: false, // Spinner gif in modal
       denyClose: false,
+
+      // Continue/Cancel Modal control
+      showConfirmModal: false,
 
       // Map
       markers: []
@@ -38,6 +42,9 @@ class StoreMap extends React.Component {
 
     // Bind the 'this' object to subfunctions.
     this.updateModal = this.updateModal.bind(this)
+    this.updateConfirmModal = this.updateConfirmModal.bind(this)
+    this.handleContinueFlag = this.handleContinueFlag.bind(this)
+    this.handleCancelFlag = this.handleCancelFlag.bind(this)
   }
 
   // This function is passed to lower-level components, so that they can directly
@@ -51,6 +58,14 @@ class StoreMap extends React.Component {
       modalBody,
       hideSpinner,
       denyClose
+    })
+  }
+
+  async updateConfirmModal(inObj) {
+    const { showConfirmModal } = inObj
+
+    await this.setState({
+      showConfirmModal
     })
   }
 
@@ -70,7 +85,20 @@ class StoreMap extends React.Component {
       appData: this.state.appData
     }
     mapProps.appData.updateModal = this.updateModal
+    mapProps.appData.updateConfirmModal = this.updateConfirmModal
     console.log('mapProps: ', mapProps)
+
+    const confirmModalBody = (
+      <>
+        <p>
+          Are you sure you want to flag this store as 'Not Safe For Work' (NSFW)?
+        </p>
+        <p>
+          Continuing will write the flag to the Bitcoin Cash blockchain. It will
+          cost a few cents in BCH and it will take a few minutes.
+        </p>
+      </>
+    )
 
     return (
       <>
@@ -107,8 +135,33 @@ class StoreMap extends React.Component {
               )
             : null
         }
+
+        {
+          this.state.showConfirmModal
+            ? (
+              <ModalConfirm
+                heading="Flag NSWF"
+                handleContinue={this.handleContinueFlag}
+                handleCancel={this.handleCancelFlag}
+                body={confirmModalBody}
+              />
+            )
+            : null
+        }
       </>
     )
+  }
+
+  handleContinueFlag() {
+    console.log('handleContinueFlag() called')
+  }
+
+  handleCancelFlag() {
+    console.log('handleCancelFlag() called')
+
+    this.setState({
+      showConfirmModal: false
+    })
   }
 
   // Load the tokens from the blockchain.
