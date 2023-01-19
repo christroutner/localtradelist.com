@@ -1,6 +1,9 @@
 /*
-  This Sweep component allows users to sweep a private key and transfer any
-  BCH or SLP tokens into their wallet.
+  This is the top-level parent component for the store-map View.
+
+  It contains a lot of state that it manages for parent children components.
+  That is why this top-level component is a Class component and not a Function
+  component.
 */
 
 // Global npm libraries
@@ -48,29 +51,6 @@ class StoreMap extends React.Component {
     this.handleCancelFlag = this.handleCancelFlag.bind(this)
   }
 
-  // This function is passed to lower-level components, so that they can directly
-  // control the waiting modal in this parent component.
-  async updateModal (inObj) {
-    const { showModal, modalHeader, modalBody, hideSpinner, denyClose } = inObj
-
-    await this.setState({
-      showModal,
-      modalHeader,
-      modalBody,
-      hideSpinner,
-      denyClose
-    })
-  }
-
-  async updateConfirmModal (inObj) {
-    const { showConfirmModal, confirmModalBody } = inObj
-
-    await this.setState({
-      showConfirmModal,
-      confirmModalBody
-    })
-  }
-
   async componentDidMount () {
     await this.loadTokens()
   }
@@ -89,18 +69,6 @@ class StoreMap extends React.Component {
     mapProps.appData.updateModal = this.updateModal
     mapProps.appData.updateConfirmModal = this.updateConfirmModal
     console.log('mapProps: ', mapProps)
-
-    // const confirmModalBody = (
-    //   <>
-    //     <p>
-    //       Are you sure you want to flag this store as 'Not Safe For Work' (NSFW)?
-    //     </p>
-    //     <p>
-    //       Continuing will write the flag to the Bitcoin Cash blockchain. It will
-    //       cost a few cents in BCH and it will take a few minutes.
-    //     </p>
-    //   </>
-    // )
 
     return (
       <>
@@ -154,20 +122,9 @@ class StoreMap extends React.Component {
     )
   }
 
-  handleContinueFlag () {
-    console.log('handleContinueFlag() called')
-  }
-
-  handleCancelFlag () {
-    console.log('handleCancelFlag() called')
-
-    this.setState({
-      showConfirmModal: false
-    })
-  }
-
-  // Load the tokens from the blockchain.
-  // Right now this is mocked by loading a hard-coded array of token IDs.
+  // This function is called when the component is loaded, from componentDidMount()
+  // It loads the tokens from the blockchain, retrieves their mutable data,
+  // and generates a pin on the map if the token has lat and long coordinates.
   async loadTokens () {
     try {
       // Get all the stores from the ssp-api
@@ -211,12 +168,62 @@ class StoreMap extends React.Component {
     }
   }
 
+  // BEGIN WAITING MODAL
+
   // This handler function is called when the modal is closed.
   async handleCloseModal () {
     this.setState({
       showModal: false
     })
   }
+
+  // This function is passed to lower-level components, so that they can directly
+  // control the waiting modal in this parent component.
+  async updateModal (inObj) {
+    const { showModal, modalHeader, modalBody, hideSpinner, denyClose } = inObj
+
+    await this.setState({
+      showModal,
+      modalHeader,
+      modalBody,
+      hideSpinner,
+      denyClose
+    })
+  }
+
+  // END WAITING MODAL
+
+  // BEGIN CONFIRMATION MODAL
+
+  // This function is passed to child components in order to control the showing
+  // of the Confirm (Continue/Cancel) modal. It lets the child components update
+  // the state of the modal and trigger a re-render.
+  async updateConfirmModal (inObj) {
+    const { showConfirmModal, confirmModalBody } = inObj
+
+    await this.setState({
+      showConfirmModal,
+      confirmModalBody
+    })
+  }
+
+  // This function is called when the 'Continue' button is clicked on the
+  // Confirmation Modal.
+  handleContinueFlag () {
+    console.log('handleContinueFlag() called')
+  }
+
+  // This function is called when the 'Cancel' button is clicked on the
+  // Confirmation Modal.
+  handleCancelFlag () {
+    console.log('handleCancelFlag() called')
+
+    this.setState({
+      showConfirmModal: false
+    })
+  }
+
+  // END CONFIRMATION MODAL
 }
 
 export default StoreMap

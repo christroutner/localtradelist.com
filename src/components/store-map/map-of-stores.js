@@ -1,5 +1,9 @@
 /*
   This function component will render the leaflet map.
+  It is passed an array of markers by the parent component and generates pins
+  on the map to represent those markers. It also attaches popups to each pin,
+  and wires up the Confirmation and Waiting modals for the buttons inside
+  those popups.
 */
 
 // Global npm libraries
@@ -12,27 +16,21 @@ import TradelistLib from '@chris.troutner/tradelist-lib'
 import ReactDOMServer from 'react-dom/server'
 
 // Local libraries
-import InfoPopup from './info-popup.js'
-// import ModalContinueCancel from '../confirm-modal'
-// import WaitingModal from '../waiting-modal'
+import InfoPopup from './popup-component.js'
 
 // Placeholders. These will be replaced by parent-level data passed in by props.
 let wallet = null
 let updateModal = null
 let updateConfirmModal = null
 
-// Continue Cancel modal variables
-// let globalSetShowContinueCancelModal = null
-
 function MapOfStreets (props) {
+  // Attach the button handlers to the window object, so that they can be called
+  // outside of the context of this component. This is needed as a hack for
+  // working with leaflet and react-leaflet.
   window.handleFlagStore = handleFlagStore
   window.handleFlagGarbage = handleFlagGarbage
 
-  // State for Continue/Cancel modal
-  // const [showContinueCancelModal, setShowContinueCancelModal] = useState(false)
-  // globalSetShowContinueCancelModal = setShowContinueCancelModal
-
-  // console.log('map-of-store2 props: ', JSON.stringify(props, null, 2))
+  // Data passed from the parent component.
   let { markers, mapCenterLat, mapCenterLong, zoom, appData } = props.mapObj
 
   // Extract parent-level functions from the appData.
@@ -40,6 +38,7 @@ function MapOfStreets (props) {
   updateModal = appData.updateModal
   updateConfirmModal = appData.updateConfirmModal
 
+  // Default settings for map, if they are not overwritten by parent component.
   if (!Array.isArray(markers)) markers = []
   if (!mapCenterLat) mapCenterLat = 45.5767026
   if (!mapCenterLong) mapCenterLong = -122.6437683
@@ -60,13 +59,11 @@ function MapOfStreets (props) {
 
         <Markers markers={markers} appData={appData} />
       </MapContainer>
-
     </>
   )
-  // }
 }
 
-// This function is called when the 'NSWF' flag button is clicked.
+// This function is called when the 'NSFW' flag button is clicked.
 async function handleFlagStore (tokenId) {
   try {
     console.log('handleFlagStore() called')
@@ -120,14 +117,6 @@ async function handleFlagGarbage (tokenId) {
 
   await updateConfirmModal(confirmModalObj)
 }
-
-// function handleContinueFlag() {
-//   console.log('Continue button clicked!')
-// }
-
-// function handleCancelFlag() {
-//   console.log('Cancel button clicked!')
-// }
 
 // This is an onclick event handler for the button inside the pin dialog.
 // When clicked, it will call this function and pass the Token ID.
