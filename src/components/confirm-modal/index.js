@@ -12,16 +12,6 @@ function ModalContinueCancel (props) {
   const [show, setShow] = useState(true)
 
   const handleClose = () => {
-    // Refuse to close the modal if denyClose is set.
-    // console.log(`props.denyClose: ${props.denyClose}`)
-    // if (props.denyClose) return
-
-    // setShow(false)
-
-    // if (props.closeFunc) {
-    //   props.closeFunc()
-    // }
-
     props.handleCancel()
   }
 
@@ -53,29 +43,6 @@ function ModalContinueCancel (props) {
     </Modal>
   )
 }
-
-// <BodyList body={props.body} />
-// {props.hideSpinner ? null : <Spinner animation='border' />}
-
-// function BodyList (props) {
-//   const items = props.body
-//
-//   const listItems = []
-//
-//   // Paragraphs
-//   for (let i = 0; i < items.length; i++) {
-//     // Generate a unique key for each entry.
-//     const rndNum = Math.floor(Math.random() * 1000)
-//     const key = `${items[i].toString()}${rndNum}`
-//     // console.log(`Dialog key: ${key}`)
-//
-//     listItems.push(<p key={key}><code>{items[i]}</code></p>)
-//   }
-//
-//   return (
-//     listItems
-//   )
-// }
 
 // export default WaitingModal
 export default ModalContinueCancel

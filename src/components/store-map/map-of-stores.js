@@ -25,6 +25,7 @@ let updateConfirmModal = null
 
 function MapOfStreets (props) {
   window.handleFlagStore = handleFlagStore
+  window.handleFlagGarbage = handleFlagGarbage
 
   // State for Continue/Cancel modal
   // const [showContinueCancelModal, setShowContinueCancelModal] = useState(false)
@@ -64,20 +65,59 @@ function MapOfStreets (props) {
   // }
 }
 
-async function handleFlagStore(tokenId) {
+// This function is called when the 'NSWF' flag button is clicked.
+async function handleFlagStore (tokenId) {
   try {
     console.log('handleFlagStore() called')
     // showContinueCancelModal = true
     // globalSetShowContinueCancelModal(true)
 
+    const confirmModalBody = (
+      <>
+        <p>
+          Are you sure you want to flag this store as 'Not Safe For Work' (NSFW)?
+        </p>
+        <p>
+          Continuing will write the flag to the Bitcoin Cash blockchain. It will
+          cost a few cents in BCH and it will take a few minutes.
+        </p>
+      </>
+    )
+
     const confirmModalObj = {
-      showConfirmModal: true
+      showConfirmModal: true,
+      confirmModalBody
     }
 
     await updateConfirmModal(confirmModalObj)
-  } catch(err) {
+  } catch (err) {
     console.log('Error in handleFlagStore(): ', err)
   }
+}
+
+// This function is called when the 'Garbage' flag button is clicked.
+async function handleFlagGarbage (tokenId) {
+  console.log(`handleFlagGarbage() called for token ${tokenId}`)
+
+  const confirmModalBody = (
+    <>
+      <p>
+        Are you sure you want to flag this store as 'Garbage'? This indicates
+        that the store provides no value.
+      </p>
+      <p>
+        Continuing will write the flag to the Bitcoin Cash blockchain. It will
+        cost a few cents in BCH and it will take a few minutes.
+      </p>
+    </>
+  )
+
+  const confirmModalObj = {
+    showConfirmModal: true,
+    confirmModalBody
+  }
+
+  await updateConfirmModal(confirmModalObj)
 }
 
 // function handleContinueFlag() {
@@ -215,7 +255,7 @@ function Markers (props) {
 
     // Append the buttons to the bottom. They do not render properly in the
     // popup component, so they are added here.
-    htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagStore('${tokenId}')">Flag</button>`
+    htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagStore('${tokenId}')">NSFW</button> <buttontype="button" class="btn btn-primary" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>`
     // console.log('htmlString: ', htmlString)
 
     // Bind the popup component to the map pin.

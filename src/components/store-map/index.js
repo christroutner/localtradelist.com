@@ -30,8 +30,9 @@ class StoreMap extends React.Component {
       hideSpinner: false, // Spinner gif in modal
       denyClose: false,
 
-      // Continue/Cancel Modal control
+      // Continue/Cancel Confirmation Modal control
       showConfirmModal: false,
+      confirmModalBody: '',
 
       // Map
       markers: []
@@ -61,11 +62,12 @@ class StoreMap extends React.Component {
     })
   }
 
-  async updateConfirmModal(inObj) {
-    const { showConfirmModal } = inObj
+  async updateConfirmModal (inObj) {
+    const { showConfirmModal, confirmModalBody } = inObj
 
     await this.setState({
-      showConfirmModal
+      showConfirmModal,
+      confirmModalBody
     })
   }
 
@@ -88,17 +90,17 @@ class StoreMap extends React.Component {
     mapProps.appData.updateConfirmModal = this.updateConfirmModal
     console.log('mapProps: ', mapProps)
 
-    const confirmModalBody = (
-      <>
-        <p>
-          Are you sure you want to flag this store as 'Not Safe For Work' (NSFW)?
-        </p>
-        <p>
-          Continuing will write the flag to the Bitcoin Cash blockchain. It will
-          cost a few cents in BCH and it will take a few minutes.
-        </p>
-      </>
-    )
+    // const confirmModalBody = (
+    //   <>
+    //     <p>
+    //       Are you sure you want to flag this store as 'Not Safe For Work' (NSFW)?
+    //     </p>
+    //     <p>
+    //       Continuing will write the flag to the Bitcoin Cash blockchain. It will
+    //       cost a few cents in BCH and it will take a few minutes.
+    //     </p>
+    //   </>
+    // )
 
     return (
       <>
@@ -140,23 +142,23 @@ class StoreMap extends React.Component {
           this.state.showConfirmModal
             ? (
               <ModalConfirm
-                heading="Flag NSWF"
+                heading='Flag NSWF'
                 handleContinue={this.handleContinueFlag}
                 handleCancel={this.handleCancelFlag}
-                body={confirmModalBody}
+                body={this.state.confirmModalBody}
               />
-            )
+              )
             : null
         }
       </>
     )
   }
 
-  handleContinueFlag() {
+  handleContinueFlag () {
     console.log('handleContinueFlag() called')
   }
 
-  handleCancelFlag() {
+  handleCancelFlag () {
     console.log('handleCancelFlag() called')
 
     this.setState({
@@ -208,39 +210,6 @@ class StoreMap extends React.Component {
       console.error('Error in loadTokens(): ', err)
     }
   }
-
-  // Generate the info modal that is displayed when the button is clicked.
-  // getModal () {
-  //   // const token = this.state.token
-  //   // console.log(`token: ${JSON.stringify(token, null, 2)}`)
-  //
-  //   return (
-  //     <Modal show={this.state.showModal} size='lg' onHide={(e) => this.handleCloseModal(this)}>
-  //       <Modal.Header closeButton>
-  //         <Modal.Title>Sweeping...</Modal.Title>
-  //       </Modal.Header>
-  //       <Modal.Body>
-  //         <Container>
-  //           <Row>
-  //             <Col style={{ textAlign: 'center' }}>
-  //               Sweeping private key... {
-  //                 this.state.hideSpinner ? null : <Spinner animation='border' />
-  //               }
-  //             </Col>
-  //           </Row>
-  //           <br />
-  //
-  //           <Row>
-  //             <Col style={{ textAlign: 'center' }}>
-  //               {this.state.statusMsg}
-  //             </Col>
-  //           </Row>
-  //         </Container>
-  //       </Modal.Body>
-  //       <Modal.Footer />
-  //     </Modal>
-  //   )
-  // }
 
   // This handler function is called when the modal is closed.
   async handleCloseModal () {
