@@ -37,13 +37,14 @@ class StoreMap extends React.Component {
       // Continue/Cancel Confirmation Modal control
       showConfirmModal: false,
       confirmModalBody: '',
+      confirmTokenId: null,
 
       // Map
       markers: []
     }
 
     // Bind the 'this' object to subfunctions.
-    this.updateModal = this.updateModal.bind(this)
+    this.updateWaitingModal = this.updateWaitingModal.bind(this)
     this.updateConfirmModal = this.updateConfirmModal.bind(this)
     // this.handleContinueFlag = this.handleContinueFlag.bind(this)
     // this.handleCancelFlag = this.handleCancelFlag.bind(this)
@@ -51,7 +52,9 @@ class StoreMap extends React.Component {
     // Encapsulate dependecies
     this.sspApi = new SspApi()
     this.popupLib = new PopupLib({
-      updateConfirmModal: this.updateConfirmModal
+      updateConfirmModal: this.updateConfirmModal,
+      updateWaitingModal: this.updateWaitingModal,
+      wallet: props.appData.wallet
     })
   }
 
@@ -70,9 +73,9 @@ class StoreMap extends React.Component {
       zoom: 12,
       appData: this.state.appData
     }
-    mapProps.appData.updateModal = this.updateModal
-    mapProps.appData.updateConfirmModal = this.updateConfirmModal
+    this.popupLib.confirmTokenId = this.state.confirmTokenId
     mapProps.appData.popupLib = this.popupLib
+
     console.log('mapProps: ', mapProps)
 
     return (
@@ -177,6 +180,7 @@ class StoreMap extends React.Component {
 
   // This handler function is called when the modal is closed.
   async handleCloseModal () {
+    console.log('handleCloseModal() called')
     this.setState({
       showModal: false
     })
@@ -184,7 +188,7 @@ class StoreMap extends React.Component {
 
   // This function is passed to lower-level components, so that they can directly
   // control the waiting modal in this parent component.
-  async updateModal (inObj) {
+  async updateWaitingModal (inObj) {
     const { showModal, modalHeader, modalBody, hideSpinner, denyClose } = inObj
 
     await this.setState({
@@ -204,12 +208,27 @@ class StoreMap extends React.Component {
   // of the Confirm (Continue/Cancel) modal. It lets the child components update
   // the state of the modal and trigger a re-render.
   async updateConfirmModal (inObj) {
-    const { showConfirmModal, confirmModalBody } = inObj
+    const { showConfirmModal, confirmModalBody, tokenId } = inObj
+    console.log(`updateConfirmModal() tokenId: `, tokenId)
 
-    await this.setState({
-      showConfirmModal,
-      confirmModalBody
-    })
+    if(tokenId) {
+      await this.setState({
+        showConfirmModal,
+        confirmModalBody,
+        confirmTokenId: tokenId
+      })
+
+
+    } else {
+      await this.setState({
+        showConfirmModal,
+        confirmModalBody
+      })
+    }
+
+    console.log('this.state.confirmTokenId: ', this.state.confirmTokenId)
+
+    // window.currentTokenId = tokenId
   }
 
   // This function is called when the 'Continue' button is clicked on the

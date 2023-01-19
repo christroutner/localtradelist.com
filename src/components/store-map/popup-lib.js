@@ -6,6 +6,9 @@
   instance of it is passed to the child components through props.
 */
 
+// Global npm libraries
+import TradelistLib from '@chris.troutner/tradelist-lib'
+
 class PopupLib {
   constructor(initObj = {}) {
     // Dependency Injection
@@ -13,22 +16,39 @@ class PopupLib {
     if(!this.updateConfirmModal) {
       throw new Error('updateConfirmModal required when instantiating popup-lib.js')
     }
-    // this.updateWaitingModal = initObj.updateWaitingModal
-    // if(!this.updateWaitingModal) {
-    //   throw new Error('updateWaitingModal required when instatiating popup-lib.js')
-    // }
+    this.updateWaitingModal = initObj.updateWaitingModal
+    if(!this.updateWaitingModal) {
+      throw new Error('updateWaitingModal required when instatiating popup-lib.js')
+    }
+    this.wallet = initObj.wallet
+    if(!this.wallet) {
+      throw new Error('wallet instance of minimal-slp-wallet requires when instantiating popup-lib.js')
+    }
+
+    // This value is passed on refresh, when the user clicks a button in a popup
+    // bound to a pin. It contains the Token ID for the token that the pin
+    // represents.
+    this.confirmTokenId = null
 
     // Bind the 'this' object to subfunctions.
-    // this.updateModal = this.updateModal.bind(this)
-    // this.updateConfirmModal = this.updateConfirmModal.bind(this)
     this.handleContinueFlag = this.handleContinueFlag.bind(this)
     this.handleCancelFlag = this.handleCancelFlag.bind(this)
+    this.flagStoreAsNsfw = this.flagStoreAsNsfw.bind(this)
   }
 
   // This function is called when the 'Continue' button is clicked on the
   // Confirmation Modal.
-  handleContinueFlag () {
-    console.log('handleContinueFlag() called')
+  async handleContinueFlag (event) {
+    // console.log('handleContinueFlag() called')
+    console.log(`handleContinueFlag() called. Token ID: ${this.confirmTokenId}`)
+
+    const modalObj = {
+      showConfirmModal: false
+    }
+
+    await this.updateConfirmModal(modalObj)
+
+    await this.flagStoreAsNsfw(this.confirmTokenId)
   }
 
   // This function is called when the 'Cancel' button is clicked on the
@@ -41,6 +61,94 @@ class PopupLib {
     }
 
     this.updateConfirmModal(modalObj)
+  }
+
+  // This is an onclick event handler for the button inside the pin dialog.
+  // When clicked, it will call this function and pass the Token ID.
+  async flagStoreAsNsfw (tokenId) {
+    try {
+      console.log('Entering flagStoreAsNsfw()')
+      console.log('flagStoreAsNsfw() tokenId: ', tokenId)
+
+      // Start the waiting modal
+      const modalBody = ['Publishing data to IPFS...']
+      const modalHeader = 'Flagging Store As NSFW'
+      let modalObj = {
+        showModal: true,
+        modalHeader,
+        modalBody,
+        hideSpinner: false,
+        denyClose: true
+      }
+      await this.updateWaitingModal(modalObj)
+
+      const tradelistLib = new TradelistLib({ wallet: this.wallet })
+
+      const data = {
+        about: tokenId
+      }
+
+      // Instantiate the support libraries.
+      await tradelistLib.util.instantiateWrite()
+      await tradelistLib.util.instantiatePin()
+
+      // Generate flag data and pin it to IPFS.
+      const cid = await tradelistLib.util.pinJson({ data })
+      console.log('IPFS CID: ', cid)
+
+      // Update modal
+      modalBody.push('...published to IPFS pinning cluster:')
+      modalBody.push(<a href={`https://p2wdb-gateway-678.fullstack.cash/ipfs/${cid}/data.json`} target='_blank' rel='noreferrer'>{cid}</a>)
+      modalBody.push('Writing IPFS CID to BCH blockchain...')
+      modalObj = {
+        showModal: true,
+        modalHeader,
+        modalBody,
+        hideSpinner: false,
+        denyClose: true
+      }
+      await this.updateWaitingModal(modalObj)
+
+      // Generate the OP_RETURN TX for a claim
+      const opReturnObj = {
+        cid,
+        storeTokenId: tokenId,
+        type: 0
+      }
+      const hex = await tradelistLib.util.writeCidToBlockchain(opReturnObj)
+
+      // Broadcast the transaction
+      const txid = await this.wallet.broadcast(hex)
+
+      modalBody.push('Claim written to blockchain. TXID:')
+      modalBody.push(<a href={`https://blockchair.com/bitcoin-cash/transaction/${txid}`} target='_blank' rel='noreferrer'>{txid}</a>)
+      modalBody.push(' ')
+
+      // Signal success
+      modalBody.push('Flag successfully published to blockchain!')
+      modalObj = {
+        showModal: true,
+        modalHeader,
+        modalBody,
+        hideSpinner: true,
+        denyClose: false
+      }
+      await this.updateWaitingModal(modalObj)
+    } catch (err) {
+      // This is a top-level function. Errors must be handled and not thrown.
+
+      // Display the error in the modal
+      const modalObj = {
+        showModal: true,
+        modalHeader: 'Error Flagging Store',
+        modalBody: [err.message],
+        hideSpinner: true,
+        denyClose: false
+      }
+      await this.updateWaitingModal(modalObj)
+
+      console.log('Error in flagStoreAsNsfw(): ', err)
+    }
   }
 }
 

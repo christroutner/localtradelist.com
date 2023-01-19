@@ -12,15 +12,15 @@ import React from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import TradelistLib from '@chris.troutner/tradelist-lib'
+
 import ReactDOMServer from 'react-dom/server'
 
 // Local libraries
 import InfoPopup from './popup-component.js'
 
 // Placeholders. These will be replaced by parent-level data passed in by props.
-let wallet = null
-let updateModal = null
+// let wallet = null
+// let updateWaitingModal = null
 let updateConfirmModal = null
 let popupLib = null
 
@@ -28,24 +28,24 @@ function MapOfStreets (props) {
   // Attach the button handlers to the window object, so that they can be called
   // outside of the context of this component. This is needed as a hack for
   // working with leaflet and react-leaflet.
-  window.handleFlagStore = handleFlagStore
+  window.handleFlagNsfw = handleFlagNsfw
   window.handleFlagGarbage = handleFlagGarbage
 
   // Data passed from the parent component.
   let { markers, mapCenterLat, mapCenterLong, zoom, appData } = props.mapObj
 
   // Extract parent-level functions from the appData.
-  wallet = appData.wallet
-  updateModal = appData.updateModal
-  updateConfirmModal = appData.updateConfirmModal
+  // wallet = appData.wallet
   popupLib = appData.popupLib
+  // updateWaitingModal = popupLib.updateWaitingModal
+  updateConfirmModal = popupLib.updateConfirmModal
 
   // Default settings for map, if they are not overwritten by parent component.
   if (!Array.isArray(markers)) markers = []
   if (!mapCenterLat) mapCenterLat = 45.5767026
   if (!mapCenterLong) mapCenterLong = -122.6437683
   if (!zoom) zoom = 12
-  console.log(`markers2: ${JSON.stringify(markers, null, 2)}`)
+  // console.log(`markers2: ${JSON.stringify(markers, null, 2)}`)
 
   return (
     <>
@@ -66,9 +66,9 @@ function MapOfStreets (props) {
 }
 
 // This function is called when the 'NSFW' flag button is clicked.
-async function handleFlagStore (tokenId) {
+async function handleFlagNsfw (tokenId) {
   try {
-    console.log('handleFlagStore() called')
+    console.log('handleFlagNsfw() called with token ID: ', tokenId)
     // showContinueCancelModal = true
     // globalSetShowContinueCancelModal(true)
 
@@ -86,12 +86,13 @@ async function handleFlagStore (tokenId) {
 
     const confirmModalObj = {
       showConfirmModal: true,
-      confirmModalBody
+      confirmModalBody,
+      tokenId
     }
 
     await updateConfirmModal(confirmModalObj)
   } catch (err) {
-    console.log('Error in handleFlagStore(): ', err)
+    console.log('Error in handleFlagNsfw(): ', err)
   }
 }
 
@@ -120,94 +121,7 @@ async function handleFlagGarbage (tokenId) {
   await updateConfirmModal(confirmModalObj)
 }
 
-// This is an onclick event handler for the button inside the pin dialog.
-// When clicked, it will call this function and pass the Token ID.
-async function handleFlagStore2 (tokenId) {
-  try {
-    console.log('handleFlagStore() tokenId: ', tokenId)
 
-    // console.log('wallet: ', wallet)
-
-    // Start the waiting modal
-    const modalBody = ['Publishing data to IPFS...']
-    const modalHeader = 'Flagging Store'
-    let modalObj = {
-      showModal: true,
-      modalHeader,
-      modalBody,
-      hideSpinner: false,
-      denyClose: true
-    }
-    await updateModal(modalObj)
-
-    const tradelistLib = new TradelistLib({ wallet })
-
-    const data = {
-      about: tokenId
-    }
-
-    // Instantiate the support libraries.
-    await tradelistLib.util.instantiateWrite()
-    await tradelistLib.util.instantiatePin()
-
-    // Generate flag data and pin it to IPFS.
-    const cid = await tradelistLib.util.pinJson({ data })
-    console.log('IPFS CID: ', cid)
-
-    // Update modal
-    modalBody.push('...published to IPFS pinning cluster:')
-    modalBody.push(<a href={`https://p2wdb-gateway-678.fullstack.cash/ipfs/${cid}/data.json`} target='_blank' rel='noreferrer'>{cid}</a>)
-    modalBody.push('Writing IPFS CID to BCH blockchain...')
-    modalObj = {
-      showModal: true,
-      modalHeader,
-      modalBody,
-      hideSpinner: false,
-      denyClose: true
-    }
-    await updateModal(modalObj)
-
-    // Generate the OP_RETURN TX for a claim
-    const opReturnObj = {
-      cid,
-      storeTokenId: tokenId,
-      type: 0
-    }
-    const hex = await tradelistLib.util.writeCidToBlockchain(opReturnObj)
-
-    // Broadcast the transaction
-    const txid = await wallet.broadcast(hex)
-
-    modalBody.push('Claim written to blockchain. TXID:')
-    modalBody.push(<a href={`https://blockchair.com/bitcoin-cash/transaction/${txid}`} target='_blank' rel='noreferrer'>{txid}</a>)
-    modalBody.push(' ')
-
-    // Signal success
-    modalBody.push('Flag successfully published to blockchain!')
-    modalObj = {
-      showModal: true,
-      modalHeader,
-      modalBody,
-      hideSpinner: true,
-      denyClose: false
-    }
-    await updateModal(modalObj)
-  } catch (err) {
-    // This is a top-level function. Errors must be handled and not thrown.
-
-    // Display the error in the modal
-    const modalObj = {
-      showModal: true,
-      modalHeader: 'Error Flagging Store',
-      modalBody: [err.message],
-      hideSpinner: true,
-      denyClose: false
-    }
-    await updateModal(modalObj)
-
-    console.log('Error in handleFlagStore(): ', err)
-  }
-}
 
 // This is a React function component. It loads the markers on the map.
 function Markers (props) {
@@ -247,7 +161,7 @@ function Markers (props) {
 
     // Append the buttons to the bottom. They do not render properly in the
     // popup component, so they are added here.
-    htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagStore('${tokenId}')">NSFW</button> <buttontype="button" class="btn btn-primary" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>`
+    htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button> <buttontype="button" class="btn btn-primary" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>`
     // console.log('htmlString: ', htmlString)
 
     // Bind the popup component to the map pin.
