@@ -52,9 +52,9 @@ class PopupLib {
 
     // Determine the type of flag this is: nsfw, garbage, or other.
     if (this.confirmType.includes('nsfw')) {
-      await this.flagStore(this.confirmTokenId, 3)
+      await this.flagStore(this.confirmTokenId, 103)
     } else if (this.confirmType.includes('garbage')) {
-      await this.flagStore(this.confirmTokenId, 4)
+      await this.flagStore(this.confirmTokenId, 104)
     } else {
       throw new Error('Confirmation type could not be determined. confirmType: ', this.confirmType)
     }
@@ -74,10 +74,11 @@ class PopupLib {
 
   // This is an onclick event handler for the button inside the pin dialog.
   // When clicked, it will call this function and pass the Token ID.
-  async flagStore (tokenId, flagType = 0) {
+  async flagStore (tokenId, flagType = 100) {
     try {
       console.log('Entering flagStore()')
       console.log('flagStore() tokenId: ', tokenId)
+      console.log('flagType: ', flagType)
 
       // Start the waiting modal
       const modalBody = ['Publishing data to IPFS...']
@@ -102,7 +103,8 @@ class PopupLib {
       await tradelistLib.util.instantiatePin()
 
       // Generate flag data and pin it to IPFS.
-      const cid = await tradelistLib.util.pinJson({ data })
+      // const cid = await tradelistLib.util.pinJson({ data })
+      const cid = 'bafybeicy2ynkojfji4nbwslcpaf6yimpw3f7z6ohdefbeg3tyygnoqtoru'
       console.log('IPFS CID: ', cid)
 
       // Update modal
