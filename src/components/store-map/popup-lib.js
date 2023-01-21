@@ -74,6 +74,16 @@ class PopupLib {
 
   // This is an onclick event handler for the button inside the pin dialog.
   // When clicked, it will call this function and pass the Token ID.
+  // This function is used for all Claims. They type of Claim is passed in as
+  // a variable.
+  //
+  // Types:
+  // 100 = test, ignored
+  // 101 = simple comment, unstructured JSON
+  // 102 = review or complex comment with structured JSON
+  // 103 = NSFW flag
+  // 104 = junk flag, signals that the token is junk and should be ignored or not included on the map
+  // 105 = admin. Signed by a specific key. Used to remove tokens from the database and map.
   async flagStore (tokenId, flagType = 100) {
     try {
       console.log('Entering flagStore()')
@@ -103,8 +113,8 @@ class PopupLib {
       await tradelistLib.util.instantiatePin()
 
       // Generate flag data and pin it to IPFS.
-      // const cid = await tradelistLib.util.pinJson({ data })
-      const cid = 'bafybeicy2ynkojfji4nbwslcpaf6yimpw3f7z6ohdefbeg3tyygnoqtoru'
+      const cid = await tradelistLib.util.pinJson({ data })
+      // const cid = 'bafybeicy2ynkojfji4nbwslcpaf6yimpw3f7z6ohdefbeg3tyygnoqtoru'
       console.log('IPFS CID: ', cid)
 
       // Update modal

@@ -135,38 +135,40 @@ function Markers (props) {
   // console.log('map: ', map)
 
   if (markers.length) {
-    // console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
-    const { lat, long, id, name, description, tokenId } = markers[0]
+    for (let i = 0; i < markers.length; i++) {
+      // console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
+      const { lat, long, id, name, description, tokenId } = markers[i]
 
-    const icon = L.icon({
-      iconSize: [25, 41],
-      iconAnchor: [10, 41],
-      popupAnchor: [2, -40],
-      iconUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-shadow.png'
-    })
+      const icon = L.icon({
+        iconSize: [25, 41],
+        iconAnchor: [10, 41],
+        popupAnchor: [2, -40],
+        iconUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.7/dist/images/marker-shadow.png'
+      })
 
-    const pin = L.marker([lat, long], { id, icon })
-    pin.addTo(map)
-    // console.log('pin: ', pin)
+      const pin = L.marker([lat, long], { id, icon })
+      pin.addTo(map)
+      // console.log('pin: ', pin)
 
-    // Data to pass on to the popup React component.
-    const popupData = {
-      name,
-      description,
-      tokenId
+      // Data to pass on to the popup React component.
+      const popupData = {
+        name,
+        description,
+        tokenId
+      }
+
+      // Render the popup component as an HTML string.
+      let htmlString = ReactDOMServer.renderToString(<InfoPopup popupData={popupData} />)
+
+      // Append the buttons to the bottom. They do not render properly in the
+      // popup component, so they are added here.
+      htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button> <buttontype="button" class="btn btn-primary" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>`
+      // console.log('htmlString: ', htmlString)
+
+      // Bind the popup component to the map pin.
+      pin.bindPopup(htmlString)
     }
-
-    // Render the popup component as an HTML string.
-    let htmlString = ReactDOMServer.renderToString(<InfoPopup popupData={popupData} />)
-
-    // Append the buttons to the bottom. They do not render properly in the
-    // popup component, so they are added here.
-    htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button> <buttontype="button" class="btn btn-primary" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>`
-    // console.log('htmlString: ', htmlString)
-
-    // Bind the popup component to the map pin.
-    pin.bindPopup(htmlString)
   }
 
   return null

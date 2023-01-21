@@ -39,6 +39,8 @@ class CreateToken extends React.Component {
       tagsStr: '',
       license: '',
       mediaType: '',
+      lat: '',
+      long: '',
 
       // Waiting Dialog Modal
       hideModal: true, // Should the modal be visible?
@@ -154,6 +156,44 @@ class CreateToken extends React.Component {
                     placeholder=''
                     onChange={e => this.setState({ tokenName: e.target.value })}
                     value={this.state.tokenName}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <br />
+
+            <Row>
+              <Col>
+                <b>Latitude:</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Control
+                    type='text'
+                    placeholder=''
+                    onChange={e => this.setState({ lat: e.target.value })}
+                    value={this.state.lat}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <br />
+
+            <Row>
+              <Col>
+                <b>Longitude:</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Control
+                    type='text'
+                    placeholder=''
+                    onChange={e => this.setState({ long: e.target.value })}
+                    value={this.state.long}
                   />
                 </Form.Group>
               </Col>
@@ -436,6 +476,7 @@ class CreateToken extends React.Component {
       // Validate input
       this.validateInputs()
 
+      // Update modal
       statusStr = 'Updating UTXOs'
       console.log(statusStr)
       dialogText.push(statusStr)
@@ -448,6 +489,7 @@ class CreateToken extends React.Component {
       // Instantiate the slp-mutable-data library
       const slpMutableData = new SlpMutableData({ wallet: bchWallet })
 
+      // Update modal
       statusStr = 'Uploading immutable data to the P2WDB and IPFS'
       console.log(statusStr)
       dialogText.push(statusStr)
@@ -469,6 +511,7 @@ class CreateToken extends React.Component {
       cidImmutable = `ipfs://${cidImmutable}`
       console.log(`Immutable data CID: ${cidImmutable}`)
 
+      // Update modal
       statusStr = 'Uploading mutable data to the P2WDB and IPFS'
       console.log(statusStr)
       dialogText.push(statusStr)
@@ -497,8 +540,8 @@ class CreateToken extends React.Component {
               '@type': 'Place',
               geo: {
                 '@type': 'GeoCoordinates',
-                latitude: 45.5767026,
-                longitude: -122.6437683
+                latitude: this.state.lat,
+                longitude: this.state.long
               }
             },
             products: [],
@@ -690,7 +733,7 @@ class CreateToken extends React.Component {
   // Verify that the required inputs have been filled out.
   validateInputs () {
     try {
-      const { tokenName, tokenTicker } = this.state
+      let { tokenName, tokenTicker, lat, long } = this.state
 
       if (!tokenName) {
         throw new Error('Token Name is required')
@@ -699,6 +742,11 @@ class CreateToken extends React.Component {
       if (!tokenTicker) {
         throw new Error('Token Ticker is required')
       }
+
+      // Ensure lat and long are floating point numbers.
+      lat = parseFloat(lat)
+      long = parseFloat(long)
+      this.setState({ lat, long })
 
       return true
     } catch (error) {
