@@ -15,7 +15,8 @@ class SspApi {
   // Note: This endpoint will be removed in the future, as it won't scale.
   async getAllStores () {
     try {
-      const server = 'http://localhost:5020'
+      // const server = 'http://localhost:5020'
+      const server = process.env.SSP_SERVER
       const endpoint = '/store/all'
 
       const result = await this.axios.get(`${server}${endpoint}`)
