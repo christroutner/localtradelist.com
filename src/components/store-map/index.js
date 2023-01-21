@@ -1,17 +1,23 @@
 /*
-  This Sweep component allows users to sweep a private key and transfer any
-  BCH or SLP tokens into their wallet.
+  This is the top-level parent component for the store-map View.
+
+  It contains a lot of state that it manages for parent children components.
+  That is why this top-level component is a Class component and not a Function
+  component.
 */
 
 // Global npm libraries
 import React from 'react'
-import { Container, Row, Col, Modal, Spinner } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 
 // Local libraries
 import SspApi from '../../services/ssp-api.js'
 import MapOfStores from './map-of-stores.js'
+import WaitingModal from '../waiting-modal'
+import ModalConfirm from '../confirm-modal'
+import PopupLib from './popup-lib.js'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -21,24 +27,36 @@ class StoreMap extends React.Component {
       appData: props.appData,
       wifToSweep: '',
 
-      // Modal control
+      // Waiting modal control
       showModal: false,
-      statusMsg: '',
-      hideSpinner: false,
-      shouldRefreshOnModalClose: false,
+      modalHeader: 'Waiting...',
+      modalBody: [], // Strings displayed in the modal
+      hideSpinner: false, // Spinner gif in modal
+      denyClose: false,
+
+      // Continue/Cancel Confirmation Modal control
+      showConfirmModal: false,
+      confirmModalBody: '',
+      confirmTokenId: null,
+      confirmType: null,
 
       // Map
       markers: []
     }
 
+    // Bind the 'this' object to subfunctions.
+    this.updateWaitingModal = this.updateWaitingModal.bind(this)
+    this.updateConfirmModal = this.updateConfirmModal.bind(this)
+    // this.handleContinueFlag = this.handleContinueFlag.bind(this)
+    // this.handleCancelFlag = this.handleCancelFlag.bind(this)
+
     // Encapsulate dependecies
     this.sspApi = new SspApi()
-
-    // Bind this to event handlers
-    // this.handleSweep = this.handleSweep.bind(this)
-    // this.updateWalletState = this.updateWalletState.bind(this)
-
-    // _this = this
+    this.popupLib = new PopupLib({
+      updateConfirmModal: this.updateConfirmModal,
+      updateWaitingModal: this.updateWaitingModal,
+      wallet: props.appData.wallet
+    })
   }
 
   async componentDidMount () {
@@ -47,15 +65,22 @@ class StoreMap extends React.Component {
 
   render () {
     // Generate the JSX for the modal.
-    const modal = this.getModal()
+    // const modal = this.getModal()
 
     const mapProps = {
+      // Default map settings.
+      mapCenterLat: 43.4691314,
+      mapCenterLong: -103.2816322,
+      zoom: 4,
+
       markers: this.state.markers,
-      mapCenterLat: 45.5767026,
-      mapCenterLong: -122.6437683,
-      zoom: 12
+      appData: this.state.appData
     }
-    console.log('mapProps: ', JSON.stringify(mapProps, null, 2))
+    this.popupLib.confirmTokenId = this.state.confirmTokenId
+    this.popupLib.confirmType = this.state.confirmType
+    mapProps.appData.popupLib = this.popupLib
+
+    console.log('mapProps: ', mapProps)
 
     return (
       <>
@@ -82,15 +107,36 @@ class StoreMap extends React.Component {
 
         {
           this.state.showModal
-            ? modal
+            ? (
+              <WaitingModal
+                heading={this.state.modalHeader}
+                body={this.state.modalBody}
+                hideSpinner={this.state.hideSpinner}
+                denyClose={this.state.denyClose}
+              />
+              )
+            : null
+        }
+
+        {
+          this.state.showConfirmModal
+            ? (
+              <ModalConfirm
+                heading='Flag NSWF'
+                onContinue={this.popupLib.handleContinueFlag}
+                onCancel={this.popupLib.handleCancelFlag}
+                body={this.state.confirmModalBody}
+              />
+              )
             : null
         }
       </>
     )
   }
 
-  // Load the tokens from the blockchain.
-  // Right now this is mocked by loading a hard-coded array of token IDs.
+  // This function is called when the component is loaded, from componentDidMount()
+  // It loads the tokens from the blockchain, retrieves their mutable data,
+  // and generates a pin on the map if the token has lat and long coordinates.
   async loadTokens () {
     try {
       // Get all the stores from the ssp-api
@@ -134,45 +180,61 @@ class StoreMap extends React.Component {
     }
   }
 
-  // Generate the info modal that is displayed when the button is clicked.
-  getModal () {
-    // const token = this.state.token
-    // console.log(`token: ${JSON.stringify(token, null, 2)}`)
-
-    return (
-      <Modal show={this.state.showModal} size='lg' onHide={(e) => this.handleCloseModal(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Sweeping...</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Container>
-            <Row>
-              <Col style={{ textAlign: 'center' }}>
-                Sweeping private key... {
-                  this.state.hideSpinner ? null : <Spinner animation='border' />
-                }
-              </Col>
-            </Row>
-            <br />
-
-            <Row>
-              <Col style={{ textAlign: 'center' }}>
-                {this.state.statusMsg}
-              </Col>
-            </Row>
-          </Container>
-        </Modal.Body>
-        <Modal.Footer />
-      </Modal>
-    )
-  }
+  // BEGIN WAITING MODAL
 
   // This handler function is called when the modal is closed.
   async handleCloseModal () {
+    console.log('handleCloseModal() called')
     this.setState({
       showModal: false
     })
   }
+
+  // This function is passed to lower-level components, so that they can directly
+  // control the waiting modal in this parent component.
+  async updateWaitingModal (inObj) {
+    const { showModal, modalHeader, modalBody, hideSpinner, denyClose } = inObj
+
+    await this.setState({
+      showModal,
+      modalHeader,
+      modalBody,
+      hideSpinner,
+      denyClose
+    })
+  }
+
+  // END WAITING MODAL
+
+  // BEGIN CONFIRMATION MODAL
+
+  // This function is passed to child components in order to control the showing
+  // of the Confirm (Continue/Cancel) modal. It lets the child components update
+  // the state of the modal and trigger a re-render.
+  async updateConfirmModal (inObj) {
+    const { showConfirmModal, confirmModalBody, tokenId, confirmType } = inObj
+    console.log('updateConfirmModal() tokenId: ', tokenId)
+
+    if (tokenId) {
+      await this.setState({
+        showConfirmModal,
+        confirmModalBody,
+        confirmTokenId: tokenId,
+        confirmType
+      })
+    } else {
+      await this.setState({
+        showConfirmModal,
+        confirmModalBody
+      })
+    }
+
+    console.log('this.state.confirmTokenId: ', this.state.confirmTokenId)
+
+    // window.currentTokenId = tokenId
+  }
+
+  // END CONFIRMATION MODAL
 }
 
 export default StoreMap
