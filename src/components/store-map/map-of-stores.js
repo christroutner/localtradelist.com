@@ -42,8 +42,10 @@ function MapOfStreets (props) {
 
   // Default settings for map, if they are not overwritten by parent component.
   if (!Array.isArray(markers)) markers = []
-  if (!mapCenterLat) mapCenterLat = 45.5767026
-  if (!mapCenterLong) mapCenterLong = -122.6437683
+  // if (!mapCenterLat) mapCenterLat = 45.5767026
+  // if (!mapCenterLong) mapCenterLong = -122.6437683
+  if (!mapCenterLat) mapCenterLat = 43.4691314
+  if (!mapCenterLong) mapCenterLong = -103.2816322
   if (!zoom) zoom = 12
   // console.log(`markers2: ${JSON.stringify(markers, null, 2)}`)
 

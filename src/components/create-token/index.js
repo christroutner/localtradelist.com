@@ -633,6 +633,8 @@ class CreateToken extends React.Component {
       statusStr = (<a href={`https://token.fullstack.cash/?tokenid=${genesisTxid}`} target='_blank' rel='noreferrer'>{genesisTxid}</a>)
       console.log(statusStr)
       dialogText.push(statusStr)
+
+      dialogText.push('Referesh the browser window to see your new store on the map!')
       this.setState({ modalBody: dialogText, hideSpinner: true })
 
       // Clear the form on successful token creation.

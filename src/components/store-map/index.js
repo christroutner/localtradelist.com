@@ -68,10 +68,12 @@ class StoreMap extends React.Component {
     // const modal = this.getModal()
 
     const mapProps = {
+      // Default map settings.
+      mapCenterLat: 43.4691314,
+      mapCenterLong: -103.2816322,
+      zoom: 4,
+
       markers: this.state.markers,
-      mapCenterLat: 45.5767026,
-      mapCenterLong: -122.6437683,
-      zoom: 12,
       appData: this.state.appData
     }
     this.popupLib.confirmTokenId = this.state.confirmTokenId
