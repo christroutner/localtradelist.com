@@ -18,8 +18,10 @@ class SspApi {
       // const server = 'http://localhost:5020'
       const server = process.env.SSP_SERVER
       const endpoint = '/store/all'
+      const url = `${server}${endpoint}`
+      console.log('Server URL: ', url)
 
-      const result = await this.axios.get(`${server}${endpoint}`)
+      const result = await this.axios.get(url)
 
       return result.data
     } catch (err) {
