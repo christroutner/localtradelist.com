@@ -73,6 +73,10 @@ class StoreMap extends React.Component {
       mapCenterLong: -103.2816322,
       zoom: 4,
 
+      // Portland
+      // mapCenterLat: 45.5767026,
+      // mapCenterLong: -122.6437683,
+
       markers: this.state.markers,
       appData: this.state.appData
     }
