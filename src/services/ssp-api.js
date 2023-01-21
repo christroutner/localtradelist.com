@@ -16,7 +16,8 @@ class SspApi {
   async getAllStores () {
     try {
       // const server = 'http://localhost:5020'
-      const server = process.env.SSP_SERVER
+      // const server = process.env.SSP_SERVER
+      const server = 'http://5.78.64.121:5020'
       const endpoint = '/store/all'
       const url = `${server}${endpoint}`
       console.log('Server URL: ', url)
