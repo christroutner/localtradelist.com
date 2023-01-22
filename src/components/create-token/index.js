@@ -41,6 +41,8 @@ class CreateToken extends React.Component {
       mediaType: '',
       lat: '',
       long: '',
+      moreInfoLink: '',
+      storeDescription: '',
 
       // Waiting Dialog Modal
       hideModal: true, // Should the modal be visible?
@@ -194,6 +196,44 @@ class CreateToken extends React.Component {
                     placeholder=''
                     onChange={e => this.setState({ long: e.target.value })}
                     value={this.state.long}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <br />
+
+            <Row>
+              <Col>
+                <b>Description:</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Control
+                    type='text'
+                    placeholder=''
+                    onChange={e => this.setState({ storeDescription: e.target.value })}
+                    value={this.state.storeDescription}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <br />
+
+            <Row>
+              <Col>
+                <b>More Info Link:</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Control
+                    type='text'
+                    placeholder=''
+                    onChange={e => this.setState({ moreInfoLink: e.target.value })}
+                    value={this.state.moreInfoLink}
                   />
                 </Form.Group>
               </Col>
@@ -531,7 +571,8 @@ class CreateToken extends React.Component {
             '@context': 'https://schema.org',
             '@type': 'Store',
             name: this.state.tokenName,
-            description: 'A generic SSP token',
+            description: this.state.storeDescription,
+            moreInfoLink: this.state.moreInfoLink,
             keywords: [
               'grocery',
               'brick-and-mortar'

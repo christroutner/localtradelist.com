@@ -154,6 +154,7 @@ class StoreMap extends React.Component {
       for (let i = 0; i < stores.length; i++) {
         const thisStore = stores[i]
         const storeData = thisStore.storeData
+        console.log(`storeData: ${JSON.stringify(storeData, null, 2)}`)
 
         // Skip this entry if it does not include the store data from the mutable data.
         if (!storeData) continue
@@ -168,7 +169,8 @@ class StoreMap extends React.Component {
           id: 1,
           name: storeData.name,
           description: storeData.description,
-          tokenId: thisStore.tokenId
+          tokenId: thisStore.tokenId,
+          moreInfoLink: storeData.moreInfoLink
         }
 
         markers.push(marker)
