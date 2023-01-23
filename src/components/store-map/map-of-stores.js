@@ -8,7 +8,6 @@
 
 // Global npm libraries
 import React from 'react'
-// import React, { useState } from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'

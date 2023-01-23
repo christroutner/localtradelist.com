@@ -11,8 +11,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 
 // Local libraries
-import RefreshTokenBalance from '../slp-tokens/refresh-tokens.js'
+// import RefreshTokenBalance from '../slp-tokens/refresh-tokens.js'
 import WaitingModal from '../waiting-modal'
+import CreateStoreMap from './create-store-map.js'
 
 // let _this
 
@@ -35,7 +36,7 @@ class CreateToken extends React.Component {
       xtraImmutable: '',
       xtraMutable: '',
       nsfw: false,
-      category: '',
+      category: 'store', // Default
       tagsStr: '',
       license: '',
       mediaType: '',
@@ -57,6 +58,7 @@ class CreateToken extends React.Component {
     this.refreshTokens = this.refreshTokens.bind(this)
     this.onCloseModal = this.onCloseModal.bind(this)
     this.handleMediaTypeChange = this.handleMediaTypeChange.bind(this)
+    this.handleMapClickEvent = this.handleMapClickEvent.bind(this)
 
     // Create a reference to the Refresh button.
     this.refreshTokenButtonRef = React.createRef()
@@ -123,6 +125,22 @@ class CreateToken extends React.Component {
       </Popover>
     )
 
+    const mapProps = {
+      // Default map settings.
+      mapCenterLat: 43.4691314,
+      mapCenterLong: -103.2816322,
+      zoom: 5,
+
+      // Portland
+      // mapCenterLat: 45.5767026,
+      // mapCenterLong: -122.6437683,
+
+      markers: this.state.markers,
+      appData: this.state.appData,
+      handleMapClickEvent: this.handleMapClickEvent
+    }
+    // console.log('mapProps: ', mapProps)
+
     return (
       <>
         <Container>
@@ -158,44 +176,6 @@ class CreateToken extends React.Component {
                     placeholder=''
                     onChange={e => this.setState({ tokenName: e.target.value })}
                     value={this.state.tokenName}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <br />
-
-            <Row>
-              <Col>
-                <b>Latitude:</b>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Control
-                    type='text'
-                    placeholder=''
-                    onChange={e => this.setState({ lat: e.target.value })}
-                    value={this.state.lat}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-            <br />
-
-            <Row>
-              <Col>
-                <b>Longitude:</b>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Form.Group>
-                  <Form.Control
-                    type='text'
-                    placeholder=''
-                    onChange={e => this.setState({ long: e.target.value })}
-                    value={this.state.long}
                   />
                 </Form.Group>
               </Col>
@@ -277,6 +257,50 @@ class CreateToken extends React.Component {
                 <OverlayTrigger trigger='click' placement='top' overlay={nsfwPopover}>
                   <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
                 </OverlayTrigger>
+              </Col>
+            </Row>
+            <br />
+
+            <Row>
+              <Col>
+                <CreateStoreMap mapObj={mapProps} />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <b>Latitude:</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Control
+                    type='text'
+                    placeholder=''
+                    onChange={e => this.setState({ lat: e.target.value })}
+                    value={this.state.lat}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <br />
+
+            <Row>
+              <Col>
+                <b>Longitude:</b>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <Form.Group>
+                  <Form.Control
+                    type='text'
+                    placeholder=''
+                    onChange={e => this.setState({ long: e.target.value })}
+                    value={this.state.long}
+                  />
+                </Form.Group>
               </Col>
             </Row>
             <br />
@@ -461,11 +485,12 @@ class CreateToken extends React.Component {
             <Col>
               <h3>Instructions</h3>
               <p>
-                This view is used to create a simple NFT and to manage its token
-                icon. Fill out the form above to create your own NFT with a
-                token icon. The new token will appear in the Tokens View.
-                Once created, you can send the NFT to any address on the
-                Bitcoin Cash blockchain.
+                Fill out the information in the form above. Click on the map to
+                to indicate the place for your 'store'.
+              </p>
+              <p>
+                <i>Note:</i> There is no need to give out sensitive information.
+                Feel free to place your store in a popular, public place.
               </p>
               <p>
                 We recommend using{' '}
@@ -478,8 +503,6 @@ class CreateToken extends React.Component {
           </Row>
         </Container>
 
-        <RefreshTokenBalance appData={this.state.appData} hideButton ref={this.refreshTokenButtonRef} />
-
         {
           this.state.hideModal
             ? null
@@ -488,6 +511,17 @@ class CreateToken extends React.Component {
 
       </>
     )
+  }
+
+  // This function is passed to the map component. It is called with the lat and
+  // lng coordinates when the user clicks on the map.
+  handleMapClickEvent (lat, lng) {
+    // console.log(`handleMapClickEvent() lat: ${lat}, lng: ${lng}`)
+
+    this.setState({
+      lat,
+      long: lng
+    })
   }
 
   // event handler for the media type drop-down.

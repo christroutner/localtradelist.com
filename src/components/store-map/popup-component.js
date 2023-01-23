@@ -13,8 +13,8 @@ function InfoPopup (props) {
     <>
       <p><b>Name</b>: {name}</p>
       <p><b>Description</b>: {description}</p>
-      <p><a href={moreInfoLink} target="_blank" rel="noreferrer">More Information</a></p>
-      <p style={{ overflowWrap: 'break-word' }}><b>Token ID</b>: <a href={`https://slp-token.fullstack.cash/?tokenid=${tokenId}`} target="_blank" rel="noreferrer">{tokenId}</a></p>
+      <p><a href={moreInfoLink} target='_blank' rel='noreferrer'>More Information</a></p>
+      <p style={{ overflowWrap: 'break-word' }}><b>Token ID</b>: <a href={`https://slp-token.fullstack.cash/?tokenid=${tokenId}`} target='_blank' rel='noreferrer'>{tokenId}</a></p>
     </>
   )
 }

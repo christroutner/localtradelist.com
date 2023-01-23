@@ -107,7 +107,7 @@ class PopupLib {
       const tradelistLib = new TradelistLib({ wallet: this.wallet })
 
       // Extended content using IPFS or P2WDB
-      if(flagType === 102) {
+      if (flagType === 102) {
         // Start the waiting modal
         modalBody.push('Publishing data to IPFS...')
         let modalObj = {
@@ -145,14 +145,12 @@ class PopupLib {
         }
         await this.updateWaitingModal(modalObj)
       } else {
-        if(flagType === 103) {
+        if (flagType === 103) {
           cid = 'NSFW'
-        } else if(flagType === 104) {
+        } else if (flagType === 104) {
           cid = 'garbage'
         }
       }
-
-
 
       // Generate the OP_RETURN TX for a claim
       const opReturnObj = {
