@@ -145,7 +145,7 @@ class StoreMap extends React.Component {
     try {
       // Get all the stores from the ssp-api
       const allStoreData = await this.sspApi.getAllStores()
-      console.log(`allStoreData: ${JSON.stringify(allStoreData, null, 2)}`)
+      // console.log(`allStoreData: ${JSON.stringify(allStoreData, null, 2)}`)
 
       const markers = []
 
@@ -154,14 +154,14 @@ class StoreMap extends React.Component {
       for (let i = 0; i < stores.length; i++) {
         const thisStore = stores[i]
         const storeData = thisStore.storeData
-        console.log(`storeData: ${JSON.stringify(storeData, null, 2)}`)
+        // console.log(`storeData: ${JSON.stringify(storeData, null, 2)}`)
 
         // Skip this entry if it does not include the store data from the mutable data.
         if (!storeData) continue
 
         const lat = storeData.location.geo.latitude
         const long = storeData.location.geo.longitude
-        console.log(`lat,long: ${lat},${long}`)
+        // console.log(`lat,long: ${lat},${long}`)
 
         const marker = {
           lat,
@@ -176,7 +176,7 @@ class StoreMap extends React.Component {
         markers.push(marker)
       }
 
-      console.log(`Updating state with these markers: ${JSON.stringify(markers, null, 2)}`)
+      // console.log(`Updating state with these markers: ${JSON.stringify(markers, null, 2)}`)
       this.setState({
         // markers: [marker]
         markers

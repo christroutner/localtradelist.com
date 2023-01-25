@@ -4,92 +4,59 @@
 */
 
 // Global npm libraries
-import React from 'react'
+import React, { useState } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 
-class EditMutableData extends React.Component {
-  constructor(props) {
-    super(props)
+function EditMutableData (props) {
+  const [mutableData, setMutableData] = useState(props.appData.mutableData)
 
-    this.state = {
-      appData: props.appData,
+  const handleUpdateMutableData = () => {
+    console.log('handleUpdateMutableData() called from button click')
 
-      mutableData: ''
-    }
-  }
-
-  async componentDidMount() {
-    await this.getMutableData()
-  }
-
-  render() {
-    return(
-      <>
-        <Container>
-          <Row>
-            <Col>
-              <b>Mutable Data:</b>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Form.Group>
-                <Form.Control
-                  type='text'
-                  as='textarea'
-                  placeholder=''
-                  onChange={e => this.setState({ mutableData: e.target.value })}
-                  value={this.state.mutableData}
-                  style={{height: '300px'}}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-          <br />
-
-          <Row>
-            <Col>
-              <Button variant='info' onClick={(e) => this.handleUpdateMutableData(e)}>Create Token</Button>
-            </Col>
-          </Row>
-        </Container>
-      </>
-    )
-  }
-
-  async handleUpdateMutableData(event) {
-    console.log('handleUpdateMutableData() button clicked')
-  }
-
-  // This function retrieves the mutable data for an SSP token controlled by
-  // the wallet. It looks for a Group minting baton held by the wallet. If
-  // found, and if the token contains SSP in the ticker, then the mutable
-  // data for that token is retrieved and saved to the state.
-  async getMutableData() {
+    let newMutableData = null
     try {
-      const groupMintBaton = this.state.appData.wallet.utxos.utxoStore.slpUtxos.group.mintBatons[0]
-      console.log('groupMintBaton: ', groupMintBaton)
+      newMutableData = JSON.parse(mutableData)
+    } catch (err) {
+      console.error('Syntax error: the mutable data could not be parsed from text to an object.')
+    }
 
-      if(groupMintBaton && groupMintBaton.tokenId) {
-        // Get the mutable data
-        const tokenData = await this.state.appData.wallet.getTokenData2(groupMintBaton.tokenId)
-        console.log('tokenData: ', tokenData)
-
-        if(tokenData.mutableData) {
-          // console.log('token data found.')
-          this.setState({
-            mutableData: JSON.stringify(tokenData.mutableData, null, 2)
-          })
-        } else {
-          this.setState({
-            mutableData: `Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`
-          })
-        }
-      }
-    } catch(err) {
-      console.error('Error in getMutableData(): ', err)
+    if (newMutableData) {
+      // Update the mutable data for the token.
     }
   }
+
+  return (
+    <>
+      <Container>
+        <Row>
+          <Col>
+            <b>Mutable Data:</b>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Control
+                type='text'
+                as='textarea'
+                placeholder=''
+                onChange={e => setMutableData(e.target.value)}
+                value={mutableData}
+                style={{ height: '300px' }}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <br />
+
+        <Row>
+          <Col>
+            <Button variant='info' onClick={(e) => handleUpdateMutableData(e)}>Create Token</Button>
+          </Col>
+        </Row>
+      </Container>
+    </>
+  )
 }
 
 export default EditMutableData

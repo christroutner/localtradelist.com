@@ -210,17 +210,17 @@ class App extends React.Component {
   // the wallet. It looks for a Group minting baton held by the wallet. If
   // found, and if the token contains SSP in the ticker, then the mutable
   // data for that token is retrieved and saved to the state.
-  async getMutableData(wallet) {
+  async getMutableData (wallet) {
     try {
       const groupMintBaton = wallet.utxos.utxoStore.slpUtxos.group.mintBatons[0]
       console.log('groupMintBaton: ', groupMintBaton)
 
-      if(groupMintBaton && groupMintBaton.tokenId) {
+      if (groupMintBaton && groupMintBaton.tokenId) {
         // Get the mutable data
         const tokenData = await wallet.getTokenData2(groupMintBaton.tokenId)
         console.log('tokenData: ', tokenData)
 
-        if(tokenData.mutableData) {
+        if (tokenData.mutableData) {
           // console.log('token data found.')
           await this.setState({
             mutableData: JSON.stringify(tokenData.mutableData, null, 2)
@@ -235,7 +235,7 @@ class App extends React.Component {
       }
 
       console.log('App.js getMutableData(): ', this.state.mutableData)
-    } catch(err) {
+    } catch (err) {
       console.error('Error in getMutableData(): ', err)
     }
   }

@@ -707,7 +707,7 @@ class CreateToken extends React.Component {
       console.log(`New token created with TXID: ${genesisTxid}`)
 
       // Save the token ID to local storage.
-      await this.state.appData.setLSState({sspTokenId: genesisTxid})
+      await this.state.appData.setLSState({ sspTokenId: genesisTxid })
 
       statusStr = 'Token Created! Token ID:'
       console.log(statusStr)
@@ -777,7 +777,7 @@ class CreateToken extends React.Component {
   // the wallets BCH and tokens. Index 1 will be used for controlling the mutable
   // data of the token. It's assumed that each wallet (12 words) controls only
   // a single store token (a new wallet is used to create a new store token).
-  async getIndex1KeyPair() {
+  async getIndex1KeyPair () {
     try {
       // Get a key pair from the wallet library.
       const keyPair = await this.state.appData.wallet.getKeyPair(1)
@@ -789,7 +789,7 @@ class CreateToken extends React.Component {
 
       // If a transaction history is found, throw an error. This forces the users
       // to create a new wallet for each store.
-      if(txHistory && txHistory.length) {
+      if (txHistory && txHistory.length) {
         throw new Error('This wallet already controls the mutable data for a store token. Please create and fund a new wallet to create a new Store token.')
       }
 
