@@ -4,54 +4,28 @@
 */
 
 // Global npm libraries
-import React, { useState } from 'react'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap'
+import React from 'react'
+import { Container, Row, Col, Tabs, Tab } from 'react-bootstrap'
+
+// Local libraries
+import EditRawJson from './edit-raw-json.js'
 
 function EditMutableData (props) {
-  const [mutableData, setMutableData] = useState(props.appData.mutableData)
-
-  const handleUpdateMutableData = () => {
-    console.log('handleUpdateMutableData() called from button click')
-
-    let newMutableData = null
-    try {
-      newMutableData = JSON.parse(mutableData)
-    } catch (err) {
-      console.error('Syntax error: the mutable data could not be parsed from text to an object.')
-    }
-
-    if (newMutableData) {
-      // Update the mutable data for the token.
-    }
-  }
-
   return (
     <>
       <Container>
         <Row>
           <Col>
-            <b>Mutable Data:</b>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <Form.Group>
-              <Form.Control
-                type='text'
-                as='textarea'
-                placeholder=''
-                onChange={e => setMutableData(e.target.value)}
-                value={mutableData}
-                style={{ height: '300px' }}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <br />
-
-        <Row>
-          <Col>
-            <Button variant='info' onClick={(e) => handleUpdateMutableData(e)}>Create Token</Button>
+            <Tabs
+              defaultActiveKey="products"
+            >
+              <Tab eventKey="products" title="Products">
+                <p>This tab will be a visual way to edit products</p>
+              </Tab>
+              <Tab eventKey="json" title="JSON">
+                <EditRawJson appData={props.appData} />
+              </Tab>
+            </Tabs>
           </Col>
         </Row>
       </Container>
