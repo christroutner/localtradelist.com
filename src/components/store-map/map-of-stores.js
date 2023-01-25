@@ -165,7 +165,13 @@ function Markers (props) {
 
       // Append the buttons to the bottom. They do not render properly in the
       // popup component, so they are added here.
-      htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button> <buttontype="button" class="btn btn-primary" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>`
+      htmlString += `
+        <button type="button" class="btn btn-primary">Comment</button>
+        <button type="button" class="btn btn-dark">Block</button>
+        <br /><br />
+        <button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button>
+        <button type="button" class="btn btn-warning" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>
+        `
       // console.log('htmlString: ', htmlString)
 
       // Bind the popup component to the map pin.
