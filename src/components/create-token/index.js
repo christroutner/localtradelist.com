@@ -585,6 +585,8 @@ class CreateToken extends React.Component {
       cidImmutable = `ipfs://${cidImmutable}`
       console.log(`Immutable data CID: ${cidImmutable}`)
 
+      // const cidImmutable = 'ipfs://bafybeidwat3gzea5ttscwz5lefonyxaz4sgim5ioo6rk624g6fanxc6scu'
+
       // Update modal
       statusStr = 'Uploading mutable data to the P2WDB and IPFS'
       console.log(statusStr)
@@ -634,10 +636,13 @@ class CreateToken extends React.Component {
       cidMutable = `ipfs://${cidMutable}`
       console.log(`Mutable data CID: ${cidMutable}`)
 
+      // const cidMutable = 'ipfs://bafybeict3bg4yoddpb2q3bn5z5bj3jbqblagrhhp7ubkdxetmoasaby23i'
+
       const wif = bchWallet.walletInfo.privateKey
 
       // Generate a new address to use for the mutable data address (MDA).
-      const keyPair = await this.getKeyPair()
+      // const keyPair = await this.getKeyPair()
+      const keyPair = await this.getIndex1KeyPair()
       console.log(`keyPair: ${JSON.stringify(keyPair, null, 2)}`)
 
       statusStr = 'Updating UTXOs'
@@ -688,7 +693,7 @@ class CreateToken extends React.Component {
         documentUrl: cidImmutable,
         decimals: 0,
         initialQty: 1,
-        mintBatonVout: null
+        mintBatonVout: 2
       }
 
       // Generate the token
@@ -700,6 +705,9 @@ class CreateToken extends React.Component {
         'group'
       )
       console.log(`New token created with TXID: ${genesisTxid}`)
+
+      // Save the token ID to local storage.
+      await this.state.appData.setLSState({sspTokenId: genesisTxid})
 
       statusStr = 'Token Created! Token ID:'
       console.log(statusStr)
@@ -765,47 +773,74 @@ class CreateToken extends React.Component {
     }
   }
 
-  // Cycles through HD wallet to find a key pair that does not have a
-  // transaction history.
-  async getKeyPair () {
+  // This function gets the key pair at index 1 of the wallet. Index 0 controls
+  // the wallets BCH and tokens. Index 1 will be used for controlling the mutable
+  // data of the token. It's assumed that each wallet (12 words) controls only
+  // a single store token (a new wallet is used to create a new store token).
+  async getIndex1KeyPair() {
     try {
-      // Get the next address from LocalStorage
-      let nextAddress = this.state.appData.lsState.nextAddress
+      // Get a key pair from the wallet library.
+      const keyPair = await this.state.appData.wallet.getKeyPair(1)
+      console.log('keyPair: ', keyPair)
 
-      // If nextAddress value isn't available, initilize it to 1.
-      if (!nextAddress) nextAddress = 1
-      console.log('nextAddress: ', nextAddress)
+      // Get transaction history for this address.
+      const txHistory = await this.state.appData.wallet.getTransactions(keyPair.cashAddress)
+      console.log('txHistory: ', txHistory)
 
-      let keyPair = {}
-      let txHistory = ['a', 'b', 'c']
-
-      console.log('Looking for keypair with no tx history...')
-
-      // Search for a keypair that has no transaction history.
-      do {
-        console.log(`Trying HD index ${nextAddress}`)
-
-        // Get a key pair from the wallet library.
-        keyPair = await this.state.appData.wallet.getKeyPair(nextAddress)
-        // console.log('keyPair: ', keyPair)
-
-        // Get transaction history for this address.
-        txHistory = await this.state.appData.wallet.getTransactions(keyPair.cashAddress)
-        if (!txHistory) txHistory = []
-        // console.log('txHistory: ', txHistory)
-
-        nextAddress++
-      } while (txHistory.length > 0)
-
-      // Save the current index to LocalStorage
-      await this.state.appData.setLSState({ nextAddress })
-      this.state.appData.lsState.nextAddress = nextAddress
+      // If a transaction history is found, throw an error. This forces the users
+      // to create a new wallet for each store.
+      if(txHistory && txHistory.length) {
+        throw new Error('This wallet already controls the mutable data for a store token. Please create and fund a new wallet to create a new Store token.')
+      }
 
       return keyPair
     } catch (err) {
-      console.error('Error in getKeyPair(): ', err)
+      console.error('Error in getIndex1KeyPair(): ', err)
+      throw err
     }
   }
+
+  // Cycles through HD wallet to find a key pair that does not have a
+  // transaction history.
+  // async getKeyPair () {
+  //   try {
+  //     // Get the next address from LocalStorage
+  //     let nextAddress = this.state.appData.lsState.nextAddress
+  //
+  //     // If nextAddress value isn't available, initilize it to 1.
+  //     if (!nextAddress) nextAddress = 1
+  //     console.log('nextAddress: ', nextAddress)
+  //
+  //     let keyPair = {}
+  //     let txHistory = ['a', 'b', 'c']
+  //
+  //     console.log('Looking for keypair with no tx history...')
+  //
+  //     // Search for a keypair that has no transaction history.
+  //     do {
+  //       console.log(`Trying HD index ${nextAddress}`)
+  //
+  //       // Get a key pair from the wallet library.
+  //       keyPair = await this.state.appData.wallet.getKeyPair(nextAddress)
+  //       // console.log('keyPair: ', keyPair)
+  //
+  //       // Get transaction history for this address.
+  //       txHistory = await this.state.appData.wallet.getTransactions(keyPair.cashAddress)
+  //       if (!txHistory) txHistory = []
+  //       // console.log('txHistory: ', txHistory)
+  //
+  //       nextAddress++
+  //     } while (txHistory.length > 0)
+  //
+  //     // Save the current index to LocalStorage
+  //     await this.state.appData.setLSState({ nextAddress })
+  //     this.state.appData.lsState.nextAddress = nextAddress
+  //
+  //     return keyPair
+  //   } catch (err) {
+  //     console.error('Error in getKeyPair(): ', err)
+  //   }
+  // }
 
   // Verify that the required inputs have been filled out.
   validateInputs () {

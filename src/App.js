@@ -45,6 +45,7 @@ class App extends React.Component {
       queryParamExists: false, // Becomes true if query parameters are detected in the URL.
       serverUrl, // Stores the URL for the currently selected server.
       servers: defaultServerOptions, // A list of back end servers.
+      mutableData: null, // Placeholder. Will contain store mutable data after wallet init (if available)
 
       // Startup Modal
       showStartModal: true, // Should the startup modal be visible?
@@ -113,6 +114,9 @@ class App extends React.Component {
         bchWallet
       })
 
+      // If this wallet has created a token already, then download the mutable data.
+      await this.getMutableData(bchWallet)
+
       // Get the BCH balance of the wallet.
       this.addToModal('Getting BCH balance')
       await this.asyncLoad.getWalletBchBalance(bchWallet, this.updateBchWalletState)
@@ -162,6 +166,7 @@ class App extends React.Component {
       wallet: this.state.bchWallet,
       bchWalletState: this.state.bchWalletState,
       lsState: this.lsState,
+      mutableData: this.state.mutableData,
 
       // Functions
       updateBchWalletState: this.updateBchWalletState,
@@ -178,7 +183,7 @@ class App extends React.Component {
         <GetRestUrl />
         <LoadScripts />
         <LoadLocalStorage passMnemonic={this.passMnemonic} />
-        <NavMenu menuHandler={this.onMenuClick} />
+        <NavMenu menuHandler={this.onMenuClick} appData={appData} />
 
         {
           this.state.showStartModal
@@ -199,6 +204,40 @@ class App extends React.Component {
         <Footer appData={appData} />
       </>
     )
+  }
+
+  // This function retrieves the mutable data for an SSP token controlled by
+  // the wallet. It looks for a Group minting baton held by the wallet. If
+  // found, and if the token contains SSP in the ticker, then the mutable
+  // data for that token is retrieved and saved to the state.
+  async getMutableData(wallet) {
+    try {
+      const groupMintBaton = wallet.utxos.utxoStore.slpUtxos.group.mintBatons[0]
+      console.log('groupMintBaton: ', groupMintBaton)
+
+      if(groupMintBaton && groupMintBaton.tokenId) {
+        // Get the mutable data
+        const tokenData = await wallet.getTokenData2(groupMintBaton.tokenId)
+        console.log('tokenData: ', tokenData)
+
+        if(tokenData.mutableData) {
+          // console.log('token data found.')
+          await this.setState({
+            mutableData: JSON.stringify(tokenData.mutableData, null, 2)
+          })
+        } else {
+          // this.setState({
+          //   mutableData: `Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`
+          // })
+
+          console.log(`Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`)
+        }
+      }
+
+      console.log('App.js getMutableData(): ', this.state.mutableData)
+    } catch(err) {
+      console.error('Error in getMutableData(): ', err)
+    }
   }
 
   // Add a new line to the waiting modal.

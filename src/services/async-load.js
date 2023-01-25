@@ -52,6 +52,9 @@ class AsyncLoad {
     await wallet.walletInfoPromise
     await wallet.initialize()
 
+    // This could be removed for production. This allows easier development.
+    window.wallet = wallet
+
     // Update the state of the wallet.
     updateBchWalletState(wallet.walletInfo)
 
