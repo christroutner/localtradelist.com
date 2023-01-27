@@ -51,6 +51,11 @@ function EditRawJson (props) {
 
     const txid = await mdaWallet.broadcast(hex)
     console.log('txid: ', txid)
+
+    await mdaWallet.bchjs.Util.sleep(2000)
+
+    // Get updated mutable data
+    await props.appData.getMutableData(props.appData.wallet, true)
   }
 
   return (
