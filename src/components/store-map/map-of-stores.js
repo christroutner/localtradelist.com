@@ -11,11 +11,11 @@ import React from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-
 import ReactDOMServer from 'react-dom/server'
 
 // Local libraries
 import InfoPopup from './popup-component.js'
+import PopupProducts from './popup-products.js'
 
 // Placeholders. These will be replaced by parent-level data passed in by props.
 // let wallet = null
@@ -171,11 +171,14 @@ function Markers (props) {
         <br /><br />
         <button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button>
         <button type="button" class="btn btn-warning" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>
+        <br /><br /><br />
         `
       // console.log('htmlString: ', htmlString)
 
+      htmlString += ReactDOMServer.renderToString(<PopupProducts appData={props.appData} />)
+
       // Bind the popup component to the map pin.
-      pin.bindPopup(htmlString)
+      pin.bindPopup(htmlString, {'maxHeight': '250'})
     }
   }
 

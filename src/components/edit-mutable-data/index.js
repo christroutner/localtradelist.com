@@ -9,6 +9,7 @@ import { Container, Row, Col, Tabs, Tab } from 'react-bootstrap'
 
 // Local libraries
 import EditRawJson from './edit-raw-json.js'
+import EditProducts from './products/index.js'
 
 function EditMutableData (props) {
   return (
@@ -20,7 +21,7 @@ function EditMutableData (props) {
               defaultActiveKey='products'
             >
               <Tab eventKey='products' title='Products'>
-                <p>This tab will be a visual way to edit products</p>
+                <EditProducts appData={props.appData} />
               </Tab>
               <Tab eventKey='json' title='JSON'>
                 <EditRawJson appData={props.appData} />
