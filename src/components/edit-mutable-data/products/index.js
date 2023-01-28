@@ -7,7 +7,8 @@ import React from 'react'
 import { Container, Row, Col, Button, Image } from 'react-bootstrap'
 
 // Local libraries
-import AddProduct from './add-product.js'
+import AddProduct from './add-product'
+import DeleteProduct from './delete-product'
 
 function EditProducts (props) {
 
@@ -35,7 +36,7 @@ function EditProducts (props) {
   for(let i=0; i < products.length; i++) {
     const thisProduct = products[i]
 
-    const productJsx = new Product(thisProduct, i)
+    const productJsx = new Product(thisProduct, i, props.appData)
     productsJsx.push(productJsx)
   }
 
@@ -64,27 +65,27 @@ function EditProducts (props) {
   )
 }
 
-function Product(props, index) {
+function Product(productData, index, appData) {
   return (
     <Container key={`product${index}`}>
       <Row>
         <Col>
-          Name: {props.name}
+          Name: {productData.name}
         </Col>
       </Row>
       <Row>
         <Col>
-          Description: {props.desc}
+          Description: {productData.desc}
         </Col>
       </Row>
       <Row>
         <Col>
-          Price: {props.price}
+          Price: {productData.price}
         </Col>
       </Row>
       <Row>
         <Col>
-          <Image src={props.imgUrl} fluid thumbnail />
+          <Image src={productData.imgUrl} fluid thumbnail />
         </Col>
       </Row>
       <Row>
@@ -92,9 +93,7 @@ function Product(props, index) {
           <Button variant='primary'>
             Edit
           </Button>{'   '}
-          <Button variant='danger'>
-            Delete
-          </Button>
+          <DeleteProduct appData={appData} index={index} />
         </Col>
       </Row>
       <br /><br />
