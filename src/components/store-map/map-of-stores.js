@@ -8,15 +8,14 @@
 
 // Global npm libraries
 import React from 'react'
-// import React, { useState } from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-
 import ReactDOMServer from 'react-dom/server'
 
 // Local libraries
 import InfoPopup from './popup-component.js'
+import PopupProducts from './popup-products.js'
 
 // Placeholders. These will be replaced by parent-level data passed in by props.
 // let wallet = null
@@ -42,8 +41,6 @@ function MapOfStreets (props) {
 
   // Default settings for map, if they are not overwritten by parent component.
   if (!Array.isArray(markers)) markers = []
-  // if (!mapCenterLat) mapCenterLat = 45.5767026
-  // if (!mapCenterLong) mapCenterLong = -122.6437683
   if (!mapCenterLat) mapCenterLat = 43.4691314
   if (!mapCenterLong) mapCenterLong = -103.2816322
   if (!zoom) zoom = 12
@@ -139,7 +136,7 @@ function Markers (props) {
   if (markers.length) {
     for (let i = 0; i < markers.length; i++) {
       // console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
-      const { lat, long, id, name, description, tokenId } = markers[i]
+      const { lat, long, id, name, description, tokenId, moreInfoLink } = markers[i]
 
       const icon = L.icon({
         iconSize: [25, 41],
@@ -157,7 +154,8 @@ function Markers (props) {
       const popupData = {
         name,
         description,
-        tokenId
+        tokenId,
+        moreInfoLink
       }
 
       // Render the popup component as an HTML string.
@@ -165,11 +163,20 @@ function Markers (props) {
 
       // Append the buttons to the bottom. They do not render properly in the
       // popup component, so they are added here.
-      htmlString += `<button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button> <buttontype="button" class="btn btn-primary" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>`
+      htmlString += `
+        <button type="button" class="btn btn-primary">Comment</button>
+        <button type="button" class="btn btn-dark">Block</button>
+        <br /><br />
+        <button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button>
+        <button type="button" class="btn btn-warning" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>
+        <br /><br /><br />
+        `
       // console.log('htmlString: ', htmlString)
 
+      htmlString += ReactDOMServer.renderToString(<PopupProducts appData={props.appData} marker={markers[i]} />)
+
       // Bind the popup component to the map pin.
-      pin.bindPopup(htmlString)
+      pin.bindPopup(htmlString, {'maxHeight': '300'})
     }
   }
 

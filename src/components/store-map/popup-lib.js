@@ -90,9 +90,11 @@ class PopupLib {
       console.log('flagStore() tokenId: ', tokenId)
       console.log('flagType: ', flagType)
 
-      // Start the waiting modal
-      const modalBody = ['Publishing data to IPFS...']
+      let cid = ''
+
+      // Initialize the modal
       const modalHeader = 'Flagging Store As NSFW'
+      const modalBody = []
       let modalObj = {
         showModal: true,
         modalHeader,
@@ -104,31 +106,51 @@ class PopupLib {
 
       const tradelistLib = new TradelistLib({ wallet: this.wallet })
 
-      const data = {
-        about: tokenId
+      // Extended content using IPFS or P2WDB
+      if (flagType === 102) {
+        // Start the waiting modal
+        modalBody.push('Publishing data to IPFS...')
+        let modalObj = {
+          showModal: true,
+          modalHeader,
+          modalBody,
+          hideSpinner: false,
+          denyClose: true
+        }
+        await this.updateWaitingModal(modalObj)
+
+        const data = {
+          about: tokenId
+        }
+
+        // Instantiate the support libraries.
+        await tradelistLib.util.instantiateWrite()
+        await tradelistLib.util.instantiatePin()
+
+        // Generate flag data and pin it to IPFS.
+        cid = await tradelistLib.util.pinJson({ data })
+        // const cid = 'bafybeicy2ynkojfji4nbwslcpaf6yimpw3f7z6ohdefbeg3tyygnoqtoru'
+        console.log('IPFS CID: ', cid)
+
+        // Update modal
+        modalBody.push('...published to IPFS pinning cluster:')
+        modalBody.push(<a href={`https://p2wdb-gateway-678.fullstack.cash/ipfs/${cid}/data.json`} target='_blank' rel='noreferrer'>{cid}</a>)
+        modalBody.push('Writing IPFS CID to BCH blockchain...')
+        modalObj = {
+          showModal: true,
+          modalHeader,
+          modalBody,
+          hideSpinner: false,
+          denyClose: true
+        }
+        await this.updateWaitingModal(modalObj)
+      } else {
+        if (flagType === 103) {
+          cid = 'NSFW'
+        } else if (flagType === 104) {
+          cid = 'garbage'
+        }
       }
-
-      // Instantiate the support libraries.
-      await tradelistLib.util.instantiateWrite()
-      await tradelistLib.util.instantiatePin()
-
-      // Generate flag data and pin it to IPFS.
-      const cid = await tradelistLib.util.pinJson({ data })
-      // const cid = 'bafybeicy2ynkojfji4nbwslcpaf6yimpw3f7z6ohdefbeg3tyygnoqtoru'
-      console.log('IPFS CID: ', cid)
-
-      // Update modal
-      modalBody.push('...published to IPFS pinning cluster:')
-      modalBody.push(<a href={`https://p2wdb-gateway-678.fullstack.cash/ipfs/${cid}/data.json`} target='_blank' rel='noreferrer'>{cid}</a>)
-      modalBody.push('Writing IPFS CID to BCH blockchain...')
-      modalObj = {
-        showModal: true,
-        modalHeader,
-        modalBody,
-        hideSpinner: false,
-        denyClose: true
-      }
-      await this.updateWaitingModal(modalObj)
 
       // Generate the OP_RETURN TX for a claim
       const opReturnObj = {
@@ -147,6 +169,7 @@ class PopupLib {
 
       // Signal success
       modalBody.push('Flag successfully published to blockchain!')
+      modalBody.push('Note: The flag will be incorporated after the next block confirmation.')
       modalObj = {
         showModal: true,
         modalHeader,

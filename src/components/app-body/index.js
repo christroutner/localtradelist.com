@@ -18,8 +18,7 @@ import Sweep from '../sweep'
 import Sign from '../sign'
 import StoreMap from '../store-map'
 import CreateToken from '../create-token'
-
-// let _this
+import EditMutableData from '../edit-mutable-data'
 
 class AppBody extends React.Component {
   constructor (props) {
@@ -70,6 +69,8 @@ class AppBody extends React.Component {
         return (<Sweep appData={this.state.appData} />)
       case 6:
         return (<Sign appData={this.state.appData} />)
+      case 7:
+        return (<EditMutableData appData={this.state.appData} />)
 
       // Special Views
       case 100:

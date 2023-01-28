@@ -7,13 +7,21 @@
 import React from 'react'
 
 function InfoPopup (props) {
-  const { name, description, tokenId } = props.popupData
+  const { name, description, tokenId, moreInfoLink } = props.popupData
 
   return (
     <>
       <p><b>Name</b>: {name}</p>
       <p><b>Description</b>: {description}</p>
-      <p style={{ overflowWrap: 'break-word' }}><b>Token ID</b>: {tokenId}</p>
+      {
+        moreInfoLink
+          ? (
+            <p><a href={moreInfoLink} target='_blank' rel='noreferrer'>More Information</a></p>
+            )
+          : null
+      }
+
+      <p style={{ overflowWrap: 'break-word' }}><b>Token ID</b>: <a href={`https://slp-token.fullstack.cash/?tokenid=${tokenId}`} target='_blank' rel='noreferrer'>{tokenId}</a></p>
     </>
   )
 }
