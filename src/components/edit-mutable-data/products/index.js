@@ -4,7 +4,7 @@
 
 // Global npm libraries
 import React from 'react'
-import { Container, Row, Col, Button, Image } from 'react-bootstrap'
+import { Container, Row, Col, Image } from 'react-bootstrap'
 
 // Local libraries
 import AddProduct from './add-product'
@@ -57,6 +57,15 @@ function EditProducts (props) {
 
       <Row>
         <Col>
+          <i>Note</i>: If you need to edit a product, delete it, then add it
+          again, using the edited data. Only the first two products are displayed
+          on the map.
+        </Col>
+      </Row>
+      <br />
+
+      <Row>
+        <Col>
           <AddProduct appData={props.appData} />
         </Col>
       </Row>
@@ -90,9 +99,6 @@ function Product(productData, index, appData) {
       </Row>
       <Row>
         <Col>
-          <Button variant='primary'>
-            Edit
-          </Button>{'   '}
           <DeleteProduct appData={appData} index={index} />
         </Col>
       </Row>

@@ -23,7 +23,7 @@ function DeleteProduct(props) {
 // Button click handler. Deletes the product associated with this button.
 async function handleDeleteProduct(props) {
   console.log('handleDeleteProduct() actived.')
-  console.log('props: ', props)
+  // console.log('props: ', props)
 
   const {appData, index} = props
 

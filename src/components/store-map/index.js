@@ -100,10 +100,10 @@ class StoreMap extends React.Component {
 
         <Container>
           <Row>
-            <Col>
+            <Col xs={12} lg={8}>
               <MapOfStores mapObj={mapProps} />
             </Col>
-            <Col>
+            <Col xs={12} lg={4}>
               Loading stores from blockchain...
             </Col>
           </Row>
