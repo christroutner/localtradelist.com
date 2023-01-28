@@ -8,8 +8,12 @@ import React, { useState } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import { SlpMutableData } from 'slp-mutable-data'
 
+// Local libraries
+import SspApi from '../../services/ssp-api'
+
 function EditRawJson (props) {
   const [mutableData, setMutableData] = useState(props.appData.mutableData)
+  console.log('EditRawJson mutableData: ', mutableData)
 
   const handleUpdateMutableData = async () => {
     console.log('handleUpdateMutableData() called from button click')
@@ -56,6 +60,12 @@ function EditRawJson (props) {
 
     // Get updated mutable data
     await props.appData.getMutableData(props.appData.wallet, true)
+
+    // Have the SSP API server also update the mutable data for this token.
+    console.log(`EditRawJson handleUpdateMutableData() newMutableData: `, newMutableData)
+    console.log(`EditRawJson handleUpdateMutableData() newMutableData.tokenId: `, newMutableData.tokenId)
+    const sspApi = new SspApi()
+    await sspApi.updateStore(newMutableData.tokenId)
   }
 
   return (

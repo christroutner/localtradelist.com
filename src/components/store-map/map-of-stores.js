@@ -41,8 +41,6 @@ function MapOfStreets (props) {
 
   // Default settings for map, if they are not overwritten by parent component.
   if (!Array.isArray(markers)) markers = []
-  // if (!mapCenterLat) mapCenterLat = 45.5767026
-  // if (!mapCenterLong) mapCenterLong = -122.6437683
   if (!mapCenterLat) mapCenterLat = 43.4691314
   if (!mapCenterLong) mapCenterLong = -103.2816322
   if (!zoom) zoom = 12
@@ -175,10 +173,10 @@ function Markers (props) {
         `
       // console.log('htmlString: ', htmlString)
 
-      htmlString += ReactDOMServer.renderToString(<PopupProducts appData={props.appData} />)
+      htmlString += ReactDOMServer.renderToString(<PopupProducts appData={props.appData} marker={markers[i]} />)
 
       // Bind the popup component to the map pin.
-      pin.bindPopup(htmlString, {'maxHeight': '250'})
+      pin.bindPopup(htmlString, {'maxHeight': '300'})
     }
   }
 

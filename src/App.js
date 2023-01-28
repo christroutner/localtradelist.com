@@ -225,6 +225,10 @@ class App extends React.Component {
         console.log('tokenData: ', tokenData)
 
         if (tokenData.mutableData) {
+          // Add the token ID to the mutable data.
+          tokenData.mutableData.tokenId = tokenData.tokenStats.tokenId
+          console.log('mutableData with tokenId: ', tokenData.mutableData)
+
           // console.log('token data found.')
           await this.setState({
             mutableData: JSON.stringify(tokenData.mutableData, null, 2)

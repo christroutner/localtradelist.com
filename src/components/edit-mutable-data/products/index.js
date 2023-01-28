@@ -35,7 +35,7 @@ function EditProducts (props) {
   for(let i=0; i < products.length; i++) {
     const thisProduct = products[i]
 
-    const productJsx = new Product(thisProduct)
+    const productJsx = new Product(thisProduct, i)
     productsJsx.push(productJsx)
   }
 
@@ -64,9 +64,9 @@ function EditProducts (props) {
   )
 }
 
-function Product(props) {
+function Product(props, index) {
   return (
-    <Container>
+    <Container key={`product${index}`}>
       <Row>
         <Col>
           Name: {props.name}

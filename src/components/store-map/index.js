@@ -163,6 +163,11 @@ class StoreMap extends React.Component {
         const long = storeData.location.geo.longitude
         // console.log(`lat,long: ${lat},${long}`)
 
+        let products = storeData.products
+        console.log(`loadTokens() storeData for ${storeData.name}: `, storeData)
+        console.log(`loadTokens() products for ${storeData.name}: `, products)
+        if(!products) products = []
+
         const marker = {
           lat,
           long,
@@ -170,7 +175,8 @@ class StoreMap extends React.Component {
           name: storeData.name,
           description: storeData.description,
           tokenId: thisStore.tokenId,
-          moreInfoLink: storeData.moreInfoLink
+          moreInfoLink: storeData.moreInfoLink,
+          products
         }
 
         markers.push(marker)

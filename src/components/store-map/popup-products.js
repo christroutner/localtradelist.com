@@ -7,14 +7,19 @@ import React from 'react'
 import { Container, Row, Col, Image } from 'react-bootstrap'
 
 function PopupProducts (props) {
-  let mutableData, products
+  // let mutableData
 
-  try {
-    mutableData = JSON.parse(props.appData.mutableData)
-    // console.log('PopupProducts mutableData: ', mutableData)
-    products = mutableData.jsonLd.storeData.products
-    // console.log('PopupProducts products: ', products)
-  } catch(err) { return null }
+  // try {
+  //   mutableData = JSON.parse(props.appData.mutableData)
+  //   // console.log('PopupProducts mutableData: ', mutableData)
+  //   products = mutableData.jsonLd.storeData.products
+  //   // console.log('PopupProducts products: ', products)
+  // } catch(err) { return null }
+
+  // If the store has no products listed in its array, return null.
+  const products = props.marker.products
+  console.log(`PopupProducts products for ${props.marker.name}: `, products)
+  if(!products) return null
 
 
   let showProd1 = false
