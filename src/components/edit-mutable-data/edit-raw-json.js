@@ -62,8 +62,8 @@ function EditRawJson (props) {
     await props.appData.getMutableData(props.appData.wallet, true)
 
     // Have the SSP API server also update the mutable data for this token.
-    console.log(`EditRawJson handleUpdateMutableData() newMutableData: `, newMutableData)
-    console.log(`EditRawJson handleUpdateMutableData() newMutableData.tokenId: `, newMutableData.tokenId)
+    // console.log(`EditRawJson handleUpdateMutableData() newMutableData: `, newMutableData)
+    // console.log(`EditRawJson handleUpdateMutableData() newMutableData.tokenId: `, newMutableData.tokenId)
     const sspApi = new SspApi()
     await sspApi.updateStore(newMutableData.tokenId)
   }

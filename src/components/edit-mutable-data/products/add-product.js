@@ -9,6 +9,7 @@ import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 
 // Local libraries
 import updateMutableData from '../update-mutable-data.js'
+import SspApi from '../../../services/ssp-api'
 
 function AddProduct(props) {
   const [prodName, setProdName] = useState('')
@@ -126,6 +127,10 @@ async function handleAddProduct(inObj) {
   // Get updated mutable data
   console.log('Updating token data cache on server.')
   await props.appData.getMutableData(props.appData.wallet, true)
+
+  // Have the SSP API server also update the mutable data for this token.
+  const sspApi = new SspApi()
+  await sspApi.updateStore(oldMutableData.tokenId)
 }
 
 export default AddProduct
