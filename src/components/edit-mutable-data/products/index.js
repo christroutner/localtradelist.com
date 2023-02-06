@@ -99,7 +99,7 @@ function Product(productData, index, appData) {
       </Row>
       <Row>
         <Col>
-          <DeleteProduct appData={appData} index={index} />
+          <DeleteProduct appData={appData} index={index} productData={productData} />
         </Col>
       </Row>
       <br /><br />

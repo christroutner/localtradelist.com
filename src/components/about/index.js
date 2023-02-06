@@ -16,8 +16,8 @@ function About(props) {
               <h2>About LocalTradeList.com</h2>
               <p><b>
                 Local Trade List is an open-source, blockchain-based app designed to
-                help the members of rural communities lower the friction of trading
-                with one another.
+                empower the members of rural communities to trade with one another,
+                and lower the friction of doing so.
               </b></p>
 
               <p>
@@ -36,8 +36,8 @@ function About(props) {
               </p>
               <ul>
                 <li>Permissionless: no login names or permission required to update the database</li>
-                <li>Censorship: users can not be de-platformed</li>
-                <li>Tamper proof: No one can alter old data, and any updates provide a chain of custody</li>
+                <li>Censorship Resistence: users can not be de-platformed, content can not be deleted</li>
+                <li>Tamper Proof: No one can alter old data, and any updates provide a chain of custody</li>
               </ul>
               <p>
                 These features of a blockchain are great for rural communities. If you
@@ -68,7 +68,8 @@ function About(props) {
                 is impossible), the data is simply not shown. Anyone is free to fork this
                 website and set different thresholds for moderation policy. It is
                 hoped that one day many versions of this app will exist among different
-                communities, with different moderation preferences. They can all pull
+                communities, in different niches, with different moderation
+                preferences. They can all pull
                 the data from the same blockchain, but display it differently depending
                 on the preferences of their user community.
               </p>

@@ -5,23 +5,66 @@
 */
 
 // Global npm libraries
-import React from 'react'
+import React, {useState} from 'react'
 import { Button} from 'react-bootstrap'
 
 // Local libraries
 import updateMutableData from '../update-mutable-data.js'
 import SspApi from '../../../services/ssp-api'
+import ModalContinueCancel from '../../confirm-modal'
 
 function DeleteProduct(props) {
+  const [showCCModal, setShowCCModal] = useState(false)
+
+  // console.log('props.appData: ', props.appData)
+  // console.log('props.index: ', props.index)
+  // console.log('props.productData: ', props.productData)
+
+  const modalBody = (
+    <>
+      <br />
+      <p>
+        If you click the Continue Button, the product {props.productData.name} will
+        be deleted from your store.
+      </p>
+      <br />
+    </>
+  )
+
   return (
-    <Button variant='danger' onClick={(e) => handleDeleteProduct(props)}>
+    <>
+    <Button variant='danger' onClick={(e) => handleInitialClick(props, setShowCCModal)}>
       Delete
     </Button>
+    {
+      showCCModal
+        ? (<ModalContinueCancel
+            onCancel={(e) => handleCancel(props, setShowCCModal)}
+            onContinue={(e) => handleContinue(props, setShowCCModal)}
+            heading="Really Delete Product?"
+            body={modalBody}
+          />)
+        : null
+    }
+    </>
   )
 }
 
+function handleCancel(props, setShowCCModal) {
+  setShowCCModal(false)
+}
+
+function handleContinue(props, setShowCCModal) {
+  console.log('continue button clicked.')
+}
+
+function handleInitialClick(props, setShowCCModal) {
+  setShowCCModal(true)
+  return
+}
+
 // Button click handler. Deletes the product associated with this button.
-async function handleDeleteProduct(props) {
+async function handleDeleteProduct(props, setShowCCModal) {
   console.log('handleDeleteProduct() actived.')
   // console.log('props: ', props)
 
@@ -55,5 +98,7 @@ async function handleDeleteProduct(props) {
   const sspApi = new SspApi()
   await sspApi.updateStore(oldMutableData.tokenId)
 }
+
+
 
 export default DeleteProduct
