@@ -18,7 +18,7 @@ function DeleteProduct(props) {
   // State for Confirm/Cancel Modal
   const [showCCModal, setShowCCModal] = useState(false)
 
-  // State of waiting modal
+  // Waiting modal state
   const [showWaitingModal, setShowWaitingModal] = useState(false)
   const [waitingModalBody, setWaitingModalBody] = useState([])
   const [hideSpinner, setHideSpinner] = useState(false)
@@ -75,7 +75,7 @@ function DeleteProduct(props) {
           body={waitingModalBody}
           denyClose={denyClose}
           hideSpinner={hideSpinner}
-          closeFunc={waitingModalClose}
+          closeFunc={(e) => waitingModalClose(props, deleteProdState)}
         />)
         : null
     }
@@ -144,12 +144,22 @@ async function handleDeleteProduct(props, deleteProdState) {
     await updateMutableData({mutableData: mutableDataStr, wallet: appData.wallet})
 
     // Get updated mutable data
-    console.log('Updating token data cache on server.')
-    await appData.getMutableData(props.appData.wallet, true)
+    // console.log('Updating token data cache on server.')
+    // await appData.getMutableData(props.appData.wallet, true)
+
+    // Update waiting modal
+    modalBody.push('Waiting for changes to propegate...')
+    deleteProdState.setWaitingModalBody(modalBody)
+
+    // Wait for changes to propegate
+    await props.appData.wallet.bchjs.Util.sleep(3000)
 
     // Have the SSP API server also update the mutable data for this token.
     const sspApi = new SspApi()
-    await sspApi.updateStore(oldMutableData.tokenId)
+    await sspApi.updateStore(oldMutableData.tokenId, true)
+
+    // Wait for changes to propegate
+    await props.appData.wallet.bchjs.Util.sleep(3000)
 
     // Update the modal body
     modalBody.push(`Done!`)
@@ -168,8 +178,12 @@ async function handleDeleteProduct(props, deleteProdState) {
 }
 
 // This function is called when the Waiting Modal is closed.
-function waitingModalClose() {
-  console.log('waiting modal closed.')
+async function waitingModalClose(props, deleteProdState) {
+  console.log('waiting modal closed. Updating token mutable data.')
+
+  // Refresh the mutable data.
+  // await props.appData.getMutableData(props.appData.wallet, true)
+  window.location.href = '/'
 }
 
 export default DeleteProduct

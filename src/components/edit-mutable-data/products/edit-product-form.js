@@ -132,7 +132,7 @@ async function handleAddProduct(inObj) {
 
   // Have the SSP API server also update the mutable data for this token.
   const sspApi = new SspApi()
-  await sspApi.updateStore(oldMutableData.tokenId)
+  await sspApi.updateStore(oldMutableData.tokenId, false)
 }
 
 export default EditProductForm
