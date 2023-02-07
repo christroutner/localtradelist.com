@@ -19,13 +19,12 @@ function PopupProducts (props) {
   // If the store has no products listed in its array, return null.
   const products = props.marker.products
   console.log(`PopupProducts products for ${props.marker.name}: `, products)
-  if(!products) return null
-
+  if (!products) return null
 
   let showProd1 = false
   let showProd2 = false
-  if(products.length > 0) showProd1 = true
-  if(products.length > 1) showProd2 = true
+  if (products.length > 0) showProd1 = true
+  if (products.length > 1) showProd2 = true
 
   return (
     <Container>
@@ -37,62 +36,62 @@ function PopupProducts (props) {
 
       {
         showProd1
-        ? (
-          <>
-            <Row>
-              <Col>
-                Name: {products[0].name}
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                Description: {products[0].desc}
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                Price: {products[0].price}
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Image src={products[0].imgUrl} fluid thumbnail />
-              </Col>
-            </Row>
-            <br /><br />
-          </>
-        )
-        : (<p>This store has no products</p>)
+          ? (
+            <>
+              <Row>
+                <Col>
+                  Name: {products[0].name}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  Description: {products[0].desc}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  Price: {products[0].price}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Image src={products[0].imgUrl} fluid thumbnail />
+                </Col>
+              </Row>
+              <br /><br />
+            </>
+            )
+          : (<p>This store has no products</p>)
       }
 
       {
         showProd2
-        ? (
-          <>
-            <Row>
-              <Col>
-                Name: {products[1].name}
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                Description: {products[1].desc}
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                Price: {products[1].price}
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <Image src={products[1].imgUrl} fluid thumbnail />
-              </Col>
-            </Row>
-            <br /><br />
-          </>
-        )
-        : null
+          ? (
+            <>
+              <Row>
+                <Col>
+                  Name: {products[1].name}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  Description: {products[1].desc}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  Price: {products[1].price}
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Image src={products[1].imgUrl} fluid thumbnail />
+                </Col>
+              </Row>
+              <br /><br />
+            </>
+            )
+          : null
       }
 
     </Container>

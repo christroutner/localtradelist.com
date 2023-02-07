@@ -4,14 +4,14 @@
 */
 
 // Global npm libraries
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 
 // Local libraries
 import updateMutableData from '../update-mutable-data.js'
 import SspApi from '../../../services/ssp-api'
 
-function EditProductForm(props) {
+function EditProductForm (props) {
   console.log('EditProductForm props: ', props)
 
   const [prodName, setProdName] = useState('')
@@ -20,7 +20,7 @@ function EditProductForm(props) {
   const [prodPrice, setProdPrice] = useState('')
 
   return (
-    <Container style={{border: 'black 1px solid', padding: '15px'}}>
+    <Container style={{ border: 'black 1px solid', padding: '15px' }}>
       <Row>
         <Col><h4>Edit a Product</h4></Col>
       </Row>
@@ -83,7 +83,7 @@ function EditProductForm(props) {
 
       <Row>
         <Col>
-          <Button variant='primary' onClick={(e) => handleAddProduct({props, prodName, prodDesc, prodImage, prodPrice})}>
+          <Button variant='primary' onClick={(e) => handleAddProduct({ props, prodName, prodDesc, prodImage, prodPrice })}>
             Add Product
           </Button>
         </Col>
@@ -93,10 +93,10 @@ function EditProductForm(props) {
 }
 
 // Add the new product to the products array in the tokens mutable data.
-async function handleAddProduct(inObj) {
+async function handleAddProduct (inObj) {
   console.log('handleAddProduct() handler activated.')
 
-  const {props, prodName, prodDesc, prodImage, prodPrice} = inObj
+  const { props, prodName, prodDesc, prodImage, prodPrice } = inObj
 
   const mutableData = props.appData.mutableData
   const wallet = props.appData.wallet
@@ -124,7 +124,7 @@ async function handleAddProduct(inObj) {
   console.log('Updated mutable data: ', mutableDataStr)
 
   // Generate a transaction to update the mutable data.
-  await updateMutableData({mutableData: mutableDataStr, wallet})
+  await updateMutableData({ mutableData: mutableDataStr, wallet })
 
   // Get updated mutable data
   console.log('Updating token data cache on server.')

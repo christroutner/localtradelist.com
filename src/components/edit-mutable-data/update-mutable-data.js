@@ -8,8 +8,8 @@ import { SlpMutableData } from 'slp-mutable-data'
 
 const MDA_HD_INDEX = 1
 
-async function updateMutableData(inObj = {}) {
-  const {mutableData, wallet} = inObj
+async function updateMutableData (inObj = {}) {
+  const { mutableData, wallet } = inObj
 
   try {
     let newMutableData = null
@@ -55,8 +55,7 @@ async function updateMutableData(inObj = {}) {
     await mdaWallet.bchjs.Util.sleep(2000)
 
     return txid
-
-  } catch(err) {
+  } catch (err) {
     console.error('Error in handleUpdateMutableData()')
     throw err
   }

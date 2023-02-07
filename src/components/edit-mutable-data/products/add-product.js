@@ -4,7 +4,7 @@
 */
 
 // Global npm libraries
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Container, Row, Col, Button, Form } from 'react-bootstrap'
 
 // Local libraries
@@ -12,7 +12,7 @@ import updateMutableData from '../update-mutable-data.js'
 import SspApi from '../../../services/ssp-api'
 import ModalWaiting from '../../waiting-modal'
 
-function AddProduct(props) {
+function AddProduct (props) {
   // Form state
   const [prodName, setProdName] = useState('')
   const [prodDesc, setProdDesc] = useState('')
@@ -31,7 +31,8 @@ function AddProduct(props) {
     setProdName,
     prodDesc,
     setProdDesc,
-    prodImage, setProdImage,
+    prodImage,
+    setProdImage,
     prodPrice,
     setProdPrice
   }
@@ -48,84 +49,84 @@ function AddProduct(props) {
 
   return (
     <>
-    <Container style={{border: 'black 1px solid', padding: '15px'}}>
-      <Row>
-        <Col><h4>Add a Product</h4></Col>
-      </Row>
+      <Container style={{ border: 'black 1px solid', padding: '15px' }}>
+        <Row>
+          <Col><h4>Add a Product</h4></Col>
+        </Row>
 
-      <Row>
-        <Col>
-          <Form.Group>
-            <Form.Label><b>Name</b></Form.Label>
-            <Form.Control
-              type='text'
-              onChange={e => setProdName(e.target.value)}
-              value={prodName}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <br />
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label><b>Name</b></Form.Label>
+              <Form.Control
+                type='text'
+                onChange={e => setProdName(e.target.value)}
+                value={prodName}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <br />
 
-      <Row>
-        <Col>
-          <Form.Group>
-            <Form.Label><b>Description</b></Form.Label>
-            <Form.Control
-              type='text'
-              onChange={e => setProdDesc(e.target.value)}
-              value={prodDesc}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <br />
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label><b>Description</b></Form.Label>
+              <Form.Control
+                type='text'
+                onChange={e => setProdDesc(e.target.value)}
+                value={prodDesc}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <br />
 
-      <Row>
-        <Col>
-          <Form.Group>
-            <Form.Label><b>Image Url</b></Form.Label>
-            <Form.Control
-              type='text'
-              onChange={e => setProdImage(e.target.value)}
-              value={prodImage}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <br />
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label><b>Image Url</b></Form.Label>
+              <Form.Control
+                type='text'
+                onChange={e => setProdImage(e.target.value)}
+                value={prodImage}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <br />
 
-      <Row>
-        <Col>
-          <Form.Group>
-            <Form.Label><b>Price</b></Form.Label>
-            <Form.Control
-              type='text'
-              onChange={e => setProdPrice(e.target.value)}
-              value={prodPrice}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-      <br />
+        <Row>
+          <Col>
+            <Form.Group>
+              <Form.Label><b>Price</b></Form.Label>
+              <Form.Control
+                type='text'
+                onChange={e => setProdPrice(e.target.value)}
+                value={prodPrice}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <br />
 
-      <Row>
-        <Col>
-          <Button variant='primary' onClick={(e) => handleAddProduct({props, formState, waitingModalState})}>
-            Add Product
-          </Button>
-        </Col>
-      </Row>
-    </Container>
-    {
+        <Row>
+          <Col>
+            <Button variant='primary' onClick={(e) => handleAddProduct({ props, formState, waitingModalState })}>
+              Add Product
+            </Button>
+          </Col>
+        </Row>
+      </Container>
+      {
       showWaitingModal
         ? (<ModalWaiting
-          heading={`Adding new product: ${prodName}`}
-          body={waitingModalBody}
-          denyClose={denyClose}
-          hideSpinner={hideSpinner}
-          closeFunc={(e) => waitingModalClose(props, waitingModalState)}
-        />)
+            heading={`Adding new product: ${prodName}`}
+            body={waitingModalBody}
+            denyClose={denyClose}
+            hideSpinner={hideSpinner}
+            closeFunc={(e) => waitingModalClose(props, waitingModalState)}
+           />)
         : null
     }
     </>
@@ -133,14 +134,13 @@ function AddProduct(props) {
 }
 
 // Add the new product to the products array in the tokens mutable data.
-async function handleAddProduct(inObj) {
+async function handleAddProduct (inObj) {
   console.log('handleAddProduct() handler activated.')
 
   try {
-
     // Expand the input parameters.
-    const {props, formState, waitingModalState} = inObj
-    const {prodName, prodDesc, prodImage, prodPrice} = formState
+    const { props, formState, waitingModalState } = inObj
+    const { prodName, prodDesc, prodImage, prodPrice } = formState
 
     // Setup Waiting Modal
     waitingModalState.setShowWaitingModal(true)
@@ -177,7 +177,7 @@ async function handleAddProduct(inObj) {
     waitingModalState.setWaitingModalBody(modalBody)
 
     // Generate a transaction to update the mutable data.
-    await updateMutableData({mutableData: mutableDataStr, wallet})
+    await updateMutableData({ mutableData: mutableDataStr, wallet })
 
     // Update waiting modal
     modalBody.push('Waiting for changes to propegate...')
@@ -198,15 +198,14 @@ async function handleAddProduct(inObj) {
     await props.appData.wallet.bchjs.Util.sleep(3000)
 
     // Update the modal
-    modalBody.push(`Done!`)
+    modalBody.push('Done!')
     waitingModalState.setWaitingModalBody(modalBody)
     waitingModalState.setHideSpinner(true)
     waitingModalState.setDenyClose(false)
-
-  } catch(err) {
+  } catch (err) {
     console.error('Error in handleDeleteProduct(): ', err)
 
-    const {waitingModalState} = inObj
+    const { waitingModalState } = inObj
 
     // Update the modal
     const modalBody = [`Error: ${err.message}`]
@@ -217,7 +216,7 @@ async function handleAddProduct(inObj) {
 }
 
 // This function is called when the waiting modal is closed.
-async function waitingModalClose(props, waitingModalState) {
+async function waitingModalClose (props, waitingModalState) {
   console.log('waiting modal closed. Updating token mutable data.')
 
   // Refresh the mutable data.

@@ -176,7 +176,7 @@ function Markers (props) {
       htmlString += ReactDOMServer.renderToString(<PopupProducts appData={props.appData} marker={markers[i]} />)
 
       // Bind the popup component to the map pin.
-      pin.bindPopup(htmlString, {'maxHeight': '300'})
+      pin.bindPopup(htmlString, { maxHeight: '300' })
     }
   }
 

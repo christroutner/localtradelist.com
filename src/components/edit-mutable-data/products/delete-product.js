@@ -5,8 +5,8 @@
 */
 
 // Global npm libraries
-import React, {useState} from 'react'
-import { Button} from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Button } from 'react-bootstrap'
 
 // Local libraries
 import updateMutableData from '../update-mutable-data.js'
@@ -14,7 +14,7 @@ import SspApi from '../../../services/ssp-api'
 import ModalContinueCancel from '../../confirm-modal'
 import ModalWaiting from '../../waiting-modal'
 
-function DeleteProduct(props) {
+function DeleteProduct (props) {
   // State for Confirm/Cancel Modal
   const [showCCModal, setShowCCModal] = useState(false)
 
@@ -55,28 +55,28 @@ function DeleteProduct(props) {
 
   return (
     <>
-    <Button variant='danger' onClick={(e) => handleInitialClick(props, deleteProdState)}>
-      Delete
-    </Button>
-    {
+      <Button variant='danger' onClick={(e) => handleInitialClick(props, deleteProdState)}>
+        Delete
+      </Button>
+      {
       showCCModal
         ? (<ModalContinueCancel
             onCancel={(e) => handleCancel(props, deleteProdState)}
             onContinue={(e) => handleContinue(props, deleteProdState)}
-            heading="Really Delete Product?"
+            heading='Really Delete Product?'
             body={modalBody}
-          />)
+           />)
         : null
     }
-    {
+      {
       showWaitingModal
         ? (<ModalWaiting
-          heading={`Deleting ${props.productData.name}...`}
-          body={waitingModalBody}
-          denyClose={denyClose}
-          hideSpinner={hideSpinner}
-          closeFunc={(e) => waitingModalClose(props, deleteProdState)}
-        />)
+            heading={`Deleting ${props.productData.name}...`}
+            body={waitingModalBody}
+            denyClose={denyClose}
+            hideSpinner={hideSpinner}
+            closeFunc={(e) => waitingModalClose(props, deleteProdState)}
+           />)
         : null
     }
     </>
@@ -85,20 +85,19 @@ function DeleteProduct(props) {
 
 // This function is called when the Delete button is clicked. It activates the
 // Cancel/Confirm modal.
-function handleInitialClick(props, deleteProdState) {
+function handleInitialClick (props, deleteProdState) {
   deleteProdState.setShowCCModal(true)
-  return
 }
 
 // This function is called when the Cancel button in the Cancel/Confirm modal
 // is clicked.
-function handleCancel(props, deleteProdState) {
+function handleCancel (props, deleteProdState) {
   deleteProdState.setShowCCModal(false)
 }
 
 // This function is called when the Continue button in the Cancel/Confirm modal
 // is clicked.
-function handleContinue(props, deleteProdState) {
+function handleContinue (props, deleteProdState) {
   console.log('continue button clicked.')
 
   deleteProdState.setShowCCModal(false)
@@ -108,7 +107,7 @@ function handleContinue(props, deleteProdState) {
 }
 
 // Button click handler. Deletes the product associated with this button.
-async function handleDeleteProduct(props, deleteProdState) {
+async function handleDeleteProduct (props, deleteProdState) {
   console.log('handleDeleteProduct() actived.')
   // console.log('props: ', props)
 
@@ -117,7 +116,7 @@ async function handleDeleteProduct(props, deleteProdState) {
     const modalBody = [`Deleting ${props.productData.name}...`]
     deleteProdState.setWaitingModalBody(modalBody)
 
-    const {appData, index} = props
+    const { appData, index } = props
 
     let oldMutableData = {}
     let products = []
@@ -137,11 +136,11 @@ async function handleDeleteProduct(props, deleteProdState) {
     console.log('Updated mutable data: ', mutableDataStr)
 
     // Update the modal body
-    modalBody.push(`Writing update to IPFS and BCH blockchain...`)
+    modalBody.push('Writing update to IPFS and BCH blockchain...')
     deleteProdState.setWaitingModalBody(modalBody)
 
     // Generate a transaction to update the mutable data.
-    await updateMutableData({mutableData: mutableDataStr, wallet: appData.wallet})
+    await updateMutableData({ mutableData: mutableDataStr, wallet: appData.wallet })
 
     // Get updated mutable data
     // console.log('Updating token data cache on server.')
@@ -162,13 +161,13 @@ async function handleDeleteProduct(props, deleteProdState) {
     await props.appData.wallet.bchjs.Util.sleep(3000)
 
     // Update the modal body
-    modalBody.push(`Done!`)
+    modalBody.push('Done!')
     deleteProdState.setWaitingModalBody(modalBody)
     deleteProdState.setHideSpinner(true)
 
     // Allow the user to close the waiting modal.
     deleteProdState.setDenyClose(false)
-  } catch(err) {
+  } catch (err) {
     console.error('Error in handleDeleteProduct(): ', err)
 
     const modalBody = [`Error: ${err.message}`]
@@ -178,7 +177,7 @@ async function handleDeleteProduct(props, deleteProdState) {
 }
 
 // This function is called when the Waiting Modal is closed.
-async function waitingModalClose(props, deleteProdState) {
+async function waitingModalClose (props, deleteProdState) {
   console.log('waiting modal closed. Updating token mutable data.')
 
   // Refresh the mutable data.

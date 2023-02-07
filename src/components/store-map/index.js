@@ -166,7 +166,7 @@ class StoreMap extends React.Component {
         let products = storeData.products
         console.log(`loadTokens() storeData for ${storeData.name}: `, storeData)
         console.log(`loadTokens() products for ${storeData.name}: `, products)
-        if(!products) products = []
+        if (!products) products = []
 
         const marker = {
           lat,
