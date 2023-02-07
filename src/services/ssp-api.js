@@ -32,16 +32,24 @@ class SspApi {
     }
   }
 
-  async updateStore(tokenId) {
+  // Have the server update the mutable data for a specific token.
+  async updateStore (tokenId, updateCache) {
     try {
-      const endpoint = `/store/update/${tokenId}`
+      // console.log('tokenId: ', tokenId)
+      // console.log('updateCache: ', updateCache)
+
+      const endpoint = '/store/update'
+      const body = {
+        tokenId,
+        updateCache
+      }
       const url = `${SERVER}${endpoint}`
       console.log('Server URL: ', url)
 
-      const result = await this.axios.get(url)
+      const result = await this.axios.post(url, body)
 
       return result.data
-    } catch(err) {
+    } catch (err) {
       console.error('Error in updateStore()')
       throw err
     }

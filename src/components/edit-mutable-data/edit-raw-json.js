@@ -65,7 +65,7 @@ function EditRawJson (props) {
     // console.log(`EditRawJson handleUpdateMutableData() newMutableData: `, newMutableData)
     // console.log(`EditRawJson handleUpdateMutableData() newMutableData.tokenId: `, newMutableData.tokenId)
     const sspApi = new SspApi()
-    await sspApi.updateStore(newMutableData.tokenId)
+    await sspApi.updateStore(newMutableData.tokenId, false)
   }
 
   return (

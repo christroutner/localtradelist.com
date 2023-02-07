@@ -5,13 +5,13 @@
 
 // Global npm libraries
 import React from 'react'
-import { Button} from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 // Local libraries
 // import updateMutableData from '../update-mutable-data.js'
 // import SspApi from '../../../services/ssp-api'
 
-function EditProduct(props) {
+function EditProduct (props) {
   return (
     <Button variant='primary' onClick={(e) => handleEditProduct(props)}>
       Edit
@@ -20,7 +20,7 @@ function EditProduct(props) {
 }
 
 // Button click handler. Deletes the product associated with this button.
-async function handleEditProduct(props) {
+async function handleEditProduct (props) {
   console.log('handleEditProduct() actived.')
   console.log('props: ', props)
 

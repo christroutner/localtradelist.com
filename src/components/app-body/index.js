@@ -19,6 +19,7 @@ import Sign from '../sign'
 import StoreMap from '../store-map'
 import CreateToken from '../create-token'
 import EditMutableData from '../edit-mutable-data'
+import About from '../about'
 
 class AppBody extends React.Component {
   constructor (props) {
@@ -71,6 +72,8 @@ class AppBody extends React.Component {
         return (<Sign appData={this.state.appData} />)
       case 7:
         return (<EditMutableData appData={this.state.appData} />)
+      case 8:
+        return (<About appData={this.state.appData} />)
 
       // Special Views
       case 100:

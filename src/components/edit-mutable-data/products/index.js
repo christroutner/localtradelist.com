@@ -11,13 +11,12 @@ import AddProduct from './add-product'
 import DeleteProduct from './delete-product'
 
 function EditProducts (props) {
-
   // Get products from the mutable data.
   let products = null
   try {
     const mutableData = JSON.parse(props.appData.mutableData)
     products = mutableData.jsonLd.storeData.products
-  } catch(err) {
+  } catch (err) {
     return (
       <Container>
         <Row>
@@ -33,7 +32,7 @@ function EditProducts (props) {
   }
 
   const productsJsx = []
-  for(let i=0; i < products.length; i++) {
+  for (let i = 0; i < products.length; i++) {
     const thisProduct = products[i]
 
     const productJsx = new Product(thisProduct, i, props.appData)
@@ -42,39 +41,39 @@ function EditProducts (props) {
 
   return (
     <>
-    <Container>
-      <Row>
-        <Col>
-          <b>Products:</b>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          {productsJsx}
-        </Col>
-      </Row>
-      <br />
+      <Container>
+        <Row>
+          <Col>
+            <b>Products:</b>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            {productsJsx}
+          </Col>
+        </Row>
+        <br />
 
-      <Row>
-        <Col>
-          <i>Note</i>: If you need to edit a product, delete it, then add it
-          again, using the edited data. Only the first two products are displayed
-          on the map.
-        </Col>
-      </Row>
-      <br />
+        <Row>
+          <Col>
+            <i>Note</i>: If you need to edit a product, delete it, then add it
+            again, using the edited data. Only the first two products are displayed
+            on the map.
+          </Col>
+        </Row>
+        <br />
 
-      <Row>
-        <Col>
-          <AddProduct appData={props.appData} />
-        </Col>
-      </Row>
-    </Container>
+        <Row>
+          <Col>
+            <AddProduct appData={props.appData} />
+          </Col>
+        </Row>
+      </Container>
     </>
   )
 }
 
-function Product(productData, index, appData) {
+function Product (productData, index, appData) {
   return (
     <Container key={`product${index}`}>
       <Row>
@@ -99,7 +98,7 @@ function Product(productData, index, appData) {
       </Row>
       <Row>
         <Col>
-          <DeleteProduct appData={appData} index={index} />
+          <DeleteProduct appData={appData} index={index} productData={productData} />
         </Col>
       </Row>
       <br /><br />
