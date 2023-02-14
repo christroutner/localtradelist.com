@@ -40,6 +40,7 @@ function App (props) {
   const [wallet, setWallet] = useState(false)
   const [servers, setServers] = useState(defaultServerOptions)
 
+<<<<<<< HEAD
     this.state = {
       // State specific to this top-level component.
       walletInitialized: false,
@@ -49,6 +50,16 @@ function App (props) {
       serverUrl, // Stores the URL for the currently selected server.
       servers: defaultServerOptions, // A list of back end servers.
       mutableData: null, // Placeholder. Will contain store mutable data after wallet init (if available)
+=======
+  // Local storage
+  const [lsState, setLSState, { removeItem }] = useLocalStorageState('bchWalletState', {
+    ssr: true,
+    defaultValue: {}
+  })
+  const removeLocalStorageItem = removeItem
+  const updateLocalStorage = (lsObj) => {
+    // console.log(`updateLocalStorage() input: ${JSON.stringify(lsObj, null, 2)}`)
+>>>>>>> upstream/master
 
     // Progressively overwrite the LocalStorage state.
     const newObj = Object.assign({}, lsState, lsObj)
@@ -89,11 +100,43 @@ function App (props) {
     bchUsdPrice: 150
   })
 
+<<<<<<< HEAD
     // Bind the 'this' object to event handlers
     this.passMnemonic = this.passMnemonic.bind(this)
     this.getMutableData = this.getMutableData.bind(this)
 
     _this = this
+=======
+  // Load all the app state into a single object that can be passed to child
+  // components.
+  const appData = {
+    wallet,
+    setWallet,
+    serverUrl,
+    setServerUrl,
+    servers,
+    setServers,
+    showStartModal,
+    setShowStartModal,
+    menuState,
+    setMenuState,
+    asyncInitFinished,
+    setAsyncInitFinished,
+    asyncInitSucceeded,
+    setAsyncInitSucceeded,
+    modalBody,
+    setModalBody,
+    hideSpinner,
+    setHideSpinner,
+    denyClose,
+    setDenyClose,
+    bchWalletState,
+    setBchWalletState,
+    bchWallet: wallet, // Alias. TODO: Remove this
+    removeLocalStorageItem,
+    updateLocalStorage,
+    updateBchWalletState
+>>>>>>> upstream/master
   }
 
   // END STATE
@@ -112,12 +155,17 @@ function App (props) {
 
           setDenyClose(true)
 
+<<<<<<< HEAD
       // If this wallet has created a token already, then download the mutable data.
       await this.getMutableData(bchWallet)
 
       // Get the BCH balance of the wallet.
       this.addToModal('Getting BCH balance')
       await this.asyncLoad.getWalletBchBalance(bchWallet, this.updateBchWalletState)
+=======
+          await asyncLoad.loadWalletLib()
+          // console.log('Wallet: ', Wallet)
+>>>>>>> upstream/master
 
           addToModal('Getting alternative servers', appData)
           const gistServers = await asyncLoad.getServers()
@@ -138,6 +186,7 @@ function App (props) {
           addToModal('Getting SLP tokens', appData)
           await asyncLoad.getSlpTokenBalances(walletTemp, updateBchWalletState, appData)
 
+<<<<<<< HEAD
     // This is a macro object that is passed to all child components. It gathers
     // all the data and handlers used throughout the app.
     const appData = {
@@ -148,6 +197,11 @@ function App (props) {
       lsState: this.lsState,
       mutableData: this.state.mutableData,
       getMutableData: this.getMutableData,
+=======
+          // Get the BCH spot price
+          addToModal('Getting BCH spot price in USD', appData)
+          await asyncLoad.getUSDExchangeRate(walletTemp, updateBchWalletState, appData)
+>>>>>>> upstream/master
 
           // Update state
           setShowStartModal(false)
@@ -166,12 +220,19 @@ function App (props) {
           ]
           setModalBody(errModalBody)
 
+<<<<<<< HEAD
     return (
       <>
         <GetRestUrl />
         <LoadScripts />
         <LoadLocalStorage passMnemonic={this.passMnemonic} />
         <NavMenu menuHandler={this.onMenuClick} appData={appData} />
+=======
+          // Update Modal State
+          setHideSpinner(true)
+          setShowStartModal(true)
+          setDenyClose(false)
+>>>>>>> upstream/master
 
           // Update the startup state.
           setAsyncInitFinished(true)
@@ -186,6 +247,7 @@ function App (props) {
     <>
       <LoadScripts />
 
+<<<<<<< HEAD
   // This function retrieves the mutable data for an SSP token controlled by
   // the wallet. It looks for a Group minting baton held by the wallet. If
   // found, and if the token contains SSP in the ticker, then the mutable
@@ -229,6 +291,9 @@ function App (props) {
   // Add a new line to the waiting modal.
   addToModal (inStr) {
     const modalBody = this.state.modalBody
+=======
+      <NavMenu menuHandler={onMenuClick} appData={appData} />
+>>>>>>> upstream/master
 
       {
         showStartModal

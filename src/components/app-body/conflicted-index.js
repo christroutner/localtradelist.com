@@ -16,16 +16,26 @@ import SlpTokens from '../slp-tokens'
 import ServerSelectView from '../servers/select-server-view'
 import Sweep from '../sweep'
 import Sign from '../sign'
+<<<<<<< HEAD
 import StoreMap from '../store-map'
 import CreateToken from '../create-token'
 import EditMutableData from '../edit-mutable-data'
 import About from '../about'
+=======
+
+function AppBody (props) {
+  // Dependency injection through props
+  const appData = props.appData
+  const menuState = props.menuState
+  // console.log('AppBody() menuState: ', menuState)
+>>>>>>> upstream/master
 
   function chooseView (menuState) {
     // console.log(`chooseView() menuState: ${menuState}`)
 
     switch (menuState) {
       case 0:
+<<<<<<< HEAD
         return (<StoreMap appData={this.state.appData} />)
       case 1:
         return (<CreateToken appData={this.state.appData} />)
@@ -47,12 +57,27 @@ import About from '../about'
         return (<EditMutableData appData={this.state.appData} />)
       case 8:
         return (<About appData={this.state.appData} />)
+=======
+        return (<BchSend appData={appData} />)
+      case 1:
+        return (<SlpTokens appData={appData} />)
+      case 2:
+        return (<BchWallet appData={appData} />)
+      case 3:
+        return (<Sweep appData={appData} />)
+      case 4:
+        return (<Sign appData={appData} />)
+>>>>>>> upstream/master
 
         // Special Views
       case 100:
         return (<ServerSelectView appData={appData} />)
       default:
+<<<<<<< HEAD
         return (<StoreMap appData={this.state.appData} />)
+=======
+        return (<BchSend appData={appData} />)
+>>>>>>> upstream/master
     }
   }
 
