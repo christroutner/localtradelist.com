@@ -11,13 +11,15 @@ import { Nav, Navbar, Image } from 'react-bootstrap'
 import Logo from './psf-logo.png'
 
 function NavMenu (props) {
-  const handleClickEvent = (menuItem) => {
-    // Pass the selected menu item up to the parent component.
-    props.menuHandler(menuItem)
-  }
 
   const mutableData = props.appData.mutableData
   // console.log('nav-menu mutableData: ', mutableData)
+
+  // This function is called when a user clicks on one of the menu items.
+  const handleClickEvent = (menuItem) => {
+    // Pass the selected menu item up to the parent component.
+    props.menuHandler(menuItem, props.appData)
+  }
 
   return (
     <>

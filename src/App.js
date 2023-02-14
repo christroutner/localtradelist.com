@@ -88,6 +88,9 @@ function App (props) {
     bchUsdPrice: 150
   })
 
+  // State specific to localtradelist.com
+  const [mutableData, setMutableData] = useState(null)
+
   // Load all the app state into a single object that can be passed to child
   // components.
   const appData = {
@@ -116,7 +119,8 @@ function App (props) {
     bchWallet: wallet, // Alias. TODO: Remove this
     removeLocalStorageItem,
     updateLocalStorage,
-    updateBchWalletState
+    updateBchWalletState,
+    mutableData, setMutableData
   }
 
   // END STATE
@@ -148,6 +152,9 @@ function App (props) {
 
           const walletTemp = await asyncLoad.initWallet(serverUrl, mnemonic, appData)
           setWallet(walletTemp)
+
+          // If this wallet has created a token already, then download the mutable data.
+          await getMutableData({wallet: walletTemp, appData})
 
           // Get the BCH balance of the wallet.
           addToModal('Getting BCH balance', appData)
@@ -208,6 +215,43 @@ function App (props) {
       <Footer appData={appData} />
     </>
   )
+}
+
+// This function retrieves the mutable data for an SSP token controlled by
+// the wallet. It looks for a Group minting baton held by the wallet. If
+// found, and if the token contains SSP in the ticker, then the mutable
+// data for that token is retrieved and saved to the state.
+async function getMutableData (inObj = {}) {
+  try {
+    const { wallet, updateCache, appData } = inObj
+
+    const groupMintBaton = wallet.utxos.utxoStore.slpUtxos.group.mintBatons[0]
+    console.log('groupMintBaton: ', groupMintBaton)
+
+    if (groupMintBaton && groupMintBaton.tokenId) {
+      console.log('getMutableData updateCache: ', updateCache)
+
+      // Get the mutable data
+      const tokenData = await wallet.getTokenData2(groupMintBaton.tokenId, updateCache)
+      console.log('tokenData: ', tokenData)
+
+      if (tokenData.mutableData) {
+        // Add the token ID to the mutable data.
+        tokenData.mutableData.tokenId = tokenData.tokenStats.tokenId
+        console.log('mutableData with tokenId: ', tokenData.mutableData)
+
+        // console.log('token data found.')
+        appData.setMutableData(JSON.stringify(tokenData.mutableData, null, 2))
+      } else {
+        console.log(`Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`)
+      }
+    }
+
+    console.log('App.js getMutableData(): ', appData.mutableData)
+  } catch (err) {
+    console.error('Error in getMutableData(): ', err.message)
+    throw err
+  }
 }
 
 // This function is passed to child components in order to update the wallet
