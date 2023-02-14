@@ -40,15 +40,14 @@ function App (props) {
   const [wallet, setWallet] = useState(false)
   const [servers, setServers] = useState(defaultServerOptions)
 
-    this.state = {
-      // State specific to this top-level component.
-      walletInitialized: false,
-      bchWallet: false, // BCH wallet instance
-      menuState: 0, // The current View being displayed in the app
-      queryParamExists: false, // Becomes true if query parameters are detected in the URL.
-      serverUrl, // Stores the URL for the currently selected server.
-      servers: defaultServerOptions, // A list of back end servers.
-      mutableData: null, // Placeholder. Will contain store mutable data after wallet init (if available)
+  // Local storage
+  const [lsState, setLSState, { removeItem }] = useLocalStorageState('bchWalletState', {
+    ssr: true,
+    defaultValue: {}
+  })
+  const removeLocalStorageItem = removeItem
+  const updateLocalStorage = (lsObj) => {
+    // console.log(`updateLocalStorage() input: ${JSON.stringify(lsObj, null, 2)}`)
 
     // Progressively overwrite the LocalStorage state.
     const newObj = Object.assign({}, lsState, lsObj)
@@ -89,11 +88,35 @@ function App (props) {
     bchUsdPrice: 150
   })
 
-    // Bind the 'this' object to event handlers
-    this.passMnemonic = this.passMnemonic.bind(this)
-    this.getMutableData = this.getMutableData.bind(this)
-
-    _this = this
+  // Load all the app state into a single object that can be passed to child
+  // components.
+  const appData = {
+    wallet,
+    setWallet,
+    serverUrl,
+    setServerUrl,
+    servers,
+    setServers,
+    showStartModal,
+    setShowStartModal,
+    menuState,
+    setMenuState,
+    asyncInitFinished,
+    setAsyncInitFinished,
+    asyncInitSucceeded,
+    setAsyncInitSucceeded,
+    modalBody,
+    setModalBody,
+    hideSpinner,
+    setHideSpinner,
+    denyClose,
+    setDenyClose,
+    bchWalletState,
+    setBchWalletState,
+    bchWallet: wallet, // Alias. TODO: Remove this
+    removeLocalStorageItem,
+    updateLocalStorage,
+    updateBchWalletState
   }
 
   // END STATE
@@ -112,12 +135,8 @@ function App (props) {
 
           setDenyClose(true)
 
-      // If this wallet has created a token already, then download the mutable data.
-      await this.getMutableData(bchWallet)
-
-      // Get the BCH balance of the wallet.
-      this.addToModal('Getting BCH balance')
-      await this.asyncLoad.getWalletBchBalance(bchWallet, this.updateBchWalletState)
+          await asyncLoad.loadWalletLib()
+          // console.log('Wallet: ', Wallet)
 
           addToModal('Getting alternative servers', appData)
           const gistServers = await asyncLoad.getServers()
@@ -138,16 +157,9 @@ function App (props) {
           addToModal('Getting SLP tokens', appData)
           await asyncLoad.getSlpTokenBalances(walletTemp, updateBchWalletState, appData)
 
-    // This is a macro object that is passed to all child components. It gathers
-    // all the data and handlers used throughout the app.
-    const appData = {
-      // Wallet and wallet state
-      bchWallet: this.state.bchWallet,
-      wallet: this.state.bchWallet,
-      bchWalletState: this.state.bchWalletState,
-      lsState: this.lsState,
-      mutableData: this.state.mutableData,
-      getMutableData: this.getMutableData,
+          // Get the BCH spot price
+          addToModal('Getting BCH spot price in USD', appData)
+          await asyncLoad.getUSDExchangeRate(walletTemp, updateBchWalletState, appData)
 
           // Update state
           setShowStartModal(false)
@@ -166,12 +178,10 @@ function App (props) {
           ]
           setModalBody(errModalBody)
 
-    return (
-      <>
-        <GetRestUrl />
-        <LoadScripts />
-        <LoadLocalStorage passMnemonic={this.passMnemonic} />
-        <NavMenu menuHandler={this.onMenuClick} appData={appData} />
+          // Update Modal State
+          setHideSpinner(true)
+          setShowStartModal(true)
+          setDenyClose(false)
 
           // Update the startup state.
           setAsyncInitFinished(true)
@@ -186,49 +196,7 @@ function App (props) {
     <>
       <LoadScripts />
 
-  // This function retrieves the mutable data for an SSP token controlled by
-  // the wallet. It looks for a Group minting baton held by the wallet. If
-  // found, and if the token contains SSP in the ticker, then the mutable
-  // data for that token is retrieved and saved to the state.
-  async getMutableData (wallet, updateCache = false) {
-    try {
-      const groupMintBaton = wallet.utxos.utxoStore.slpUtxos.group.mintBatons[0]
-      console.log('groupMintBaton: ', groupMintBaton)
-
-      if (groupMintBaton && groupMintBaton.tokenId) {
-        console.log('getMutableData updateCache: ', updateCache)
-
-        // Get the mutable data
-        const tokenData = await wallet.getTokenData2(groupMintBaton.tokenId, updateCache)
-        console.log('tokenData: ', tokenData)
-
-        if (tokenData.mutableData) {
-          // Add the token ID to the mutable data.
-          tokenData.mutableData.tokenId = tokenData.tokenStats.tokenId
-          console.log('mutableData with tokenId: ', tokenData.mutableData)
-
-          // console.log('token data found.')
-          await this.setState({
-            mutableData: JSON.stringify(tokenData.mutableData, null, 2)
-          })
-        } else {
-          // this.setState({
-          //   mutableData: `Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`
-          // })
-
-          console.log(`Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`)
-        }
-      }
-
-      console.log('App.js getMutableData(): ', this.state.mutableData)
-    } catch (err) {
-      console.error('Error in getMutableData(): ', err)
-    }
-  }
-
-  // Add a new line to the waiting modal.
-  addToModal (inStr) {
-    const modalBody = this.state.modalBody
+      <NavMenu menuHandler={onMenuClick} appData={appData} />
 
       {
         showStartModal
