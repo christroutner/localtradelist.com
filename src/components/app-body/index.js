@@ -21,67 +21,52 @@ import CreateToken from '../create-token'
 import EditMutableData from '../edit-mutable-data'
 import About from '../about'
 
-class AppBody extends React.Component {
-  constructor (props) {
-    super(props)
+function AppBody (props) {
+  // Dependency injection through props
+  const appData = props.appData
+  const menuState = props.menuState
 
-    this.state = {
-      activeView: 0,
-      menuState: props.menuState,
-      appData: props.appData
-    }
-
-    // This function is passed from the parent component. It's used to update
-    // the BCH wallet state.
-    this.updateBchWalletState = props.appData.updateBchWalletState
-
-    // _this = this
-  }
-
-  render () {
-    // console.log(`AppBody menu state: ${this.props.menuState}`)
-
-    return (
-      <>
-        {this.chooseView(this.props.menuState)}
-      </>
-    )
-  }
-
-  chooseView (menuState) {
+  function chooseView (menuState) {
     // console.log(`chooseView() menuState: ${menuState}`)
 
     switch (menuState) {
       case 0:
-        return (<StoreMap appData={this.state.appData} />)
+        return (<StoreMap appData={appData} />)
       case 1:
-        return (<CreateToken appData={this.state.appData} />)
+        return (<CreateToken appData={appData} />)
       case 2:
-        return (<BchSend appData={this.state.appData} />)
+        return (<BchSend appData={appData} />)
       case 3:
-        return (<SlpTokens appData={this.state.appData} />)
+        return (<SlpTokens appData={appData} />)
       case 4:
         return (
           <BchWallet
-            appData={this.state.appData}
+            appData={appData}
           />
         )
       case 5:
-        return (<Sweep appData={this.state.appData} />)
+        return (<Sweep appData={appData} />)
       case 6:
-        return (<Sign appData={this.state.appData} />)
+        return (<Sign appData={appData} />)
       case 7:
-        return (<EditMutableData appData={this.state.appData} />)
+        return (<EditMutableData appData={appData} />)
       case 8:
-        return (<About appData={this.state.appData} />)
+        return (<About appData={appData} />)
 
       // Special Views
       case 100:
-        return (<ServerSelectView appData={this.state.appData} />)
+        return (<ServerSelectView appData={appData} />)
       default:
-        return (<StoreMap appData={this.state.appData} />)
+        return (<StoreMap appData={appData} />)
     }
   }
+
+  return (
+    <>
+      {chooseView(menuState)}
+    </>
+  )
+
 }
 
 export default AppBody
