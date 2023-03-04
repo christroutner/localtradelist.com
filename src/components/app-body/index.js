@@ -66,7 +66,6 @@ function AppBody (props) {
       {chooseView(menuState)}
     </>
   )
-
 }
 
 export default AppBody

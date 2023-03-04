@@ -120,7 +120,8 @@ function App (props) {
     removeLocalStorageItem,
     updateLocalStorage,
     updateBchWalletState,
-    mutableData, setMutableData
+    mutableData,
+    setMutableData
   }
 
   // END STATE
@@ -154,7 +155,7 @@ function App (props) {
           setWallet(walletTemp)
 
           // If this wallet has created a token already, then download the mutable data.
-          await getMutableData({wallet: walletTemp, appData})
+          await getMutableData({ wallet: walletTemp, appData })
 
           // Get the BCH balance of the wallet.
           addToModal('Getting BCH balance', appData)

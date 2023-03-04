@@ -11,7 +11,6 @@ import { Nav, Navbar, Image } from 'react-bootstrap'
 import Logo from './psf-logo.png'
 
 function NavMenu (props) {
-
   const mutableData = props.appData.mutableData
   // console.log('nav-menu mutableData: ', mutableData)
 

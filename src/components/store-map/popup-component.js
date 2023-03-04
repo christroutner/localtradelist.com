@@ -21,7 +21,15 @@ function InfoPopup (props) {
           : null
       }
 
-      <p style={{ overflowWrap: 'break-word' }}><b>Token ID</b>: <a href={`https://slp-token.fullstack.cash/?tokenid=${tokenId}`} target='_blank' rel='noreferrer'>{tokenId}</a></p>
+      <p style={{ overflowWrap: 'break-word' }}>
+        <a
+          href={`https://profile.localtradelist.com/?tokenid=${tokenId}`}
+          target='_blank'
+          rel='noreferrer'
+        >
+          <b>Profile Page</b>
+        </a>
+      </p>
     </>
   )
 }
