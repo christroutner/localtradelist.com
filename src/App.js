@@ -41,7 +41,7 @@ function App (props) {
   const [servers, setServers] = useState(defaultServerOptions)
 
   // Local storage
-  const [lsState, setLSState, { removeItem }] = useLocalStorageState('bchWalletState', {
+  const [lsState, setLSState, { removeItem }] = useLocalStorageState('localTradeListWalletState', {
     ssr: true,
     defaultValue: {}
   })
@@ -245,6 +245,9 @@ async function getMutableData (inObj = {}) {
         appData.setMutableData(JSON.stringify(tokenData.mutableData, null, 2))
       } else {
         console.log(`Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`)
+
+        // Ask the back-end server to refresh the mutable data
+        await wallet.getTokenData2(groupMintBaton.tokenId, true)
       }
     }
 
