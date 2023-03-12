@@ -41,7 +41,7 @@ function App (props) {
   const [servers, setServers] = useState(defaultServerOptions)
 
   // Local storage
-  const [lsState, setLSState, { removeItem }] = useLocalStorageState('bchWalletState', {
+  const [lsState, setLSState, { removeItem }] = useLocalStorageState('localTradeListWalletState', {
     ssr: true,
     defaultValue: {}
   })
@@ -120,7 +120,8 @@ function App (props) {
     removeLocalStorageItem,
     updateLocalStorage,
     updateBchWalletState,
-    mutableData, setMutableData
+    mutableData,
+    setMutableData
   }
 
   // END STATE
@@ -154,7 +155,7 @@ function App (props) {
           setWallet(walletTemp)
 
           // If this wallet has created a token already, then download the mutable data.
-          await getMutableData({wallet: walletTemp, appData})
+          await getMutableData({ wallet: walletTemp, appData })
 
           // Get the BCH balance of the wallet.
           addToModal('Getting BCH balance', appData)
@@ -244,6 +245,9 @@ async function getMutableData (inObj = {}) {
         appData.setMutableData(JSON.stringify(tokenData.mutableData, null, 2))
       } else {
         console.log(`Mutable data for token named ${tokenData.tokenStats.name} (Token ID ${groupMintBaton.tokenId}) could not be retrieved.`)
+
+        // Ask the back-end server to refresh the mutable data
+        await wallet.getTokenData2(groupMintBaton.tokenId, true)
       }
     }
 

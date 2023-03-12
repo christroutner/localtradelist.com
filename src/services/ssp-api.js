@@ -5,8 +5,8 @@
 // Global npm libraries
 const axios = require('axios')
 
-const SERVER = 'http://localhost:5020'
-// const SERVER = process.env.SSP_SERVER
+// const SERVER = 'http://localhost:5020'
+const SERVER = process.env.REACT_APP_SSP_SERVER
 // const SERVER = 'http://5.78.64.121:5020'
 
 class SspApi {

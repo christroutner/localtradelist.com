@@ -707,7 +707,7 @@ class CreateToken extends React.Component {
       console.log(`New token created with TXID: ${genesisTxid}`)
 
       // Save the token ID to local storage.
-      await this.state.appData.setLSState({ sspTokenId: genesisTxid })
+      await this.state.appData.updateLocalStorage({ sspTokenId: genesisTxid })
 
       statusStr = 'Token Created! Token ID:'
       console.log(statusStr)
