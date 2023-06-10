@@ -18,6 +18,7 @@ import MapOfStores from './map-of-stores.js'
 import WaitingModal from '../waiting-modal'
 import ModalConfirm from '../confirm-modal'
 import PopupLib from './popup-lib.js'
+import StoreFeed from './store-feed.js'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -41,12 +42,15 @@ class StoreMap extends React.Component {
       confirmType: null,
 
       // Map
-      markers: []
+      markers: [],
+
+      mapFilterBox: {}
     }
 
     // Bind the 'this' object to subfunctions.
     this.updateWaitingModal = this.updateWaitingModal.bind(this)
     this.updateConfirmModal = this.updateConfirmModal.bind(this)
+    this.updateMapFilterBox = this.updateMapFilterBox.bind(this)
     // this.handleContinueFlag = this.handleContinueFlag.bind(this)
     // this.handleCancelFlag = this.handleCancelFlag.bind(this)
 
@@ -61,6 +65,8 @@ class StoreMap extends React.Component {
 
   async componentDidMount () {
     await this.loadTokens()
+
+    // console.log('ping01 from store-map/index.js componentDidMount()')
   }
 
   render () {
@@ -78,13 +84,20 @@ class StoreMap extends React.Component {
       // mapCenterLong: -122.6437683,
 
       markers: this.state.markers,
-      appData: this.state.appData
+      appData: this.state.appData,
+
+      updateMapFilterBox: this.updateMapFilterBox
     }
     this.popupLib.confirmTokenId = this.state.confirmTokenId
     this.popupLib.confirmType = this.state.confirmType
     mapProps.appData.popupLib = this.popupLib
 
     console.log('mapProps: ', mapProps)
+
+    const mapFilterBoxProps = {
+      appData: this.state.appData,
+      mapFilterBox: this.state.mapFilterBox
+    }
 
     return (
       <>
@@ -105,6 +118,8 @@ class StoreMap extends React.Component {
             </Col>
             <Col xs={12} lg={4}>
               Loading stores from blockchain...
+
+              <StoreFeed mapFilterBoxProps={mapFilterBoxProps} />
             </Col>
           </Row>
         </Container>
@@ -130,12 +145,19 @@ class StoreMap extends React.Component {
                 onContinue={this.popupLib.handleContinueFlag}
                 onCancel={this.popupLib.handleCancelFlag}
                 body={this.state.confirmModalBody}
+                closeFunc={this.handleCloseModal}
               />
               )
             : null
         }
       </>
     )
+  }
+
+  // Update the store feed, to the right of the map.
+  updateMapFilterBox (mapFilterBox) {
+    console.log('updateMapFilterBox() mapFilterBox: ', mapFilterBox)
+    this.setState({ mapFilterBox })
   }
 
   // This function is called when the component is loaded, from componentDidMount()

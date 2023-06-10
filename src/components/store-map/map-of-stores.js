@@ -8,7 +8,7 @@
 
 // Global npm libraries
 import React from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import ReactDOMServer from 'react-dom/server'
@@ -31,7 +31,7 @@ function MapOfStreets (props) {
   window.handleFlagGarbage = handleFlagGarbage
 
   // Data passed from the parent component.
-  let { markers, mapCenterLat, mapCenterLong, zoom, appData } = props.mapObj
+  let { markers, mapCenterLat, mapCenterLong, zoom, appData, updateMapFilterBox } = props.mapObj
 
   // Extract parent-level functions from the appData.
   // wallet = appData.wallet
@@ -59,9 +59,33 @@ function MapOfStreets (props) {
         />
 
         <Markers markers={markers} appData={appData} />
+
+        <MapMoveEvent appData={appData} updateMapFilterBox={updateMapFilterBox} />
       </MapContainer>
     </>
   )
+}
+
+function MapMoveEvent (props) {
+  const updateMapFilterBox = props.updateMapFilterBox
+
+  const map = useMapEvents({
+    // This event handler is called any time the map is moved or zoomed.
+    moveend: () => {
+      console.log('The map was moved')
+      console.log('map: ', map)
+
+      const zoom = map.getZoom()
+      console.log('zoom: ', zoom)
+
+      const bounds = map.getBounds()
+      console.log('bounds: ', bounds)
+
+      updateMapFilterBox(bounds)
+    }
+  })
+
+  return null
 }
 
 // This function is called when the 'NSFW' flag button is clicked.
