@@ -7,7 +7,7 @@
 */
 
 // Global npm libraries
-import React from 'react'
+import React, { useState } from 'react'
 import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -69,21 +69,34 @@ function MapOfStreets (props) {
 function MapMoveEvent (props) {
   const updateMapFilterBox = props.updateMapFilterBox
 
+  const [firstRun, setFirstRun] = useState(true)
+
+  // function updateStoreFeed(bounds) {
+  //   updateMapFilterBox(bounds)
+  // }
+
   const map = useMapEvents({
     // This event handler is called any time the map is moved or zoomed.
     moveend: () => {
-      console.log('The map was moved')
-      console.log('map: ', map)
-
-      const zoom = map.getZoom()
-      console.log('zoom: ', zoom)
-
       const bounds = map.getBounds()
       console.log('bounds: ', bounds)
+      //
+      // updateMapFilterBox(bounds)
 
+      // updateStoreFeed(bounds)
       updateMapFilterBox(bounds)
     }
   })
+
+  if (firstRun) {
+    const bounds = map.getBounds()
+    console.log('bounds: ', bounds)
+
+    setFirstRun(false)
+
+    // updateStoreFeed(bounds)
+    updateMapFilterBox(bounds)
+  }
 
   return null
 }

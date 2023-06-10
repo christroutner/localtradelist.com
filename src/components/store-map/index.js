@@ -86,6 +86,8 @@ class StoreMap extends React.Component {
       markers: this.state.markers,
       appData: this.state.appData,
 
+      // Pass handle to the function that updates the store feed when the map
+      // is moved or zoomed.
       updateMapFilterBox: this.updateMapFilterBox
     }
     this.popupLib.confirmTokenId = this.state.confirmTokenId
@@ -117,8 +119,6 @@ class StoreMap extends React.Component {
               <MapOfStores mapObj={mapProps} />
             </Col>
             <Col xs={12} lg={4}>
-              Loading stores from blockchain...
-
               <StoreFeed mapFilterBoxProps={mapFilterBoxProps} />
             </Col>
           </Row>
