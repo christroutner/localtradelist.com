@@ -6,12 +6,15 @@
 
 // Global npm libraries
 import React, { useState, useEffect } from 'react'
+import { Container, Row, Col, Image } from 'react-bootstrap'
 import axios from 'axios'
+
+const SERVER = process.env.REACT_APP_SSP_SERVER
 
 function StoreFeed (props) {
   const { mapFilterBoxProps } = props
   const { mapFilterBox } = mapFilterBoxProps
-  console.log('mapFilterBox: ', mapFilterBox)
+  // console.log('mapFilterBox: ', mapFilterBox)
 
   const box = mapFilterBox
 
@@ -28,7 +31,7 @@ function StoreFeed (props) {
         if (!boxIsEmpty) {
           // Get a list of stores that are visible within the map window. They will be
           // sorted with the first having the most recent update to its mutable data.
-          const response = await axios.post('http://localhost:5020/store/box', { box })
+          const response = await axios.post(`${SERVER}/store/box`, { box })
           // console.log('response.data: ', response.data)
 
           const stores = response.data.stores
@@ -38,7 +41,26 @@ function StoreFeed (props) {
 
           for (let i = 0; i < stores.length; i++) {
             const thisStore = stores[i]
-            const thisStoreDetails = (<p key={`store-detail-${i}`}>{thisStore.storeData.name}</p>)
+            console.log('thisStore: ', thisStore)
+
+            const storeIcon = thisStore.mutableData.tokenIcon
+
+            let storeDesc = thisStore.storeData.description
+            if(storeDesc.length > 80) storeDesc = `${storeDesc.slice(0,80)}...`
+
+            const thisStoreDetails = (
+              <>
+                <Row key={`store-detail-${i}`}>
+                  <Col>
+                    <Image src={storeIcon} fluid thumbnail />
+                  </Col>
+                  <Col>
+                    <h4>{thisStore.storeData.name}</h4>
+                    <p>{storeDesc}</p>
+                  </Col>
+                </Row>
+              </>
+            )
             tempStoreDetails.push(thisStoreDetails)
           }
 
@@ -56,7 +78,9 @@ function StoreFeed (props) {
 
   return (
     <>
-      {storeDetails}
+      <Container>
+        {storeDetails}
+      </Container>
     </>
   )
 }
