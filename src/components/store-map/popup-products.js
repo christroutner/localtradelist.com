@@ -18,7 +18,7 @@ function PopupProducts (props) {
 
   // If the store has no products listed in its array, return null.
   const products = props.marker.products
-  console.log(`PopupProducts products for ${props.marker.name}: `, products)
+  // console.log(`PopupProducts products for ${props.marker.name}: `, products)
   if (!products) return null
 
   let showProd1 = false

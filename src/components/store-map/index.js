@@ -18,6 +18,7 @@ import MapOfStores from './map-of-stores.js'
 import WaitingModal from '../waiting-modal'
 import ModalConfirm from '../confirm-modal'
 import PopupLib from './popup-lib.js'
+import StoreFeed from './store-feed.js'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -41,14 +42,16 @@ class StoreMap extends React.Component {
       confirmType: null,
 
       // Map
-      markers: []
+      markers: [],
+
+      mapFilterBox: {}
     }
 
     // Bind the 'this' object to subfunctions.
     this.updateWaitingModal = this.updateWaitingModal.bind(this)
     this.updateConfirmModal = this.updateConfirmModal.bind(this)
-    // this.handleContinueFlag = this.handleContinueFlag.bind(this)
-    // this.handleCancelFlag = this.handleCancelFlag.bind(this)
+    this.updateMapFilterBox = this.updateMapFilterBox.bind(this)
+    this.onCloseModal = this.onCloseModal.bind(this)
 
     // Encapsulate dependecies
     this.sspApi = new SspApi()
@@ -61,6 +64,8 @@ class StoreMap extends React.Component {
 
   async componentDidMount () {
     await this.loadTokens()
+
+    // console.log('ping01 from store-map/index.js componentDidMount()')
   }
 
   render () {
@@ -78,13 +83,22 @@ class StoreMap extends React.Component {
       // mapCenterLong: -122.6437683,
 
       markers: this.state.markers,
-      appData: this.state.appData
+      appData: this.state.appData,
+
+      // Pass handle to the function that updates the store feed when the map
+      // is moved or zoomed.
+      updateMapFilterBox: this.updateMapFilterBox
     }
     this.popupLib.confirmTokenId = this.state.confirmTokenId
     this.popupLib.confirmType = this.state.confirmType
     mapProps.appData.popupLib = this.popupLib
 
-    console.log('mapProps: ', mapProps)
+    // console.log('mapProps: ', mapProps)
+
+    const mapFilterBoxProps = {
+      appData: this.state.appData,
+      mapFilterBox: this.state.mapFilterBox
+    }
 
     return (
       <>
@@ -104,7 +118,7 @@ class StoreMap extends React.Component {
               <MapOfStores mapObj={mapProps} />
             </Col>
             <Col xs={12} lg={4}>
-              Loading stores from blockchain...
+              <StoreFeed mapFilterBoxProps={mapFilterBoxProps} />
             </Col>
           </Row>
         </Container>
@@ -117,6 +131,7 @@ class StoreMap extends React.Component {
                 body={this.state.modalBody}
                 hideSpinner={this.state.hideSpinner}
                 denyClose={this.state.denyClose}
+                closeFunc={this.onCloseModal}
               />
               )
             : null
@@ -130,12 +145,19 @@ class StoreMap extends React.Component {
                 onContinue={this.popupLib.handleContinueFlag}
                 onCancel={this.popupLib.handleCancelFlag}
                 body={this.state.confirmModalBody}
+                closeFunc={this.onCloseModal}
               />
               )
             : null
         }
       </>
     )
+  }
+
+  // Update the store feed, to the right of the map.
+  updateMapFilterBox (mapFilterBox) {
+    // console.log('updateMapFilterBox() mapFilterBox: ', mapFilterBox)
+    this.setState({ mapFilterBox })
   }
 
   // This function is called when the component is loaded, from componentDidMount()
@@ -164,8 +186,8 @@ class StoreMap extends React.Component {
         // console.log(`lat,long: ${lat},${long}`)
 
         let products = storeData.products
-        console.log(`loadTokens() storeData for ${storeData.name}: `, storeData)
-        console.log(`loadTokens() products for ${storeData.name}: `, products)
+        // console.log(`loadTokens() storeData for ${storeData.name}: `, storeData)
+        // console.log(`loadTokens() products for ${storeData.name}: `, products)
         if (!products) products = []
 
         const marker = {
@@ -195,8 +217,8 @@ class StoreMap extends React.Component {
   // BEGIN WAITING MODAL
 
   // This handler function is called when the modal is closed.
-  async handleCloseModal () {
-    console.log('handleCloseModal() called')
+  async onCloseModal () {
+    console.log('onCloseModal() called')
     this.setState({
       showModal: false
     })

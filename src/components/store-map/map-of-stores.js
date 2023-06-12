@@ -7,8 +7,8 @@
 */
 
 // Global npm libraries
-import React from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import React, { useState } from 'react'
+import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import ReactDOMServer from 'react-dom/server'
@@ -31,7 +31,7 @@ function MapOfStreets (props) {
   window.handleFlagGarbage = handleFlagGarbage
 
   // Data passed from the parent component.
-  let { markers, mapCenterLat, mapCenterLong, zoom, appData } = props.mapObj
+  let { markers, mapCenterLat, mapCenterLong, zoom, appData, updateMapFilterBox } = props.mapObj
 
   // Extract parent-level functions from the appData.
   // wallet = appData.wallet
@@ -59,9 +59,46 @@ function MapOfStreets (props) {
         />
 
         <Markers markers={markers} appData={appData} />
+
+        <MapMoveEvent appData={appData} updateMapFilterBox={updateMapFilterBox} />
       </MapContainer>
     </>
   )
+}
+
+function MapMoveEvent (props) {
+  const updateMapFilterBox = props.updateMapFilterBox
+
+  const [firstRun, setFirstRun] = useState(true)
+
+  // function updateStoreFeed(bounds) {
+  //   updateMapFilterBox(bounds)
+  // }
+
+  const map = useMapEvents({
+    // This event handler is called any time the map is moved or zoomed.
+    moveend: () => {
+      const bounds = map.getBounds()
+      // console.log('bounds: ', bounds)
+      //
+      // updateMapFilterBox(bounds)
+
+      // updateStoreFeed(bounds)
+      updateMapFilterBox(bounds)
+    }
+  })
+
+  if (firstRun) {
+    const bounds = map.getBounds()
+    // console.log('bounds: ', bounds)
+
+    setFirstRun(false)
+
+    // updateStoreFeed(bounds)
+    updateMapFilterBox(bounds)
+  }
+
+  return null
 }
 
 // This function is called when the 'NSFW' flag button is clicked.
@@ -127,11 +164,15 @@ async function handleFlagGarbage (tokenId) {
 function Markers (props) {
   // console.log('Marker props: ', props)
 
-  const { markers } = props
+  const { markers, appData } = props
 
   // globalMap = useMap()
   const map = useMap()
   // console.log('map: ', map)
+
+  // Add the map and pin handles to the appData object
+  appData.map = map
+  appData.pins = []
 
   if (markers.length) {
     for (let i = 0; i < markers.length; i++) {
@@ -164,8 +205,8 @@ function Markers (props) {
       // Append the buttons to the bottom. They do not render properly in the
       // popup component, so they are added here.
       htmlString += `
-        <button type="button" class="btn btn-primary">Comment</button>
-        <button type="button" class="btn btn-dark">Block</button>
+        <button type="button" class="btn btn-primary" style="display: none;">Comment</button>
+        <button type="button" class="btn btn-dark" style="display: none;">Block</button>
         <br /><br />
         <button type="button" class="btn btn-danger" onclick="window.handleFlagNsfw('${tokenId}')">NSFW</button>
         <button type="button" class="btn btn-warning" onclick="window.handleFlagGarbage('${tokenId}')">Garbage</button>
@@ -177,6 +218,8 @@ function Markers (props) {
 
       // Bind the popup component to the map pin.
       pin.bindPopup(htmlString, { maxHeight: '300' })
+
+      appData.pins.push(pin)
     }
   }
 

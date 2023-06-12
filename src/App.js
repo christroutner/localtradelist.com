@@ -133,70 +133,74 @@ function App (props) {
 
   useEffect(() => {
     async function asyncEffect () {
-      // console.log('asyncInitStarted: ', asyncInitStarted)
-      if (!asyncInitStarted) {
-        try {
-          setAsyncInitStarted(true)
+      try {
+        // console.log('asyncInitStarted: ', asyncInitStarted)
+        if (!asyncInitStarted) {
+          try {
+            setAsyncInitStarted(true)
 
-          addToModal('Loading minimal-slp-wallet', appData)
+            addToModal('Loading minimal-slp-wallet', appData)
 
-          setDenyClose(true)
+            setDenyClose(true)
 
-          await asyncLoad.loadWalletLib()
-          // console.log('Wallet: ', Wallet)
+            await asyncLoad.loadWalletLib()
+            // console.log('Wallet: ', Wallet)
 
-          addToModal('Getting alternative servers', appData)
-          const gistServers = await asyncLoad.getServers()
-          setServers(gistServers)
-          // console.log('servers: ', servers)
+            addToModal('Getting alternative servers', appData)
+            const gistServers = await asyncLoad.getServers()
+            setServers(gistServers)
+            // console.log('servers: ', servers)
 
-          addToModal('Initializing wallet', appData)
-          console.log(`Initializing wallet with back end server ${serverUrl}`)
+            addToModal('Initializing wallet', appData)
+            console.log(`Initializing wallet with back end server ${serverUrl}`)
 
-          const walletTemp = await asyncLoad.initWallet(serverUrl, mnemonic, appData)
-          setWallet(walletTemp)
+            const walletTemp = await asyncLoad.initWallet(serverUrl, mnemonic, appData)
+            setWallet(walletTemp)
 
-          // If this wallet has created a token already, then download the mutable data.
-          await getMutableData({ wallet: walletTemp, appData })
+            // If this wallet has created a token already, then download the mutable data.
+            await getMutableData({ wallet: walletTemp, appData })
 
-          // Get the BCH balance of the wallet.
-          addToModal('Getting BCH balance', appData)
-          await asyncLoad.getWalletBchBalance(walletTemp, updateBchWalletState, appData)
+            // Get the BCH balance of the wallet.
+            addToModal('Getting BCH balance', appData)
+            await asyncLoad.getWalletBchBalance(walletTemp, updateBchWalletState, appData)
 
-          // Get the SLP tokens held by the wallet.
-          addToModal('Getting SLP tokens', appData)
-          await asyncLoad.getSlpTokenBalances(walletTemp, updateBchWalletState, appData)
+            // Get the SLP tokens held by the wallet.
+            addToModal('Getting SLP tokens', appData)
+            await asyncLoad.getSlpTokenBalances(walletTemp, updateBchWalletState, appData)
 
-          // Get the BCH spot price
-          addToModal('Getting BCH spot price in USD', appData)
-          await asyncLoad.getUSDExchangeRate(walletTemp, updateBchWalletState, appData)
+            // Get the BCH spot price
+            addToModal('Getting BCH spot price in USD', appData)
+            await asyncLoad.getUSDExchangeRate(walletTemp, updateBchWalletState, appData)
 
-          // Update state
-          setShowStartModal(false)
-          setDenyClose(false)
+            // Update state
+            setShowStartModal(false)
+            setDenyClose(false)
 
-          // Update the startup state.
-          setAsyncInitFinished(true)
-          setAsyncInitSucceeded(true)
-          console.log('App.js useEffect() startup finished successfully')
-        } catch (err) {
-          console.error('Error in App.js useEffect(): ', err)
+            // Update the startup state.
+            setAsyncInitFinished(true)
+            setAsyncInitSucceeded(true)
+            console.log('App.js useEffect() startup finished successfully')
+          } catch (err) {
+            console.error('Error in App.js useEffect(): ', err)
 
-          const errModalBody = [
-            `Error: ${err.message}`,
-            'Try selecting a different back end server using the drop-down menu at the bottom of the app.'
-          ]
-          setModalBody(errModalBody)
+            const errModalBody = [
+              `Error: ${err.message}`,
+              'Try selecting a different back end server using the drop-down menu at the bottom of the app.'
+            ]
+            setModalBody(errModalBody)
 
-          // Update Modal State
-          setHideSpinner(true)
-          setShowStartModal(true)
-          setDenyClose(false)
+            // Update Modal State
+            setHideSpinner(true)
+            setShowStartModal(true)
+            setDenyClose(false)
 
-          // Update the startup state.
-          setAsyncInitFinished(true)
-          setAsyncInitSucceeded(false)
+            // Update the startup state.
+            setAsyncInitFinished(true)
+            setAsyncInitSucceeded(false)
+          }
         }
+      } catch (err) {
+        console.error('Error in App.js useEffect(): ', err)
       }
     }
     asyncEffect()
