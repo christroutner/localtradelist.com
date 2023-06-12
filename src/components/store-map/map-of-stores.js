@@ -79,7 +79,7 @@ function MapMoveEvent (props) {
     // This event handler is called any time the map is moved or zoomed.
     moveend: () => {
       const bounds = map.getBounds()
-      console.log('bounds: ', bounds)
+      // console.log('bounds: ', bounds)
       //
       // updateMapFilterBox(bounds)
 
@@ -90,7 +90,7 @@ function MapMoveEvent (props) {
 
   if (firstRun) {
     const bounds = map.getBounds()
-    console.log('bounds: ', bounds)
+    // console.log('bounds: ', bounds)
 
     setFirstRun(false)
 

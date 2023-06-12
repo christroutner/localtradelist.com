@@ -94,7 +94,7 @@ class StoreMap extends React.Component {
     this.popupLib.confirmType = this.state.confirmType
     mapProps.appData.popupLib = this.popupLib
 
-    console.log('mapProps: ', mapProps)
+    // console.log('mapProps: ', mapProps)
 
     const mapFilterBoxProps = {
       appData: this.state.appData,
@@ -156,7 +156,7 @@ class StoreMap extends React.Component {
 
   // Update the store feed, to the right of the map.
   updateMapFilterBox (mapFilterBox) {
-    console.log('updateMapFilterBox() mapFilterBox: ', mapFilterBox)
+    // console.log('updateMapFilterBox() mapFilterBox: ', mapFilterBox)
     this.setState({ mapFilterBox })
   }
 
@@ -186,8 +186,8 @@ class StoreMap extends React.Component {
         // console.log(`lat,long: ${lat},${long}`)
 
         let products = storeData.products
-        console.log(`loadTokens() storeData for ${storeData.name}: `, storeData)
-        console.log(`loadTokens() products for ${storeData.name}: `, products)
+        // console.log(`loadTokens() storeData for ${storeData.name}: `, storeData)
+        // console.log(`loadTokens() products for ${storeData.name}: `, products)
         if (!products) products = []
 
         const marker = {

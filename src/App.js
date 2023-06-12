@@ -156,14 +156,14 @@ function App (props) {
 
             const walletTemp = await asyncLoad.initWallet(serverUrl, mnemonic, appData)
             setWallet(walletTemp)
-            
+
             // If this wallet has created a token already, then download the mutable data.
             await getMutableData({ wallet: walletTemp, appData })
-            
+
             // Get the BCH balance of the wallet.
             addToModal('Getting BCH balance', appData)
             await asyncLoad.getWalletBchBalance(walletTemp, updateBchWalletState, appData)
-            
+
             // Get the SLP tokens held by the wallet.
             addToModal('Getting SLP tokens', appData)
             await asyncLoad.getSlpTokenBalances(walletTemp, updateBchWalletState, appData)

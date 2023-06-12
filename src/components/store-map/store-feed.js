@@ -35,13 +35,13 @@ function StoreFeed (props) {
           // console.log('response.data: ', response.data)
 
           const stores = response.data.stores
-          console.log('stores: ', stores)
+          // console.log('stores: ', stores)
 
           const tempStoreDetails = []
 
           for (let i = 0; i < stores.length; i++) {
             const thisStore = stores[i]
-            console.log('thisStore: ', thisStore)
+            // console.log('thisStore: ', thisStore)
 
             const storeIcon = thisStore.mutableData.tokenIcon
 
@@ -49,8 +49,8 @@ function StoreFeed (props) {
             if (storeDesc.length > 80) storeDesc = `${storeDesc.slice(0, 80)}...`
 
             const thisStoreDetails = (
-              <>
-                <Row key={`store-detail-${i}`}>
+              <div key={`store-detail-${i}`}>
+                <Row>
                   <Col>
                     <Image src={storeIcon} fluid thumbnail />
                   </Col>
@@ -59,14 +59,14 @@ function StoreFeed (props) {
                     <p>{storeDesc}</p>
                   </Col>
                 </Row>
-              </>
+              </div>
             )
             tempStoreDetails.push(thisStoreDetails)
           }
 
           if (tempStoreDetails.length !== storeDetails.length) {
             setStoreDetails(tempStoreDetails)
-            console.log('storeDetails: ', storeDetails)
+            // console.log('storeDetails: ', storeDetails)
           }
         }
       } catch (err) {
