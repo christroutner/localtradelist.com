@@ -506,12 +506,12 @@ class CreateToken extends React.Component {
         {
           this.state.hideModal
             ? null
-            : <WaitingModal 
-                heading='Creating NFT' 
-                body={this.state.modalBody} 
-                hideSpinner={this.state.hideSpinner} 
-                closeFunc={this.onCloseModal} 
-                denyClose={!this.state.dialogFinished} 
+            : <WaitingModal
+                heading='Creating NFT'
+                body={this.state.modalBody}
+                hideSpinner={this.state.hideSpinner}
+                closeFunc={this.onCloseModal}
+                denyClose={!this.state.dialogFinished}
               />
         }
 
