@@ -51,8 +51,7 @@ class StoreMap extends React.Component {
     this.updateWaitingModal = this.updateWaitingModal.bind(this)
     this.updateConfirmModal = this.updateConfirmModal.bind(this)
     this.updateMapFilterBox = this.updateMapFilterBox.bind(this)
-    // this.handleContinueFlag = this.handleContinueFlag.bind(this)
-    // this.handleCancelFlag = this.handleCancelFlag.bind(this)
+    this.onCloseModal = this.onCloseModal.bind(this)
 
     // Encapsulate dependecies
     this.sspApi = new SspApi()
@@ -132,6 +131,7 @@ class StoreMap extends React.Component {
                 body={this.state.modalBody}
                 hideSpinner={this.state.hideSpinner}
                 denyClose={this.state.denyClose}
+                closeFunc={this.onCloseModal}
               />
               )
             : null
@@ -145,7 +145,7 @@ class StoreMap extends React.Component {
                 onContinue={this.popupLib.handleContinueFlag}
                 onCancel={this.popupLib.handleCancelFlag}
                 body={this.state.confirmModalBody}
-                closeFunc={this.handleCloseModal}
+                closeFunc={this.onCloseModal}
               />
               )
             : null
@@ -217,8 +217,8 @@ class StoreMap extends React.Component {
   // BEGIN WAITING MODAL
 
   // This handler function is called when the modal is closed.
-  async handleCloseModal () {
-    console.log('handleCloseModal() called')
+  async onCloseModal () {
+    console.log('onCloseModal() called')
     this.setState({
       showModal: false
     })
