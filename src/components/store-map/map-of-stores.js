@@ -164,11 +164,15 @@ async function handleFlagGarbage (tokenId) {
 function Markers (props) {
   // console.log('Marker props: ', props)
 
-  const { markers } = props
+  const { markers, appData } = props
 
   // globalMap = useMap()
   const map = useMap()
   // console.log('map: ', map)
+
+  // Add the map and pin handles to the appData object
+  appData.map = map
+  appData.pins = []
 
   if (markers.length) {
     for (let i = 0; i < markers.length; i++) {
@@ -214,6 +218,8 @@ function Markers (props) {
 
       // Bind the popup component to the map pin.
       pin.bindPopup(htmlString, { maxHeight: '300' })
+
+      appData.pins.push(pin)
     }
   }
 

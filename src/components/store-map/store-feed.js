@@ -50,7 +50,7 @@ function StoreFeed (props) {
 
             const thisStoreDetails = (
               <div key={`store-detail-${i}`}>
-                <Row>
+                <Row onClick={() => handleShowStore({mapFilterBoxProps, thisStore})}>
                   <Col>
                     <Image src={storeIcon} fluid thumbnail />
                   </Col>
@@ -83,6 +83,34 @@ function StoreFeed (props) {
       </Container>
     </>
   )
+}
+
+// This function is called when the user clicks on a store in the store feed.
+// It loads the pin dialog in the map for that store.
+function handleShowStore(inObj = {}) {
+  // console.log('showStore() called. inObj: ', inObj)
+  const {thisStore, mapFilterBoxProps} = inObj
+  const {appData} = mapFilterBoxProps
+  // console.log('appData: ', appData)
+
+  // console.log('thisStore: ', thisStore)
+  const storeName = thisStore.storeData.name
+
+  // const map = appData.map
+  const pins = appData.pins
+  // console.log('pins: ', pins)
+
+  for(let i=0; i < pins.length; i++) {
+    const thisPin = pins[i]
+
+    const popupContent = thisPin._popup._content
+
+    if(popupContent.includes(storeName)) {
+      // console.log('Found popup')
+      thisPin.openPopup()
+    }
+  }
+
 }
 
 export default StoreFeed
