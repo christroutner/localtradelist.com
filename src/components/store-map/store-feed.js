@@ -46,7 +46,7 @@ function StoreFeed (props) {
             const storeIcon = thisStore.mutableData.tokenIcon
 
             let storeDesc = thisStore.storeData.description
-            if(storeDesc.length > 80) storeDesc = `${storeDesc.slice(0,80)}...`
+            if (storeDesc.length > 80) storeDesc = `${storeDesc.slice(0, 80)}...`
 
             const thisStoreDetails = (
               <>

@@ -34,41 +34,48 @@ class AsyncLoad {
 
   // Initialize the BCH wallet
   async initWallet (restURL, mnemonic, appData) {
-    const options = {
-      interface: 'consumer-api',
-      restURL,
-      noUpdate: true
+    try {
+      console.log('starting initWallet()')
+
+      const options = {
+        interface: 'consumer-api',
+        restURL,
+        noUpdate: true
+      }
+
+      let wallet
+      if (mnemonic) {
+        // Load the wallet from the mnemonic, if it's available from local storage.
+        wallet = new this.BchWallet(mnemonic, options)
+      } else {
+        // Generate a new mnemonic and wallet.
+        wallet = new this.BchWallet(null, options)
+      }
+
+      // Wait for wallet to initialize.
+      await wallet.walletInfoPromise
+      await wallet.initialize()
+      console.log('starting to update wallet state.')
+
+      // This could be removed for production. This allows easier development.
+      // window.wallet = wallet
+
+      // Update the state of the wallet.
+      appData.updateBchWalletState({ walletObj: wallet.walletInfo, appData })
+      console.log('finished updating wallet state.')
+      // Save the mnemonic to local storage.
+      if (!mnemonic) {
+        const newMnemonic = wallet.walletInfo.mnemonic
+        appData.updateLocalStorage({ mnemonic: newMnemonic })
+      }
+
+      this.wallet = wallet
+
+      return wallet
+    } catch (err) {
+      console.error('Error in async-load.js/initWallet()')
+      throw err
     }
-
-    let wallet
-    if (mnemonic) {
-      // Load the wallet from the mnemonic, if it's available from local storage.
-      wallet = new this.BchWallet(mnemonic, options)
-    } else {
-      // Generate a new mnemonic and wallet.
-      wallet = new this.BchWallet(null, options)
-    }
-
-    // Wait for wallet to initialize.
-    await wallet.walletInfoPromise
-    await wallet.initialize()
-    console.log('starting to update wallet state.')
-
-    // This could be removed for production. This allows easier development.
-    // window.wallet = wallet
-
-    // Update the state of the wallet.
-    appData.updateBchWalletState({ walletObj: wallet.walletInfo, appData })
-    console.log('finished updating wallet state.')
-    // Save the mnemonic to local storage.
-    if (!mnemonic) {
-      const newMnemonic = wallet.walletInfo.mnemonic
-      appData.updateLocalStorage({ mnemonic: newMnemonic })
-    }
-
-    this.wallet = wallet
-
-    return wallet
   }
 
   // Get the spot exchange rate for BCH in USD.
