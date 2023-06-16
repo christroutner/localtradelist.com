@@ -88,7 +88,7 @@ function StoreFeed (props) {
 // This function is called when the user clicks on a store in the store feed.
 // It loads the pin dialog in the map for that store.
 function handleShowStore (inObj = {}) {
-  console.log('showStore() called. inObj: ', inObj)
+  // console.log('showStore() called. inObj: ', inObj)
   const { thisStore, mapFilterBoxProps } = inObj
   const { appData } = mapFilterBoxProps
   // console.log('appData: ', appData)
@@ -97,11 +97,11 @@ function handleShowStore (inObj = {}) {
   let storeName = thisStore.storeData.name
   storeName = storeName.split(' ')
   storeName = storeName[0]
-  console.log('storeName: ', storeName)
+  // console.log('storeName: ', storeName)
 
   // const map = appData.map
   const pins = appData.pins
-  console.log('pins: ', pins)
+  // console.log('pins: ', pins)
 
   for (let i = 0; i < pins.length; i++) {
     const thisPin = pins[i]
@@ -109,7 +109,7 @@ function handleShowStore (inObj = {}) {
     const popupContent = thisPin._popup._content
 
     if (popupContent.includes(storeName)) {
-      console.log('Found popup')
+      // console.log('Found popup')
       thisPin.openPopup()
     }
   }

@@ -176,8 +176,8 @@ function Markers (props) {
 
   if (markers.length) {
     for (let i = 0; i < markers.length; i++) {
-      // console.log(`Adding this marker to the map: ${JSON.stringify(markers, null, 2)}`)
-      const { lat, long, id, name, description, tokenId, moreInfoLink } = markers[i]
+      // console.log(`Adding this marker to the map: ${JSON.stringify(markers[i], null, 2)}`)
+      const { lat, long, id, name, description, tokenId, moreInfoLink, tokenIcon } = markers[i]
 
       const icon = L.icon({
         iconSize: [25, 41],
@@ -196,7 +196,8 @@ function Markers (props) {
         name,
         description,
         tokenId,
-        moreInfoLink
+        moreInfoLink,
+        tokenIcon
       }
 
       // Render the popup component as an HTML string.

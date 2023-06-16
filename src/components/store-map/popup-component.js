@@ -5,12 +5,15 @@
 
 // Global npm libraries
 import React from 'react'
+import { Image } from 'react-bootstrap'
 
 function InfoPopup (props) {
-  const { name, description, tokenId, moreInfoLink } = props.popupData
+  const { name, description, tokenId, moreInfoLink, tokenIcon } = props.popupData
+  // console.log('tokenIcon: ', tokenIcon)
 
   return (
     <>
+      <p><Image src={tokenIcon} fluid thumbnail /></p>
       <p><b>Name</b>: {name}</p>
       <p><b>Description</b>: {description}</p>
       {

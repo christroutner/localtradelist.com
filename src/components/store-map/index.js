@@ -8,7 +8,7 @@
 
 // Global npm libraries
 import React from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Image } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
 
@@ -19,6 +19,7 @@ import WaitingModal from '../waiting-modal'
 import ModalConfirm from '../confirm-modal'
 import PopupLib from './popup-lib.js'
 import StoreFeed from './store-feed.js'
+import Logo from '../nav-menu/localtradelist01.png'
 
 class StoreMap extends React.Component {
   constructor (props) {
@@ -104,6 +105,22 @@ class StoreMap extends React.Component {
       <>
         <Container>
           <Row>
+            <Col xs={12} sm={3}>
+              <center><Image src={Logo} thumbnail width='150' /></center>
+            </Col>
+            <Col xs={12} sm={9}>
+              <br />
+              <h3>LocalTradeList.com</h3>
+              <p>
+                Helping neighbors trade with neighbors. Empower your community
+                through trade.
+              </p>
+            </Col>
+          </Row>
+        </Container>
+
+        <Container>
+          <Row>
             <Col style={{ textAlign: 'right' }}>
               <a href='https://youtu.be/QW9xixHaEJE' target='_blank' rel='noreferrer'>
                 <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
@@ -176,10 +193,12 @@ class StoreMap extends React.Component {
       for (let i = 0; i < stores.length; i++) {
         const thisStore = stores[i]
         const storeData = thisStore.storeData
-        // console.log(`storeData: ${JSON.stringify(storeData, null, 2)}`)
+        // console.log(`loadTokens() storeData: ${JSON.stringify(storeData, null, 2)}`)
 
         // Skip this entry if it does not include the store data from the mutable data.
         if (!storeData) continue
+
+        const tokenIcon = thisStore.mutableData.tokenIcon
 
         const lat = storeData.location.geo.latitude
         const long = storeData.location.geo.longitude
@@ -198,7 +217,8 @@ class StoreMap extends React.Component {
           description: storeData.description,
           tokenId: thisStore.tokenId,
           moreInfoLink: storeData.moreInfoLink,
-          products
+          products,
+          tokenIcon
         }
 
         markers.push(marker)

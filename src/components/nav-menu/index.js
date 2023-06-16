@@ -8,7 +8,8 @@
 // Global npm libraries
 import React from 'react'
 import { Nav, Navbar, Image } from 'react-bootstrap'
-import Logo from './psf-logo.png'
+// import Logo from './psf-logo.png'
+import Logo from './localtradelist01.png'
 
 function NavMenu (props) {
   const mutableData = props.appData.mutableData
