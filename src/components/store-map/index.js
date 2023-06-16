@@ -115,6 +115,16 @@ class StoreMap extends React.Component {
                 Helping neighbors trade with neighbors. Empower your community
                 through trade.
               </p>
+
+            </Col>
+          </Row>
+
+          <Row>
+            <Col style={{padding: '25px'}}>
+              <center><p>
+                Use the map below to zoom into your local geographic area, and
+                discover people near you with products or services to trade.
+              </p></center>
             </Col>
           </Row>
         </Container>
