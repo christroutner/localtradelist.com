@@ -569,6 +569,18 @@ class CreateToken extends React.Component {
       // Instantiate the slp-mutable-data library
       const slpMutableData = new SlpMutableData({ wallet: bchWallet })
 
+      // Check balance of wallet, and throw error if it does not have enough sats.
+      statusStr = 'Checking wallet balance...'
+      console.log(statusStr)
+      dialogText.push(statusStr)
+      this.setState({ modalBody: dialogText })
+
+      const balance = await bchWallet.getBalance()
+      console.log('balance: ', balance)
+      if (balance < 50000) {
+        throw new Error('Wallet does not have enough BCH to create a new store.')
+      }
+
       // Update modal
       statusStr = 'Uploading immutable data to the P2WDB and IPFS'
       console.log(statusStr)
@@ -744,10 +756,10 @@ class CreateToken extends React.Component {
         dialogFinished: true
       })
     } catch (err) {
-      console.log('Error trying to create NFT: ', err)
+      console.log('Error trying to create Store: ', err)
       this.setState({
         hideSpinner: true,
-        modalBody: ['Error creating NFT!', err.message],
+        modalBody: ['Error creating Store!', err.message],
         dialogFinished: true
       })
     }
