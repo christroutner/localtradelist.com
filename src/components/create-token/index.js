@@ -782,15 +782,18 @@ class CreateToken extends React.Component {
   }
 
   onCloseModal () {
-    const shouldRefreshTokens = this.state.shouldRefreshTokens
+    // Code being deprecated 6/16/23
+    // const shouldRefreshTokens = this.state.shouldRefreshTokens
+    //
+    // this.setState({ hideModal: true })
+    //
+    // if (shouldRefreshTokens) {
+    //   this.refreshTokens()
+    // }
 
-    console.log('onCloseModal() executed. App should be reloaded.')
+    console.log('Refreshing app to load new token and change menu')
+    window.location.href = '/'
 
-    this.setState({ hideModal: true })
-
-    if (shouldRefreshTokens) {
-      this.refreshTokens()
-    }
   }
 
   // This function gets the key pair at index 1 of the wallet. Index 0 controls
