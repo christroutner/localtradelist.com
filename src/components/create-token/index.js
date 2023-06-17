@@ -9,6 +9,7 @@ import Accordion from 'react-bootstrap/Accordion'
 import { SlpMutableData } from 'slp-mutable-data'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios'
 
 // Local libraries
 // import RefreshTokenBalance from '../slp-tokens/refresh-tokens.js'
@@ -578,7 +579,23 @@ class CreateToken extends React.Component {
       const balance = await bchWallet.getBalance()
       console.log('balance: ', balance)
       if (balance < 50000) {
-        throw new Error('Wallet does not have enough BCH to create a new store.')
+        try {
+          // Try to request funds from the faucet
+          const response = await axios.post(`${process.env.REACT_APP_SSP_SERVER}/store/faucet`, {bchAddress: bchWallet.walletInfo.cashAddress})
+
+          console.log(`Wallet funded via faucet. TXID: ${response.data.txid}`)
+
+          // Wait for the indexers to update.
+          await bchWallet.bchjs.Util.sleep(2000)
+
+          // Update the UTXOs of the wallet.
+          await bchWallet.initialize()
+
+        } catch(err) {
+          // Throw an error if the app is not successful in requesting funds
+          // from the faucet.
+          throw new Error('Wallet does not have enough BCH to create a new store.')
+        }
       }
 
       // Update modal
@@ -782,18 +799,16 @@ class CreateToken extends React.Component {
   }
 
   onCloseModal () {
-    // Code being deprecated 6/16/23
-    // const shouldRefreshTokens = this.state.shouldRefreshTokens
-    //
-    // this.setState({ hideModal: true })
-    //
-    // if (shouldRefreshTokens) {
-    //   this.refreshTokens()
-    // }
 
-    console.log('Refreshing app to load new token and change menu')
-    window.location.href = '/'
+    const shouldRefreshTokens = this.state.shouldRefreshTokens
 
+    this.setState({ hideModal: true })
+
+    if (shouldRefreshTokens) {
+      // this.refreshTokens()
+      console.log('Refreshing app to load new token and change menu')
+      window.location.href = '/'
+    }
   }
 
   // This function gets the key pair at index 1 of the wallet. Index 0 controls
