@@ -48,7 +48,7 @@ async function updateMutableData (inObj = {}) {
     const hex = await mdaMutableData.data.writeCIDToOpReturn(cidMutable)
 
     // Broadcast the transaction.
-    const txid = await mdaWallet.broadcast(hex)
+    const txid = await mdaWallet.broadcast({hex})
     console.log('MDA update txid: ', txid)
 
     // Wait for the transaction to propegate.

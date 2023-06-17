@@ -53,7 +53,7 @@ function EditRawJson (props) {
 
     const hex = await mdaMutableData.data.writeCIDToOpReturn(cidMutable)
 
-    const txid = await mdaWallet.broadcast(hex)
+    const txid = await mdaWallet.broadcast({hex})
     console.log('txid: ', txid)
 
     await mdaWallet.bchjs.Util.sleep(2000)

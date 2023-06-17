@@ -718,7 +718,8 @@ class CreateToken extends React.Component {
 
       // Write mutable data to the MDA
       const hex = await slpMutableData.data.writeCIDToOpReturn(cidMutable, keyPair.wif)
-      const mdaWriteTxid = await bchWallet.ar.sendTx(hex)
+      // const mdaWriteTxid = await bchWallet.ar.sendTx(hex)
+      const mdaWriteTxid = await bchWallet.broadcast({hex})
       console.log(`CID written to MDA. TXID: ${mdaWriteTxid}`)
 
       // Collect token data that will be used to generate the token
