@@ -306,178 +306,182 @@ class CreateToken extends React.Component {
             </Row>
             <br />
 
-            <Accordion>
-              <Accordion.Item eventKey='0'>
-                <Accordion.Header>Advanced</Accordion.Header>
-                <Accordion.Body>
-                  <Container>
-                    <Row>
-                      <Col>
-                        <b>Full-Sized Image URL (optional):</b>
-                      </Col>
-                      <Col xs={2}>
-                        <OverlayTrigger trigger='click' placement='top' overlay={fullSizedImagePopover}>
-                          <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
-                        </OverlayTrigger>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <Form.Group>
-                          <Form.Control
-                            type='text'
-                            placeholder='https://bafybeicvlcwv3flrwa4egmroyicvghevi6uzbd56drmoerjeguu4ikpnhe.ipfs.dweb.link/psf-logo.png'
-                            onChange={e => this.setState({ fullSizedUrl: e.target.value })}
-                            value={this.state.fullSizedUrl}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <br />
+            <div style={{visibility: 'hidden'}}>
+              <Accordion >
+                <Accordion.Item eventKey='0'>
+                  <Accordion.Header>Advanced</Accordion.Header>
+                  <Accordion.Body>
+                    <Container>
+                      <Row>
+                        <Col>
+                          <b>Full-Sized Image URL (optional):</b>
+                        </Col>
+                        <Col xs={2}>
+                          <OverlayTrigger trigger='click' placement='top' overlay={fullSizedImagePopover}>
+                            <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
+                          </OverlayTrigger>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Control
+                              type='text'
+                              placeholder='https://bafybeicvlcwv3flrwa4egmroyicvghevi6uzbd56drmoerjeguu4ikpnhe.ipfs.dweb.link/psf-logo.png'
+                              onChange={e => this.setState({ fullSizedUrl: e.target.value })}
+                              value={this.state.fullSizedUrl}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <br />
 
-                    <Row>
-                      <Col>
-                        <b>Category (optional):</b>
-                      </Col>
-                      <Col xs={2}>
-                        <OverlayTrigger trigger='click' placement='top' overlay={categoryPopover}>
-                          <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
-                        </OverlayTrigger>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <Form.Group>
-                          <Form.Control
-                            type='text'
-                            placeholder='art'
-                            onChange={e => this.setState({ category: e.target.value })}
-                            value={this.state.category}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <br />
+                      <Row>
+                        <Col>
+                          <b>Category (optional):</b>
+                        </Col>
+                        <Col xs={2}>
+                          <OverlayTrigger trigger='click' placement='top' overlay={categoryPopover}>
+                            <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
+                          </OverlayTrigger>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Control
+                              type='text'
+                              placeholder='art'
+                              onChange={e => this.setState({ category: e.target.value })}
+                              value={this.state.category}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <br />
 
-                    <Row>
-                      <Col>
-                        <b>Tags (optional):</b>
-                      </Col>
-                      <Col xs={2}>
-                        <OverlayTrigger trigger='click' placement='top' overlay={tagPopover}>
-                          <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
-                        </OverlayTrigger>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <Form.Group>
-                          <Form.Control
-                            type='text'
-                            placeholder='nft,token,art,stable diffusion,meme'
-                            onChange={e => this.setState({ tagsStr: e.target.value })}
-                            value={this.state.tagsStr}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <br />
+                      <Row>
+                        <Col>
+                          <b>Tags (optional):</b>
+                        </Col>
+                        <Col xs={2}>
+                          <OverlayTrigger trigger='click' placement='top' overlay={tagPopover}>
+                            <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
+                          </OverlayTrigger>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Control
+                              type='text'
+                              placeholder='nft,token,art,stable diffusion,meme'
+                              onChange={e => this.setState({ tagsStr: e.target.value })}
+                              value={this.state.tagsStr}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <br />
 
-                    <Row>
-                      <Col>
-                        <b>Media Type (optional):</b>
-                      </Col>
-                      <Col xs={2}>
-                        <OverlayTrigger trigger='click' placement='top' overlay={mediaTypePopover}>
-                          <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
-                        </OverlayTrigger>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <Form.Select aria-label='Default select example' onChange={this.handleMediaTypeChange} value={this.state.mediaType}>
-                          <option>Select media type</option>
-                          <option value='image'>image</option>
-                          <option value='audio'>audio</option>
-                          <option value='video'>video</option>
-                          <option value='3d'>3D Object</option>
-                          <option value='html'>HTML</option>
-                          <option value='text'>text</option>
-                        </Form.Select>
-                      </Col>
-                    </Row>
-                    <br />
+                      <Row>
+                        <Col>
+                          <b>Media Type (optional):</b>
+                        </Col>
+                        <Col xs={2}>
+                          <OverlayTrigger trigger='click' placement='top' overlay={mediaTypePopover}>
+                            <FontAwesomeIcon icon={faCircleQuestion} size='lg' />
+                          </OverlayTrigger>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Select aria-label='Default select example' onChange={this.handleMediaTypeChange} value={this.state.mediaType}>
+                            <option>Select media type</option>
+                            <option value='image'>image</option>
+                            <option value='audio'>audio</option>
+                            <option value='video'>video</option>
+                            <option value='3d'>3D Object</option>
+                            <option value='html'>HTML</option>
+                            <option value='text'>text</option>
+                          </Form.Select>
+                        </Col>
+                      </Row>
+                      <br />
 
-                    <Row>
-                      <Col>
-                        <b>Extra Immutable Data (optional):</b>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <Form.Group>
-                          <Form.Control
-                            type='text'
-                            as='textarea'
-                            placeholder='https://PSFoundation.cash'
-                            onChange={e => this.setState({ xtraImmutable: e.target.value })}
-                            value={this.state.xtraImmutable}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <br />
+                      <Row>
+                        <Col>
+                          <b>Extra Immutable Data (optional):</b>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Control
+                              type='text'
+                              as='textarea'
+                              placeholder='https://PSFoundation.cash'
+                              onChange={e => this.setState({ xtraImmutable: e.target.value })}
+                              value={this.state.xtraImmutable}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <br />
 
-                    <Row>
-                      <Col>
-                        <b>Extra Mutable Data (optional):</b>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <Form.Group>
-                          <Form.Control
-                            type='text'
-                            as='textarea'
-                            placeholder='https://PSFoundation.cash'
-                            onChange={e => this.setState({ xtraMutable: e.target.value })}
-                            value={this.state.xtraMutable}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <br />
+                      <Row>
+                        <Col>
+                          <b>Extra Mutable Data (optional):</b>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Control
+                              type='text'
+                              as='textarea'
+                              placeholder='https://PSFoundation.cash'
+                              onChange={e => this.setState({ xtraMutable: e.target.value })}
+                              value={this.state.xtraMutable}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <br />
 
-                    <Row>
-                      <Col>
-                        <b>License (optional):</b>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <Form.Group>
-                          <Form.Control
-                            type='text'
-                            as='textarea'
-                            placeholder='https://bafybeidnkhjfsbihp4gquwqrs6y35jfpcriafymceszwvkundjkwk546pi.ipfs.dweb.link/copyright.txt'
-                            onChange={e => this.setState({ license: e.target.value })}
-                            value={this.state.license}
-                          />
-                        </Form.Group>
-                      </Col>
-                    </Row>
-                    <br />
-                  </Container>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
+                      <Row>
+                        <Col>
+                          <b>License (optional):</b>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Control
+                              type='text'
+                              as='textarea'
+                              placeholder='https://bafybeidnkhjfsbihp4gquwqrs6y35jfpcriafymceszwvkundjkwk546pi.ipfs.dweb.link/copyright.txt'
+                              onChange={e => this.setState({ license: e.target.value })}
+                              value={this.state.license}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <br />
+                    </Container>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+            </div>
             <br />
 
           </Form>
 
           <Row>
             <Col>
-              <Button variant='info' onClick={(e) => this.handleCreateToken(e)}>Create Token</Button>
+              <Button
+                variant='info'
+                onClick={(e) => this.handleCreateToken(e)}>Create Store</Button>
             </Col>
           </Row>
 
