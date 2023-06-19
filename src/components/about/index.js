@@ -15,12 +15,17 @@ function About (props) {
             <h2>About LocalTradeList.com</h2>
             <p>
               <b>
-                Local Trade List is an open-source, blockchain-based app designed to
-                empower the members of rural communities to trade with one another,
-                and lower the friction of doing so.
+                Local Trade List is a platform to help neighbors trade with neighbors.
               </b>
             </p>
 
+            <p>
+              <a href="https://docs.localtradelist.com">
+                Find out more at the documentation site.
+              </a>
+            </p>
+
+            <h3>Overview</h3>
             <p>
               Many of the social problems in the world today are due to centralization.
               People who rely on big corporate stores like Walmart and Amazon are
