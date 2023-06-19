@@ -120,11 +120,13 @@ class StoreMap extends React.Component {
           </Row>
 
           <Row>
-            <Col style={{padding: '25px'}}>
-              <center><p>
-                Use the map below to zoom into your local geographic area, and
-                discover people near you with products or services to trade.
-              </p></center>
+            <Col style={{ padding: '25px' }}>
+              <center>
+                <p>
+                  Use the map below to zoom into your local geographic area, and
+                  discover people near you with products or services to trade.
+                </p>
+              </center>
             </Col>
           </Row>
         </Container>

@@ -306,8 +306,8 @@ class CreateToken extends React.Component {
             </Row>
             <br />
 
-            <div style={{visibility: 'hidden'}}>
-              <Accordion >
+            <div style={{ visibility: 'hidden' }}>
+              <Accordion>
                 <Accordion.Item eventKey='0'>
                   <Accordion.Header>Advanced</Accordion.Header>
                   <Accordion.Body>
@@ -481,7 +481,9 @@ class CreateToken extends React.Component {
             <Col>
               <Button
                 variant='info'
-                onClick={(e) => this.handleCreateToken(e)}>Create Store</Button>
+                onClick={(e) => this.handleCreateToken(e)}
+              >Create Store
+              </Button>
             </Col>
           </Row>
 
@@ -585,7 +587,7 @@ class CreateToken extends React.Component {
       if (balance < 50000) {
         try {
           // Try to request funds from the faucet
-          const response = await axios.post(`${process.env.REACT_APP_SSP_SERVER}/store/faucet`, {bchAddress: bchWallet.walletInfo.cashAddress})
+          const response = await axios.post(`${process.env.REACT_APP_SSP_SERVER}/store/faucet`, { bchAddress: bchWallet.walletInfo.cashAddress })
 
           console.log(`Wallet funded via faucet. TXID: ${response.data.txid}`)
 
@@ -594,8 +596,7 @@ class CreateToken extends React.Component {
 
           // Update the UTXOs of the wallet.
           await bchWallet.initialize()
-
-        } catch(err) {
+        } catch (err) {
           // Throw an error if the app is not successful in requesting funds
           // from the faucet.
           throw new Error('Wallet does not have enough BCH to create a new store.')
@@ -723,7 +724,7 @@ class CreateToken extends React.Component {
       // Write mutable data to the MDA
       const hex = await slpMutableData.data.writeCIDToOpReturn(cidMutable, keyPair.wif)
       // const mdaWriteTxid = await bchWallet.ar.sendTx(hex)
-      const mdaWriteTxid = await bchWallet.broadcast({hex})
+      const mdaWriteTxid = await bchWallet.broadcast({ hex })
       console.log(`CID written to MDA. TXID: ${mdaWriteTxid}`)
 
       // Collect token data that will be used to generate the token
@@ -804,7 +805,6 @@ class CreateToken extends React.Component {
   }
 
   onCloseModal () {
-
     const shouldRefreshTokens = this.state.shouldRefreshTokens
 
     this.setState({ hideModal: true })

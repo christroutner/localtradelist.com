@@ -161,7 +161,7 @@ class PopupLib {
       const hex = await tradelistLib.util.writeCidToBlockchain(opReturnObj)
 
       // Broadcast the transaction
-      const txid = await this.wallet.broadcast({hex})
+      const txid = await this.wallet.broadcast({ hex })
 
       modalBody.push('Claim written to blockchain. TXID:')
       modalBody.push(<a href={`https://blockchair.com/bitcoin-cash/transaction/${txid}`} target='_blank' rel='noreferrer'>{txid}</a>)

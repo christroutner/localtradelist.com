@@ -123,7 +123,8 @@ function App (props) {
     updateLocalStorage,
     updateBchWalletState,
     mutableData,
-    setMutableData
+    setMutableData,
+    lsState
   }
 
   // END STATE

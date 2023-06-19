@@ -138,7 +138,7 @@ class SweepWif extends React.Component {
         // Broadcast the transaction to the network.
         // const txId = await sweeperLib.blockchain.broadcast(transactionHex)
         // const txid = await this.state.appData.bchWallet.ar.sendTx(hex)
-        const txid = await this.state.appData.bchWallet.broadcast({hex})
+        const txid = await this.state.appData.bchWallet.broadcast({ hex })
 
         // Generate an HTML status message with links to block explorers.
         const statusMsg = (

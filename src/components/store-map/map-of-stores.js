@@ -46,6 +46,15 @@ function MapOfStreets (props) {
   if (!zoom) zoom = 12
   // console.log(`markers2: ${JSON.stringify(markers, null, 2)}`)
 
+  // Update map settings from Local Storage if the data exists.
+  if (appData.lsState && appData.lsState.mapBounds) {
+    // console.log('appData.lsState.mapBounds: ', appData.lsState.mapBounds)
+
+    mapCenterLat = appData.lsState.mapBounds.center.lat
+    mapCenterLong = appData.lsState.mapBounds.center.lng
+    zoom = appData.lsState.mapBounds.zoom
+  }
+
   return (
     <>
       <MapContainer
@@ -68,6 +77,7 @@ function MapOfStreets (props) {
 
 function MapMoveEvent (props) {
   const updateMapFilterBox = props.updateMapFilterBox
+  const appData = props.appData
 
   const [firstRun, setFirstRun] = useState(true)
 
@@ -79,11 +89,16 @@ function MapMoveEvent (props) {
     // This event handler is called any time the map is moved or zoomed.
     moveend: () => {
       const bounds = map.getBounds()
+      const zoom = map.getZoom()
+      const center = map.getCenter()
       // console.log('bounds: ', bounds)
       //
       // updateMapFilterBox(bounds)
 
-      // updateStoreFeed(bounds)
+      // Save the bounds to LocalStorage
+      appData.updateLocalStorage({ mapBounds: { bounds, zoom, center } })
+
+      // Update the store feed to display stores within the bounds of the map.
       updateMapFilterBox(bounds)
     }
   })
