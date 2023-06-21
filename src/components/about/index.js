@@ -13,72 +13,78 @@ function About (props) {
         <Row>
           <Col>
             <h2>About LocalTradeList.com</h2>
+
+            <p>
+              Have a bumper crop of potatoes? Drop a pin on the map and let your
+              neighbors know. Did your cat just have kittens and they need a
+              good home? Put it on the map. Looking for a local farmer to buy
+              food from? Check the map!
+            </p>
+
             <p>
               <b>
-                Local Trade List is a platform to help neighbors trade with neighbors.
+                Local Trade List is a platform to help neighbors trade with
+                neighbors. The goal of the app is to make it easy and fun to
+                trade with the people around you.
               </b>
             </p>
 
             <p>
-              <a href="https://docs.localtradelist.com">
+              <a href='https://docs.localtradelist.com' target='blank' rel='noreferrer'>
                 Find out more at the documentation site.
               </a>
             </p>
 
-            <h3>Overview</h3>
+            <h3>What makes Local Trade List different?</h3>
             <p>
-              Many of the social problems in the world today are due to centralization.
-              People who rely on big corporate stores like Walmart and Amazon are
-              easy targets for manipulation from State actors. People who can meet
-              their needs locally, through trade with their local community, make a
-              much more difficult target for State actors to manipulate and coerce.
-              The goal of this app is help people find one another in their local
-              community to trade with.
+              There are several map-based apps out there for freedom-focused
+              communities. So what makes Local Trade List different? Our app
+              has two high-level goals:
             </p>
 
+            <ul>
+              <li>
+                Make the user interface easy and fun to use.
+              </li>
+              <li>
+                Use blockchain technology to eliminate the threat of deplatforming.
+              </li>
+            </ul>
+
             <p>
-              Blockchains are just a new form of a database. They are inefficient
-              databases by Web 2.0 standard, but their main advantage are:
+              The focus on blockchain technology is what really sets this app apart
+              from others like it. All data on the map is anchored in a blockchain.
+              That means data can never be deleted, and censorship is impossible.
+              Anyone can run their own copy of Local Trade List for their local
+              community. No one can stop them, no one can tamper with their data,
+              and no one can deplatform anyone. However, there is room for
+              community moderation. It's a delicate balance.{' '}
+              <a href='https://docs.localtradelist.com/docs/technology/architecture#group-moderation' target='blank' rel='noreferrer'>
+                Learn more about our integration of blockchain with this application.
+              </a>
+            </p>
+
+            <h3>Support</h3>
+            <p>
+              Local Trade List is an open source software project, running open
+              protocols, on open networks. There is no central organization
+              behind it, but there are chat rooms where the community of users
+              and software developers congregate. We welcome you to ask questions
+              and participate in our community!
             </p>
             <ul>
-              <li>Permissionless: no login names or permission required to update the database</li>
-              <li>Censorship Resistence: users can not be de-platformed, content can not be deleted</li>
-              <li>Tamper Proof: No one can alter old data, and any updates provide a chain of custody</li>
+              <li>
+                <a href='https://t.me/sji_freedom_cell'>
+                  Telegram Chat Channel
+                </a>
+              </li>
+              <li>
+                <a href='https://chat.psfoundation.info/channel/40e7cc7d0e5f16c393aa5f8fa014c2df756972019d6b16dba17264abd91793b3' target='_blank' rel='noreferrer'>
+                  Nostr Chat Channel
+                </a>
+              </li>
             </ul>
-            <p>
-              These features of a blockchain are great for rural communities. If you
-              have some Bitcoin Cash (BCH), no one can stop you from writing data
-              to the blockchain. No one can stop you from advertising the
-              goods you want to offer for trade. No one can deplatform you, or
-              directly manipulate your data.
-            </p>
 
-            <p>
-              For example, no one can stop you from advertising and selling goods
-              such as unpasteurized milk or non-USDA certified food. These are examples
-              of items that are banned for sale from sites like Craigslist, Facebook
-              Marketplace, and other similar platforms. This site is also not
-              restricted to a single country or legal jurisdiction. It is inherently
-              international, just like the internet and Bitcoin protocol are.
-            </p>
-
-            <p>
-              Local Trade List is also an experiment in group moderation. Explicit
-              stores can be flagged as 'Not Safe For Work' (NSFW) by any user. 'Garbage'
-              entries can be flagged as such. If enough people flag content, the
-              website will hide the data from the map. Website operators only
-              choose the thresholds for when this group action is recognized.
-            </p>
-            <p>
-              Flagged stores are not deleted (that
-              is impossible), the data is simply not shown. Anyone is free to fork this
-              website and set different thresholds for moderation policy. It is
-              hoped that one day many versions of this app will exist among different
-              communities, in different niches, with different moderation
-              preferences. They can all pull
-              the data from the same blockchain, but display it differently depending
-              on the preferences of their user community.
-            </p>
           </Col>
         </Row>
 
