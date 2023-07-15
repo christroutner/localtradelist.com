@@ -1,7 +1,6 @@
 /*
-  This component controlls the store feed, to the rigth of the map. It updates
-  any time the map is moved or zoomed. The stores are sorted with the most
-  recently updated mutable data first.
+  This component is identical to store-feed.js. While the original component
+  displays the first 3 entries, this one displays the rest.
 */
 
 // Global npm libraries
@@ -11,7 +10,7 @@ import axios from 'axios'
 
 const SERVER = process.env.REACT_APP_SSP_SERVER
 
-function StoreFeed (props) {
+function StoreFeed2 (props) {
   const { mapFilterBoxProps } = props
   const { mapFilterBox } = mapFilterBoxProps
   // console.log('mapFilterBox: ', mapFilterBox)
@@ -39,34 +38,74 @@ function StoreFeed (props) {
 
           const tempStoreDetails = []
 
-          let numStores = stores.length
-          if (numStores > 3) numStores = 3
+          // Exit if there are less than 3 entries.
+          const numStores = stores.length
+          if (numStores < 4) return
 
-          for (let i = 0; i < numStores; i++) {
-            const thisStore = stores[i]
+          for (let i = 3; i < numStores; i += 2) {
+            const thisStore1 = stores[i]
             // console.log('thisStore: ', thisStore)
 
-            const storeIcon = thisStore.mutableData.tokenIcon
+            const storeIcon1 = thisStore1.mutableData.tokenIcon
 
-            let storeDesc = thisStore.storeData.description
-            if (storeDesc.length > 80) storeDesc = `${storeDesc.slice(0, 80)}...`
+            let storeDesc1 = thisStore1.storeData.description
+            if (storeDesc1.length > 80) storeDesc1 = `${storeDesc1.slice(0, 80)}...`
+
+            const thisStore2 = stores[i + 1]
+            // console.log('thisStore: ', thisStore)
+
+            let storeIcon2, storeName2, storeDesc2
+            if (thisStore2) {
+              storeIcon2 = thisStore2.mutableData.tokenIcon
+              storeName2 = thisStore2.storeData.name
+              storeDesc2 = thisStore2.storeData.description
+              if (storeDesc2.length > 80) storeDesc2 = `${storeDesc2.slice(0, 80)}...`
+            } else {
+              storeIcon2 = ''
+              storeName2 = ''
+              storeDesc2 = ''
+            }
 
             const thisStoreDetails = (
               <div key={`store-detail-${i}`}>
-                <Row
-                  onClick={() => handleShowStore({ mapFilterBoxProps, thisStore })}
-                  style={{
-                    paddingTop: '10px',
-                    paddingBottom: '10px'
-                  }}
-                >
-                  <Col xs={4} lg={4}>
-                    <Image src={storeIcon} fluid thumbnail />
+                <Row>
+
+                  <Col xs={12} lg={6}>
+                    <Row
+                      onClick={() => handleShowStore({ mapFilterBoxProps, thisStore: thisStore1 })}
+                      style={{
+                        paddingTop: '10px',
+                        paddingBottom: '10px'
+                      }}
+                    >
+                      <Col xs={4} lg={4}>
+                        <Image src={storeIcon1} fluid thumbnail />
+                      </Col>
+                      <Col xs={8} lg={6}>
+                        <h4>{thisStore1.storeData.name}</h4>
+                        <p>{storeDesc1}</p>
+                      </Col>
+                    </Row>
                   </Col>
-                  <Col xs={8} lg={6}>
-                    <h4>{thisStore.storeData.name}</h4>
-                    <p>{storeDesc}</p>
+
+                  <Col xs={12} lg={6}>
+                    <Row
+                      onClick={() => handleShowStore({ mapFilterBoxProps, thisStore: thisStore2 })}
+                      style={{
+                        paddingTop: '10px',
+                        paddingBottom: '10px'
+                      }}
+                    >
+                      <Col xs={4} lg={4}>
+                        <Image src={storeIcon2} fluid thumbnail />
+                      </Col>
+                      <Col xs={8} lg={6}>
+                        <h4>{storeName2}</h4>
+                        <p>{storeDesc2}</p>
+                      </Col>
+                    </Row>
                   </Col>
+
                 </Row>
               </div>
             )
@@ -124,4 +163,4 @@ function handleShowStore (inObj = {}) {
   }
 }
 
-export default StoreFeed
+export default StoreFeed2

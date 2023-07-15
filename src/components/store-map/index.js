@@ -19,6 +19,7 @@ import WaitingModal from '../waiting-modal'
 import ModalConfirm from '../confirm-modal'
 import PopupLib from './popup-lib.js'
 import StoreFeed from './store-feed.js'
+import StoreFeed2 from './store-feed2.js'
 import Logo from '../nav-menu/localtradelist01.png'
 
 class StoreMap extends React.Component {
@@ -148,6 +149,12 @@ class StoreMap extends React.Component {
             </Col>
             <Col xs={12} lg={4}>
               <StoreFeed mapFilterBoxProps={mapFilterBoxProps} />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <StoreFeed2 mapFilterBoxProps={mapFilterBoxProps} />
             </Col>
           </Row>
         </Container>
